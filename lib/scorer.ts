@@ -7,7 +7,7 @@ import {
   LlmScorePass2Schema,
   ThesisScoreSchema,
 } from "./types";
-import { applyHardGates, applyCapsToCriteria } from "./gates";
+import { applyHardGates, applyCapsToCriteria, applyGateFitCeiling } from "./gates";
 import { computeFit, verdictFromFit } from "./criteria";
 import { scoreThesisHeuristic } from "./heuristic";
 import { getGroqModel } from "./models";
@@ -186,8 +186,8 @@ function buildScoreFromPass1(
     gatesTriggered
   );
 
-  const fit = computeFit(criteria);
-  const verdict = object.verdict || verdictFromFit(fit);
+  const fit = applyGateFitCeiling(computeFit(criteria), gatesTriggered);
+  const verdict = verdictFromFit(fit);
   const trapNote =
     object.trapNote?.trim() ||
     (gatesTriggered.length > 0

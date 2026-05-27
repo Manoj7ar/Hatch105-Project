@@ -1,6 +1,6 @@
 import type { Thesis, EvidenceTag } from "./types";
 import type { CriterionKey } from "./types";
-import { applyHardGates, applyCapsToCriteria } from "./gates";
+import { applyHardGates, applyCapsToCriteria, applyGateFitCeiling } from "./gates";
 import { computeFit, verdictFromFit } from "./criteria";
 import { CRITERIA_VERSION } from "./criteria-version";
 import { checkShopifySurfaces } from "./shopify-surfaces";
@@ -12,7 +12,11 @@ function scoreBuildability(blob: string, ref: string): CriterionResult {
   if (traps.some((t) => blob.includes(t)))
     return { score: 1, reason: "Research-grade or realtime multimodal — not a 10-week v1.", evidence: "inferred" };
 
-  if (/theme app extension|checkout extension|checkout block|liquid\/metafield|zero external javascript/.test(blob))
+  if (
+    /theme app extension|checkout extension|checkout block|liquid\/metafield|zero external javascript|back.in.stock|oos variant|webhook.*twilio|sms when/.test(
+      blob
+    )
+  )
     return { score: 5, reason: "Thin Shopify surface (extension/block); v1 in days.", evidence: "sourced" };
 
   if (/shopify functions|selling plan|webhook|one-click|sidebar/.test(blob))
@@ -33,7 +37,11 @@ function scoreBuildability(blob: string, ref: string): CriterionResult {
 function scoreSpeed(blob: string): CriterionResult {
   if (/per-save|success fee|\$1 per|flat €|flat monthly|\$19\/mo|\$29\/mo/.test(blob))
     return { score: 5, reason: "Clear monetization; self-serve; immediate ROI story.", evidence: "sourced" };
-  if (/app store|install in one click|day-1|wismo|oos|404/.test(blob))
+  if (
+    /app store|install in one click|day-1|wismo|oos|404|back.in.stock|failed subscription|recovery email/.test(
+      blob
+    )
+  )
     return { score: 4, reason: "App Store subscription; value visible in first cycle.", evidence: "inferred" };
   if (/migrate|stockist|enterprise|10m\+/.test(blob))
     return { score: 2, reason: "Long setup or relationship-driven sale.", evidence: "inferred" };
@@ -44,7 +52,12 @@ function scoreSpeed(blob: string): CriterionResult {
 
 function scoreWedge(blob: string, t: Thesis): CriterionResult {
   const combined = `${t.one_liner} ${t.wedge}`;
-  if (combined.length < 120 && /recover|auto-|without human|€0|escape|wismo/.test(blob))
+  if (
+    combined.length < 160 &&
+    /recover|auto-|without human|€0|escape|wismo|back.in.stock|oos|failed subscription|when a watched variant/.test(
+      blob
+    )
+  )
     return { score: 5, reason: "One painful moment, one fix — merchant gets it instantly.", evidence: "sourced" };
   if (/vs |replace|kill|trap|not just/.test(blob))
     return { score: 4, reason: "Clear job-to-be-done vs incumbent or status quo.", evidence: "sourced" };
@@ -56,7 +69,7 @@ function scoreWedge(blob: string, t: Thesis): CriterionResult {
 }
 
 function scoreDistribution(blob: string, customer: string): CriterionResult {
-  if (/sub-\$500|sub-\$1m|\$50k–|\$50k-/.test(customer + blob))
+  if (/sub-\$500|sub-\$1m|\$50k–|\$50k-|\$80k–|\$100k–|\$150k–/.test(customer + blob))
     return { score: 5, reason: "Shopify App Store + tight DTC ICP.", evidence: "sourced" };
   if (/shopify app|dtc brands/.test(blob))
     return { score: 4, reason: "App Store + content motion.", evidence: "inferred" };
@@ -70,7 +83,11 @@ function scoreDistribution(blob: string, customer: string): CriterionResult {
 function scoreTrap(blob: string, ref: string): CriterionResult {
   if (["H-03", "H-11", "H-20", "H-32", "H-41"].includes(ref))
     return { score: 1, reason: "Known trap: science project or liability-heavy automation.", evidence: "sourced" };
-  if (/yotpo|gorgias|klaviyo|recharge|octane|loop advanced/.test(blob))
+  if (
+    /\bvs\s+(yotpo|gorgias|klaviyo|recharge)\b|1\/10th of yotpo|killing octane|half of yotpo|vs yotpo/.test(
+      blob
+    )
+  )
     return { score: 2, reason: "Incumbent or suite-player battlefield.", evidence: "inferred" };
   if (/closed-loop repricing|autonomous|realtime/.test(blob))
     return { score: 2, reason: "Platform or trust risk.", evidence: "inferred" };
@@ -135,7 +152,7 @@ export function scoreThesisHeuristic(thesis: Thesis) {
   const { gatesTriggered, caps } = applyHardGates(thesis);
   criteria = applyCapsToCriteria(criteria, caps, gatesTriggered);
 
-  const fit = computeFit(criteria);
+  const fit = applyGateFitCeiling(computeFit(criteria), gatesTriggered);
   const verdict = verdictFromFit(fit);
 
   return {

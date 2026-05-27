@@ -33,7 +33,10 @@ export async function runBatchScore(
     updateJob(job);
 
     try {
-      const score = await scoreThesis(thesis, ctx);
+      const score = await scoreThesis(thesis, {
+        ...ctx,
+        forceGroq: ctx?.forceGroq ?? true,
+      });
       saveScore(score);
       item.status = "done";
     } catch (e) {

@@ -79,3 +79,23 @@ export function applyCapsToCriteria(
   }
   return out;
 }
+
+/** Cap composite Hatch Fit when hard gates imply trap / wrong team size. */
+export function applyGateFitCeiling(
+  fit: number,
+  gatesTriggered: GateId[]
+): number {
+  if (gatesTriggered.some((g) => g === "G3D" || g === "REALTIME_AI")) {
+    return Math.min(fit, 2.75);
+  }
+  if (gatesTriggered.includes("AUTO_REPRICE")) {
+    return Math.min(fit, 3.15);
+  }
+  if (
+    gatesTriggered.includes("POS_ENTERPRISE") &&
+    gatesTriggered.length === 1
+  ) {
+    return Math.min(fit, 3.35);
+  }
+  return fit;
+}
