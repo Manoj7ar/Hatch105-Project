@@ -1,10 +1,16 @@
+"use client";
+
+import Link from "next/link";
 import type { ReactNode } from "react";
+import { ideaPath } from "@/lib/idea-path";
+import { resolveTeamTitleToRef } from "@/lib/teams-mention";
 
 const REF_PATTERN = /(\*\*)?(H-\d{2})(\*\*)?/g;
 
 export function formatTeamText(
   text: string,
-  teamTitles: string[] = []
+  teamTitles: string[] = [],
+  teams: { ref: string; title: string }[] = []
 ): ReactNode[] {
   const parts: ReactNode[] = [];
   const sortedTitles = [...teamTitles].sort((a, b) => b.length - a.length);
@@ -15,46 +21,60 @@ export function formatTeamText(
   let m: RegExpExecArray | null;
   const refRe = new RegExp(REF_PATTERN.source, "g");
   while ((m = refRe.exec(text)) !== null) {
+    const ref = m[2]!;
     matches.push({
       index: m.index,
       length: m[0].length,
       node: (
-        <span
+        <Link
           key={`ref-${m.index}`}
-          className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs font-medium text-slate-600"
+          href={ideaPath(ref)}
+          className="rounded bg-[#fff0eb] px-1.5 py-0.5 font-mono text-xs font-medium text-[var(--groq-orange)] hover:underline"
         >
-          {m[2]}
-        </span>
+          {ref}
+        </Link>
       ),
     });
   }
 
   for (const title of sortedTitles) {
     const escaped = title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const teamRef = resolveTeamTitleToRef(title, teams);
+
     const atRe = new RegExp(`@${escaped}`, "g");
     while ((m = atRe.exec(text)) !== null) {
+      const inner = (
+        <span className="rounded-full bg-[var(--groq-orange)] px-2 py-0.5 text-xs font-medium text-white">
+          @{title}
+        </span>
+      );
       matches.push({
         index: m.index,
         length: m[0].length,
-        node: (
-          <span
-            key={`at-${m.index}`}
-            className="rounded-full bg-slate-900 px-2 py-0.5 text-xs font-medium text-white"
-          >
-            @{title}
-          </span>
+        node: teamRef ? (
+          <Link key={`at-${m.index}`} href={ideaPath(teamRef)} className="inline">
+            {inner}
+          </Link>
+        ) : (
+          inner
         ),
       });
     }
+
     const boldRe = new RegExp(`\\*\\*${escaped}\\*\\*`, "g");
     while ((m = boldRe.exec(text)) !== null) {
+      const inner = (
+        <span className="font-semibold text-[#0d0d0d]">{title}</span>
+      );
       matches.push({
         index: m.index,
         length: m[0].length,
-        node: (
-          <span key={`bold-${m.index}`} className="font-semibold text-[#0d0d0d]">
-            {title}
-          </span>
+        node: teamRef ? (
+          <Link key={`bold-${m.index}`} href={ideaPath(teamRef)} className="hover:underline">
+            {inner}
+          </Link>
+        ) : (
+          inner
         ),
       });
     }

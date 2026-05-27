@@ -27,7 +27,7 @@ export function ChatMessageRow({
     return (
       <div className="flex justify-end py-3">
         <div className="max-w-[min(85%,32rem)] rounded-[24px] bg-[#f4f4f4] px-4 py-2.5 text-[15px] leading-7 text-[#0d0d0d]">
-          {formatTeamText(content, teamTitles)}
+          {formatTeamText(content, teamTitles, teams)}
         </div>
       </div>
     );

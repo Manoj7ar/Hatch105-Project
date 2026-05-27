@@ -1,124 +1,211 @@
 # Hatch105 Thesis Ranker
 
-Inspectable ranking system for the [Hatch105 Build Challenge](Initial-dataset/Hatch105%20Build%20Challenge.html): scores 50 Happy Stack Labs theses on **Hatch Fit** (buildability, speed to revenue, wedge, distribution, trap risk, expansion) and re-ranks when new theses arrive.
+Inspectable ranking system for the [Hatch105 Build Challenge](Initial-dataset/Hatch105%20Build%20Challenge.html): score 50 Happy Stack Labs theses on **Hatch Fit**, explain every placement, and **re-rank the full set** when new ideas arrive in the same JSON/CSV format.
+
+Built with **Next.js**, **Groq** (optional), and persisted `scores/*.json` so humans and reviewers can audit every decision.
+
+---
+
+## What you get
+
+| Capability | Where |
+|------------|--------|
+| Ranked list of all 50 theses | [http://localhost:3000](http://localhost:3000) → **All ideas** |
+| Written rubric + hard gates | [CRITERIA.md](CRITERIA.md) + [`lib/gates.ts`](lib/gates.ts) |
+| Full company profile + cohort charts | `/ideas/H-01` … `/ideas/H-50` |
+| **Live re-rank** (batch ingest + progress) | **Live re-rank** tab or CLI |
+| Grounded dataset chat (`@` mentions) | [/chat](http://localhost:3000/chat) |
+| Compare up to 4 teams | [/compare](http://localhost:3000/compare) |
+| Portfolio board (local) | **Portfolio** tab |
+| Executive brief export | **Executive brief** button |
+
+---
 
 ## Quick start
 
 ```bash
 npm install
-cp .env.example .env.local   # add GROQ_API_KEY from https://console.groq.com
-npm run seed               # Score all 50 → scores/*.json + RANKING.md
-npm run dev                # http://localhost:3000
+cp .env.example .env.local   # set GROQ_API_KEY from https://console.groq.com
+npm run seed                 # score all 50 → scores/*.json + RANKING.md
+npm run dev                  # http://localhost:3000
 ```
 
-## Ask the dataset (grounded chat)
+The UI reads committed `scores/*.json` on load. Re-run `npm run seed` after rubric or model changes.
 
-Open **http://localhost:3000/chat** — a ChatGPT-style interface that answers **only** from your local thesis rankings (no web search). Each request reloads `Initial-dataset/candidate_theses.json`, `scores/*.json`, and the rubric into the Groq system prompt.
+**Without Groq:** `SCORING_MODE=heuristic npm run seed` — deterministic rules, no API key.
 
-Requires `GROQ_API_KEY` in `.env.local`. The server injects rankings + scores + rubric into each request (compact snapshot for Groq token limits; top 8 theses include full criterion notes). To score new ideas, use **Live re-rank** on the Rankings page (chat does not score).
+---
 
-## Live re-rank (CLI — use on the call if UI/network fails)
+## Environment variables
+
+Copy [`.env.example`](.env.example). Common settings:
+
+| Variable | Purpose |
+|----------|---------|
+| `GROQ_API_KEY` | Groq API for scoring, chat, brief |
+| `GROQ_MODEL` | Default `llama-3.3-70b-versatile` (chat + scoring) |
+| `GROQ_SCORING_MODEL` | Optional separate model for structured scoring only |
+| `SCORING_MODE` | `auto` \| `groq` \| `heuristic` |
+| `SCORING_ROUTING` | `smart` (heuristic first) \| `always_groq` |
+| `SCORING_TWO_PASS` | Pass 1 scores; pass 2 adds snapshot/plan for top fits |
+| `FIRECRAWL_API_KEY` | External research mode (optional) |
+| `RESEARCH_DEFAULT_MODE` | `grounded` \| `external` |
+| `CRITERIA_VERSION` | Rubric version stamped on each score |
+
+---
+
+## How ranking works
+
+**North star:** Which thesis should a **3-person Hatch team** build this year — shippable in **10 weeks**, revenue inside **10 weeks**, without trap pivots.
+
+### Hatch Fit (1–5)
+
+Weighted average of six criteria (see [CRITERIA.md](CRITERIA.md)):
+
+| Criterion | Weight |
+|-----------|--------|
+| Buildability (3d · 3w · 10w) | 25% |
+| Speed to revenue | 20% |
+| Wedge clarity | 15% |
+| Distribution | 15% |
+| Trap risk *(inverted)* | 10% |
+| Expansion | 15% |
+
+### Pipeline
+
+1. **Input** — [`Initial-dataset/candidate_theses.json`](Initial-dataset/candidate_theses.json) (title, one_liner, example_customer, wedge).
+2. **Score** — [`lib/scorer.ts`](lib/scorer.ts): Groq structured output (AI SDK) or [`lib/heuristic.ts`](lib/heuristic.ts) fallback.
+3. **Gates** — [`lib/gates.ts`](lib/gates.ts) always runs **after** the model (`G3D`, `REALTIME_AI`, etc.).
+4. **Persist** — `scores/H-XX.json` (inspectable JSON per thesis).
+5. **Rank** — [`lib/rank.ts`](lib/rank.ts) sorts by Hatch Fit; [`RANKING.md`](RANKING.md) + UI consume the result.
+
+Evidence on each criterion is tagged **sourced**, **inferred**, or **guess**.
+
+---
+
+## Live re-rank (challenge step 3)
+
+Paste or upload **new theses** in the same JSON/CSV shape as the dataset.
+
+**UI:** Rankings → **Live re-rank** → **Score & re-rank with Groq** → watch per-thesis progress → full list updates with placement summaries.
+
+**CLI** (reliable on a walkthrough if the network fails):
 
 ```bash
 npm run rank -- --input fixtures/new_theses.json --merge
 ```
 
-Or paste JSON in the **Live re-rank** tab in the UI.
+[`fixtures/new_theses.json`](fixtures/new_theses.json) includes five sample ideas (H-51–H-55) for dry runs.
 
-## Criteria
+---
 
-See [CRITERIA.md](CRITERIA.md) — weights, 1–5 anchors, hard gates (`G3D`, `REALTIME_AI`, etc.). Hard gates always run in code **after** the model scores.
+## Chat
 
-## Scoring modes
+**[/chat](http://localhost:3000/chat)** answers from the local ranking snapshot only (no web search in chat). Type `@` to mention a team; links in replies open `/ideas/[ref]`.
 
-| Mode | How |
-|------|-----|
-| **auto** (default) | Groq when `GROQ_API_KEY` is set; otherwise heuristic |
-| **groq** | Force Groq (fails over to heuristic per thesis on API error) |
-| **heuristic** | Deterministic rules + gates; no API key |
+From any company page, **Ask in chat** prefills `@TeamName` in the composer.
 
-```bash
-# Groq (recommended for challenge)
-GROQ_API_KEY=gsk_... GROQ_MODEL=llama-3.3-70b-versatile npm run seed
+Chat does **not** score new ideas — use **Live re-rank** for that.
 
-# Heuristic only
-SCORING_MODE=heuristic npm run seed
+---
+
+## Company pages
+
+Each thesis has a dedicated route: **`/ideas/H-XX`**
+
+- Rank context vs cohort (median, percentile)
+- Radar + bar charts vs cohort averages
+- Criterion breakdown with reasons
+- Research (grounded / Firecrawl) and **Re-score with Groq**
+- Human override paper trail (`overrides/H-XX.json`)
+- Previous / next in rank order
+
+---
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Development server |
+| `npm run build` | Production build (pre-renders 50 idea pages) |
+| `npm run seed` | Score all candidate theses |
+| `npm run rank -- --input <file> [--merge]` | CLI live re-rank |
+| `npm test` | Vitest — gates + heuristic golden cases |
+| `npm run lint` | ESLint |
+
+---
+
+## API routes
+
+| Route | Method | Purpose |
+|-------|--------|---------|
+| `/api/ranking` | GET | Full ranking state + markdown |
+| `/api/rerank/batch` | POST, GET | Start/poll batch scoring job |
+| `/api/teams` | GET | Teams for `@` autocomplete |
+| `/api/chat` | POST | Grounded chat (streaming) |
+| `/api/research/[ref]` | GET, POST | Research + optional re-score |
+| `/api/overrides/[ref]` | POST | Human override note |
+| `/api/brief` | POST | Executive memo (Groq) |
+
+---
+
+## Project layout
+
+```
+Initial-dataset/          Challenge brief + candidate_theses.{json,csv}
+CRITERIA.md               Rubric (human-readable source of truth)
+fixtures/                 Sample theses for live re-rank practice
+scores/                   One JSON file per thesis (committed for deploy)
+data/competitors.json     Grounded research cache for "vs X" wedges
+lib/
+  scorer.ts               Groq + heuristic scoring
+  gates.ts                Deterministic post-LLM caps
+  rerank-batch.ts         Batch jobs + finalize ranking
+  thesis-detail.ts        Cohort benchmarks (server)
+  prompts/                Groq system prompts
+app/
+  page.tsx                Rankings dashboard
+  ideas/[ref]/            Per-company detail pages
+  chat/                   Grounded chat
+  compare/                Side-by-side compare
+  api/                    HTTP handlers
+components/               UI (rankings, thesis charts, chat, rerank)
+scripts/                  seed-scores.ts, rank.ts
+tests/                    Regression tests
 ```
 
-Groq scoring adds per-thesis **technical snapshot**, **3d / 3w / 10w v1 plan**, and optional **trap note** (visible in the detail panel).
+Runtime paths (gitignored): `.jobs/`, `research/`, `scores/archive/`.
 
-## How we teach Groq to rank the dataset
-
-This is **not** fine-tuning a custom model. We use Groq’s **`llama-3.3-70b-versatile`** by default for chat, briefs, and scoring (override with `GROQ_MODEL`). Optional `GROQ_SCORING_MODEL=openai/gpt-oss-20b` if you want GPT-OSS only for structured thesis JSON.
-
-1. **Input** — Each row from [`Initial-dataset/candidate_theses.json`](Initial-dataset/candidate_theses.json) (team name, one-liner, customer, wedge) plus the full [CRITERIA.md](CRITERIA.md) rubric (condensed in [`lib/prompts/rubric-summary.ts`](lib/prompts/rubric-summary.ts)).
-2. **Prompt** — [`lib/prompts/score-thesis.ts`](lib/prompts/score-thesis.ts) tells the model to score six criteria (1–5), write one-sentence reasons, output a verdict, technical snapshot, 10-week v1 plan, and trap note when relevant.
-3. **Structured output** — [`lib/scorer.ts`](lib/scorer.ts) uses the AI SDK `generateObject` path (with JSON parse fallback) so each thesis becomes a typed object matching [`LlmScoreOutputSchema`](lib/types.ts).
-4. **Deterministic gates** — [`lib/gates.ts`](lib/gates.ts) always runs **after** the LLM (e.g. `G3D`, `REALTIME_AI`) so traps cannot be ignored.
-5. **Persist & rank** — Scores land in `scores/H-XX.json`; [`lib/rank.ts`](lib/rank.ts) computes Hatch Fit and sort order; `RANKING.md` and the UI read those files.
-
-Batch scoring (`npm run seed`) walks all 50 theses. When Groq returns malformed JSON, the run logs the schema error and retries or falls back to the heuristic scorer for that thesis—so the pipeline still completes.
-
-![Groq batch scoring: re-scoring theses with structured JSON output and per-thesis Hatch Fit results](docs/images/groq-seed-scoring.png)
-
-*Example log: `npm run seed` with Groq scoring teams H-40–H-46. Each line is a saved score with verdict and `scoredWith: groq`. Occasional schema validation errors (missing `verdict`, `technicalSnapshot`, etc.) trigger retry or heuristic fallback.*
-
-**Grounded chat** uses the same dataset differently: on each `/chat` message we inject the latest rankings and scores into the system prompt ([`lib/dataset-context.ts`](lib/dataset-context.ts)) so Groq answers only from that snapshot—no web search and no re-scoring inside chat.
+---
 
 ## Deploy (Vercel)
 
-1. Push repo to GitHub and import on [Vercel](https://vercel.com).
-2. Committed `scores/*.json` powers the UI without Groq on page load.
-3. For **live re-rank**, set environment variables:
-   - `GROQ_API_KEY`
-   - `GROQ_MODEL` (optional, default `llama-3.3-70b-versatile`)
-   - `GROQ_SCORING_MODEL` (optional, e.g. `openai/gpt-oss-20b` for scoring only)
-   - `SCORING_MODE=auto`
+1. Import the repo on [Vercel](https://vercel.com).
+2. Committed `scores/*.json` lets the rankings UI work without Groq on cold start.
+3. Set `GROQ_API_KEY` (and optional vars above) for **Live re-rank**, chat, and brief.
 
 ```bash
 npx vercel --prod
 ```
 
-## Power features
+---
 
-| Feature | Where |
-|---------|--------|
-| **Evidence tags** (sourced / inferred / guess) | Thesis detail panel, compare, markdown export |
-| **Human override + paper trail** | Thesis panel → Edit override → `overrides/H-XX.json` |
-| **Research this team** | Grounded (competitor cache) or External (Firecrawl) → re-score with citations |
-| **Competitor cache** | [`data/competitors.json`](data/competitors.json) injected when wedge mentions `vs X` |
-| **Shopify surface checker** | Flags impossible surfaces before scoring |
-| **Batch re-rank** | Live re-rank tab → progress bars + retry failed |
-| **Compare tray** | `/compare` — up to 4 teams, mobile-friendly |
-| **Portfolio Kanban** | Rankings → Portfolio tab (localStorage) |
-| **Keyboard shortcuts** | `/` search · `j`/`k` navigate · `Enter` open · `?` help |
-| **Executive brief** | Rankings → Executive brief (Groq memo from current ranking) |
-| **Chat handoffs** | Score this idea · Add to compare chips on comparison tables |
-| **Regression tests** | `npm test` — gates + heuristic golden theses |
+## Tests
 
-Score archives on overwrite: `scores/archive/{criteriaVersion}/`.
-
-## Project structure
-
-```
-Initial-dataset/     Challenge brief + candidate_theses.csv / .json
-lib/
-  scorer.ts          Groq + heuristic, gates applied after LLM
-  prompts/           Rubric prompt for Groq
-  gates.ts           Deterministic trap caps
-scores/              Persisted per-thesis JSON (inspectable)
-app/api/             ranking, rerank, batch, research, overrides, brief
-data/competitors.json
-overrides/           Human governance trail
-components/          UI
-fixtures/            Sample theses for dry-run
-scripts/             seed + CLI rank
+```bash
+npm test
 ```
 
-## Executive pick
-
-Re-run `npm run seed` with Groq to refresh rankings. Heuristic default was **TrackReply (H-48)** at the top; Groq may shift order with richer technical judgment.
+Covers hard gates, fit bands, and heuristic snapshots on golden fixtures in [`tests/fixtures/golden-theses.json`](tests/fixtures/golden-theses.json).
 
 ---
 
-*Theses are confidential — do not redistribute `Initial-dataset/` files.*
+## Confidentiality
+
+Theses in `Initial-dataset/` are confidential per the challenge brief — do not redistribute them outside the review process.
+
+---
+
+## License
+
+Private challenge submission — see repository owner for usage terms.

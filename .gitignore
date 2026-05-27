@@ -45,3 +45,6 @@ next-env.d.ts
 
 # optional local research cache
 /research/
+
+# score history from re-scoring (committed scores/*.json stay tracked)
+/scores/archive/

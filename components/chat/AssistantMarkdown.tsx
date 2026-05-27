@@ -38,19 +38,21 @@ type AssistantMarkdownProps = {
 function TextWithRefs({
   children,
   teamTitles = [],
+  teams = [],
 }: {
   children?: React.ReactNode;
   teamTitles?: string[];
+  teams?: { ref: string; title: string }[];
 }) {
   if (typeof children === "string") {
-    return <>{formatTeamText(children, teamTitles)}</>;
+    return <>{formatTeamText(children, teamTitles, teams)}</>;
   }
   if (Array.isArray(children)) {
     return (
       <>
         {children.map((child, i) =>
           typeof child === "string" ? (
-            <span key={i}>{formatTeamText(child, teamTitles)}</span>
+            <span key={i}>{formatTeamText(child, teamTitles, teams)}</span>
           ) : (
             <span key={i}>{child}</span>
           )
@@ -61,9 +63,14 @@ function TextWithRefs({
   return <>{children}</>;
 }
 
-function buildComponents(teamTitles: string[]): Components {
+function buildComponents(
+  teamTitles: string[],
+  teams: { ref: string; title: string }[]
+): Components {
   const wrap = (children: React.ReactNode) => (
-    <TextWithRefs teamTitles={teamTitles}>{children}</TextWithRefs>
+    <TextWithRefs teamTitles={teamTitles} teams={teams}>
+      {children}
+    </TextWithRefs>
   );
   return {
     h2: ({ children }) => (
@@ -155,7 +162,7 @@ export function AssistantMarkdown({
   teamTitles = [],
   teams = [],
 }: AssistantMarkdownProps) {
-  const components = buildComponents(teamTitles);
+  const components = buildComponents(teamTitles, teams);
   const compareTitles = extractTeamNamesFromTables(content, teamTitles);
 
   if (!content.trim() && !isStreaming) {
