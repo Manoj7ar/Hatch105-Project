@@ -47,6 +47,24 @@ SCORING_MODE=heuristic npm run seed
 
 Groq scoring adds per-thesis **technical snapshot**, **3d / 3w / 10w v1 plan**, and optional **trap note** (visible in the detail panel).
 
+## How we teach Groq to rank the dataset
+
+This is **not** fine-tuning a custom model. We keep Groq’s general model (`openai/gpt-oss-20b`) and **instruct** it on every scoring run using our rubric and thesis text, then **validate and persist** the result so rankings stay inspectable.
+
+1. **Input** — Each row from `candidate_theses.json` (team name, one-liner, customer, wedge) plus the full [CRITERIA.md](CRITERIA.md) rubric (condensed in [`lib/prompts/rubric-summary.ts`](lib/prompts/rubric-summary.ts)).
+2. **Prompt** — [`lib/prompts/score-thesis.ts`](lib/prompts/score-thesis.ts) tells the model to score six criteria (1–5), write one-sentence reasons, output a verdict, technical snapshot, 10-week v1 plan, and trap note when relevant.
+3. **Structured output** — [`lib/scorer.ts`](lib/scorer.ts) uses the AI SDK `generateObject` path (with JSON parse fallback) so each thesis becomes a typed object matching [`LlmScoreOutputSchema`](lib/types.ts).
+4. **Deterministic gates** — [`lib/gates.ts`](lib/gates.ts) always runs **after** the LLM (e.g. `G3D`, `REALTIME_AI`) so traps cannot be ignored.
+5. **Persist & rank** — Scores land in `scores/H-XX.json`; [`lib/rank.ts`](lib/rank.ts) computes Hatch Fit and sort order; `RANKING.md` and the UI read those files.
+
+Batch scoring (`npm run seed`) walks all 50 theses. When Groq returns malformed JSON, the run logs the schema error and retries or falls back to the heuristic scorer for that thesis—so the pipeline still completes.
+
+![Groq batch scoring: re-scoring theses with structured JSON output and per-thesis Hatch Fit results](docs/images/groq-seed-scoring.png)
+
+*Example log: `npm run seed` with Groq scoring teams H-40–H-46. Each line is a saved score with verdict and `scoredWith: groq`. Occasional schema validation errors (missing `verdict`, `technicalSnapshot`, etc.) trigger retry or heuristic fallback.*
+
+**Grounded chat** uses the same dataset differently: on each `/chat` message we inject the latest rankings and scores into the system prompt ([`lib/dataset-context.ts`](lib/dataset-context.ts)) so Groq answers only from that snapshot—no web search and no re-scoring inside chat.
+
 ## Deploy (Vercel)
 
 1. Push repo to GitHub and import on [Vercel](https://vercel.com).
