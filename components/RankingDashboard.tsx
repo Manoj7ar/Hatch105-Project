@@ -15,6 +15,9 @@ import { FocusInput } from "./ui/FocusInput";
 import { GroqIcon } from "./ui/GroqIcon";
 import { CompareTray } from "./CompareTray";
 import { PortfolioBoard } from "./PortfolioBoard";
+import { TrapStories } from "./traps/TrapStories";
+import { TensionTable } from "./traps/TensionTable";
+import { groupTrapStories, listCohortTensions } from "@/lib/thesis-insights";
 
 type Tab = "all" | "top3" | "traps" | "rerank" | "portfolio";
 
@@ -274,19 +277,43 @@ export function RankingDashboard() {
         <PortfolioBoard ranked={state.ranked} />
       ) : tab === "top3" ? (
         <TopThreeCards items={state.top3} />
+      ) : tab === "traps" && state ? (
+        <div className="space-y-10">
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-lg font-semibold text-slate-900">Trap stories</h2>
+              <p className="mt-1 text-sm text-slate-500">
+                Narrative buckets for ideas that look like winners but fail a 3-person Hatch
+                sprint — grounded in gates and rubric, not vibes.
+              </p>
+            </div>
+            <TrapStories stories={groupTrapStories(state.ranked)} />
+          </div>
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-lg font-semibold text-slate-900">Rank vs gates</h2>
+              <p className="mt-1 text-sm text-slate-500">
+                High fit or top-15 placement despite hard gates — read before trusting the headline
+                rank.
+              </p>
+            </div>
+            <TensionTable tensions={listCohortTensions(state.ranked)} />
+          </div>
+          <div className="space-y-3">
+            <h2 className="text-lg font-semibold text-slate-900">All flagged ideas</h2>
+            <RankingTable
+              rows={list}
+              newRefs={newRefs}
+              highlightRef={list[highlightIndex]?.ref}
+            />
+          </div>
+        </div>
       ) : (
-        <>
-          {tab === "traps" && (
-            <p className="text-sm text-slate-500">
-              Ideas flagged by low fit, hard gates, or known trap patterns.
-            </p>
-          )}
-          <RankingTable
-            rows={list}
-            newRefs={newRefs}
-            highlightRef={list[highlightIndex]?.ref}
-          />
-        </>
+        <RankingTable
+          rows={list}
+          newRefs={newRefs}
+          highlightRef={list[highlightIndex]?.ref}
+        />
       )}
 
       <CompareTray />

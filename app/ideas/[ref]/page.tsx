@@ -47,6 +47,7 @@ export default async function IdeaDetailRoute({ params }: PageProps) {
           thesis={thesis}
           benchmarks={benchmarks}
           adjacent={adjacent}
+          ranked={state.ranked}
         />
       </main>
       <CompareTray />

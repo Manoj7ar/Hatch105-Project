@@ -275,8 +275,7 @@ body {
 }
 
 .hatch-tray {
-  border: 1px solid #f9c4b0;
-  border-top: 3px solid var(--groq-orange);
+  border: 1px solid #e2e8f0;
 }
 
 @keyframes shimmer {

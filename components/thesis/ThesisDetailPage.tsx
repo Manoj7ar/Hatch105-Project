@@ -9,8 +9,14 @@ import { CriterionRadarChart } from "./CriterionRadarChart";
 import { CriterionCompareBars } from "./CriterionCompareBars";
 import { FitCohortChart } from "./FitCohortChart";
 import { ThesisDetailActions } from "./ThesisDetailActions";
+import { ThesisDetailBody } from "./ThesisDetailBody";
 import type { CohortBenchmarks } from "@/lib/thesis-detail";
 import { getFitPercentile, ideaPath } from "@/lib/thesis-detail";
+import {
+  getWhyThisRank,
+  getSimilarTheses,
+  getRankGateTension,
+} from "@/lib/thesis-insights";
 
 function verdictVariant(
   verdict: string
@@ -25,11 +31,16 @@ export function ThesisDetailPage({
   thesis,
   benchmarks,
   adjacent,
+  ranked,
 }: {
   thesis: RankedThesis;
   benchmarks: CohortBenchmarks;
   adjacent: { prev: RankedThesis | null; next: RankedThesis | null };
+  ranked: RankedThesis[];
 }) {
+  const why = getWhyThisRank(thesis, benchmarks, ranked);
+  const similar = getSimilarTheses(thesis, ranked);
+  const tension = getRankGateTension(thesis);
   const scoredLabel =
     thesis.scoredWith === "human+groq"
       ? "Human + Groq"
@@ -81,50 +92,61 @@ export function ThesisDetailPage({
         </div>
       </header>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="hatch-label">Rank context</p>
-          <p className="mt-2 text-2xl font-semibold text-slate-900">
-            #{thesis.rank}
-            <span className="text-base font-normal text-slate-500">
-              {" "}
-              of {benchmarks.count}
-            </span>
-          </p>
-          <p className="mt-1 text-sm text-slate-600">
-            Top {percentile}% of cohort by fit score
-          </p>
-        </div>
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="hatch-label">vs cohort</p>
-          <p className="mt-2 text-2xl font-semibold text-slate-900">
-            {vsMedian >= 0 ? "+" : ""}
-            {vsMedian}
-            <span className="text-base font-normal text-slate-500"> vs median</span>
-          </p>
-          <p className="mt-1 text-sm text-slate-600">
-            Cohort median {benchmarks.medianFit} · mean {benchmarks.meanFit}
-          </p>
-          {benchmarks.topPick.ref !== thesis.ref && (
-            <p className="mt-2 text-xs text-slate-500">
-              #1:{" "}
-              <Link href={ideaPath(benchmarks.topPick.ref)} className="hatch-link">
-                {benchmarks.topPick.title}
-              </Link>{" "}
-              (fit {benchmarks.topPick.fit})
-            </p>
-          )}
-        </div>
-      </div>
-
-      <ThesisDetailActions thesis={thesis} topPickRef={benchmarks.topPick.ref} />
-
-      <section className="grid gap-4 lg:grid-cols-3">
-        <CriterionRadarChart thesis={thesis} benchmarks={benchmarks} />
-        <CriterionCompareBars thesis={thesis} benchmarks={benchmarks} />
-        <FitCohortChart thesis={thesis} benchmarks={benchmarks} />
-      </section>
-
+      <ThesisDetailBody
+        why={why}
+        similar={similar}
+        tension={tension}
+        thesis={thesis}
+        benchmarks={benchmarks}
+        rankContextGrid={
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+              <p className="hatch-label">Rank context</p>
+              <p className="mt-2 text-2xl font-semibold text-slate-900">
+                #{thesis.rank}
+                <span className="text-base font-normal text-slate-500">
+                  {" "}
+                  of {benchmarks.count}
+                </span>
+              </p>
+              <p className="mt-1 text-sm text-slate-600">
+                Top {percentile}% of cohort by fit score
+              </p>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+              <p className="hatch-label">vs cohort</p>
+              <p className="mt-2 text-2xl font-semibold text-slate-900">
+                {vsMedian >= 0 ? "+" : ""}
+                {vsMedian}
+                <span className="text-base font-normal text-slate-500"> vs median</span>
+              </p>
+              <p className="mt-1 text-sm text-slate-600">
+                Cohort median {benchmarks.medianFit} · mean {benchmarks.meanFit}
+              </p>
+              {benchmarks.topPick.ref !== thesis.ref && (
+                <p className="mt-2 text-xs text-slate-500">
+                  #1:{" "}
+                  <Link href={ideaPath(benchmarks.topPick.ref)} className="hatch-link">
+                    {benchmarks.topPick.title}
+                  </Link>{" "}
+                  (fit {benchmarks.topPick.fit})
+                </p>
+              )}
+            </div>
+          </div>
+        }
+        actions={
+          <ThesisDetailActions thesis={thesis} topPickRef={benchmarks.topPick.ref} />
+        }
+        charts={
+          <section className="grid gap-4 lg:grid-cols-3">
+            <CriterionRadarChart thesis={thesis} benchmarks={benchmarks} />
+            <CriterionCompareBars thesis={thesis} benchmarks={benchmarks} />
+            <FitCohortChart thesis={thesis} benchmarks={benchmarks} />
+          </section>
+        }
+        belowCharts={
+          <div className="space-y-6">
       {thesis.thesis && (
         <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="hatch-label">Thesis</h2>
@@ -281,6 +303,9 @@ export function ThesisDetailPage({
           <span />
         )}
       </nav>
+          </div>
+        }
+      />
     </article>
   );
 }

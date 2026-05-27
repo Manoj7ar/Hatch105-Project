@@ -113,12 +113,18 @@ Chat does **not** score new ideas — use **Live re-rank** for that.
 
 Each thesis has a dedicated route: **`/ideas/H-XX`**
 
+- **Why this rank** — headline plus strongest/weakest criteria vs cohort (template-driven from `scores/*.json`)
+- **Rank vs gates** — callout when fit is high but hard gates fired
+- **Similar in cohort** — three nearest neighbors by criterion profile
+- **10-week build lens** — toggle for buildability + trap safety vs cohort and v1 timeline (3d / 3w / 10w)
 - Rank context vs cohort (median, percentile)
 - Radar + bar charts vs cohort averages
 - Criterion breakdown with reasons
 - Research (grounded / Firecrawl) and **Re-score with Groq**
 - Human override paper trail (`overrides/H-XX.json`)
 - Previous / next in rank order
+
+**Traps tab** (home): narrative **trap stories** (paper titans, incumbent squeeze, scope/platform, low fit), **rank vs gates** tension table, then the full flagged list.
 
 ---
 
