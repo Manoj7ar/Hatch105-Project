@@ -4,41 +4,64 @@
   "criteria": {
     "buildability": {
       "score": 5,
-      "reason": "The widget can be built as a Shopify App Extension using Liquid and Metafields, requiring only server‑side rendering and minimal JavaScript, enabling a 3‑person team to deliver a v1 within 3 days, 3 weeks, and 10 weeks."
+      "reason": "Thin Shopify surface (extension/block); v1 in days.",
+      "evidence": "sourced"
     },
     "speedToRevenue": {
       "score": 5,
-      "reason": "The app can be listed in the Shopify App Store, offers a self‑serve installation, and the $29/month price point encourages immediate purchase in the first billing cycle."
+      "reason": "Clear monetization; self-serve; immediate ROI story.",
+      "evidence": "sourced"
     },
     "wedge": {
-      "score": 5,
-      "reason": "It renders review star ratings and the first five reviews natively in Liquid with zero external JavaScript, improving page load and SEO while costing $29/mo versus Yotpo's $79/mo."
+      "score": 3,
+      "reason": "Understandable wedge with some scope breadth.",
+      "evidence": "inferred"
     },
     "distribution": {
-      "score": 5,
-      "reason": "Targeting US apparel/supplements DTC brands with $500K–$5M revenue aligns with the $50K–$2M DTC market, and the App Store provides a scalable distribution channel."
+      "score": 3,
+      "reason": "Reachable but needs outbound or education.",
+      "evidence": "guess"
     },
     "trapRisk": {
       "score": 2,
-      "reason": "The solution avoids the identified traps such as generative 3D/AR, real‑time voice/video, autonomous repricing, and multi‑app scope, making it safe for a small team. [Gate INCUMBENT_WAR capped at 2]"
+      "reason": "Incumbent or suite-player battlefield.",
+      "evidence": "inferred"
     },
     "expansion": {
-      "score": 5,
-      "reason": "Future upsells include premium analytics, multi‑language reviews, and integration with loyalty programs, providing a clear path from €10K to €1M without pivoting."
+      "score": 3,
+      "reason": "Bolt-on expansion possible.",
+      "evidence": "guess"
     }
   },
   "gatesTriggered": [
     "INCUMBENT_WAR"
   ],
-  "fit": 4.7,
-  "verdict": "Strong Hatch fit",
-  "scoredWith": "groq",
-  "scoredAt": "2026-05-27T14:22:39.445Z",
-  "technicalSnapshot": "The app leverages Shopify’s Liquid templating and Metafield API to render reviews server‑side, uses the Storefront API to fetch review data, and integrates with Shopify App Bridge for admin configuration. No external JavaScript is injected until the user scrolls, ensuring fast page load. The solution can be packaged as a Shopify App Extension and listed in the App Store.",
-  "v1Plan": {
-    "day3": "Create app skeleton, install flow, fetch reviews via Storefront API, render static HTML in Liquid.",
-    "week3": "Add async loading on scroll, admin settings page, pricing page, App Store listing metadata.",
-    "week10": "Implement analytics dashboard, premium feature set, support workflow, marketing outreach."
-  },
-  "trapNote": "Hard gates triggered: INCUMBENT_WAR"
+  "fit": 3.8,
+  "verdict": "Viable with scope discipline",
+  "scoredWith": "heuristic",
+  "scoredAt": "2026-05-27T16:26:51.001Z",
+  "criteriaVersion": "2026-05-v1",
+  "researchCitations": [
+    {
+      "index": 1,
+      "title": "Best Product reviews Apps For 2026 - Shopify App Store",
+      "url": "https://apps.shopify.com/categories/marketing-and-conversion-social-trust-product-reviews/all",
+      "snippet": "Boost your Shopify store with apps for Product reviews. Discover the latest free and premium apps on the Shopify App Store.",
+      "source": "external"
+    },
+    {
+      "index": 2,
+      "title": "Grow Your Brand Faster With Customer Reviews",
+      "url": "https://www.yotpo.com/get-started-reviews/",
+      "snippet": "Collect reviews, ratings, photos, and videos and turn your customer content into sales with our flexible plans.",
+      "source": "external"
+    },
+    {
+      "index": 3,
+      "title": "Adding the Reviews Widget to Shopify - Yotpo",
+      "url": "https://support.yotpo.com/docs/adding-the-reviews-widget-to-shopify",
+      "snippet": "The Reviews Widget 3.0 lets you showcase your reviews on your homepage and product pages in a fully customizable format. Each review will appear with a title, ...",
+      "source": "external"
+    }
+  ]
 }
