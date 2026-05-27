@@ -1,0 +1,41 @@
+{
+  "ref": "H-09",
+  "title": "CheckoutPulse",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "Checkout UI extensions allow custom blocks; fetching social proof via API is straightforward, enabling a 3‑day build."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "App Store listing with instant checkout extension installation and monthly subscription billing ensures revenue in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Instant trust boost at checkout directly addresses conversion pain points."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "App Store reach plus content marketing can target $50K–$800K merchants."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "No high‑risk features; simple social proof block avoids incumbent war or liability."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "Social proof can be extended to upsell widgets and loyalty programs, enabling growth to €1M."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:21:35.729Z",
+  "technicalSnapshot": "CheckoutPulse is a Shopify Checkout UI extension that injects a live social proof block into the checkout page. It leverages the Shopify Checkout API to access cart data, uses Shopify App Bridge for secure communication, and fetches real‑time purchase and review data from a third‑party social proof service via HTTPS. The extension runs entirely in the Shopify front‑end, requiring no backend hosting beyond a lightweight Node.js server for API calls, and can be distributed through the Shopify App Store.",
+  "v1Plan": {
+    "day3": "Basic checkout extension skeleton with mock social proof data display.",
+    "week3": "Live data integration: real‑time purchase count, pinned review, trust badges, and responsive UI.",
+    "week10": "Production‑ready extension with analytics dashboard, subscription billing, performance optimization, and optional upsell block."
+  }
+}

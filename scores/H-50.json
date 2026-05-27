@@ -1,0 +1,41 @@
+{
+  "ref": "H-50",
+  "title": "HabitatKit",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The wizard can be built as a Shopify App Extension using the Storefront API and Admin API to fetch species data and product SKUs, allowing a 3‑person team to deliver a functional v1 in 3 days, 3 weeks, and 10 weeks."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "The app can be listed in the Shopify App Store, installed via self‑serve, and customers can purchase the full kit in the first checkout cycle, enabling revenue within the first week."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "The 'Build My Habitat' wizard instantly translates species choice into a complete enclosure kit, giving merchants a clear, one‑sentence value proposition."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Reptile DTC brands are a niche but growing market; the app can reach them through the App Store and targeted content, covering the $50K–$2M revenue range."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "No high‑risk features such as generative 3D, real‑time voice/video, autonomous repricing, or multi‑app scope are present, making it safe for a small team."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "After initial reptile focus, the same wizard framework can be extended to other exotic pets, enabling growth to €10K→€1M without pivot."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:32:01.499Z",
+  "technicalSnapshot": "HabitatKit is a Shopify App Extension that leverages the Storefront API to render a species‑specific wizard on the storefront, uses the Admin API to create and manage product SKUs for enclosure components, and integrates with Shopify Checkout for seamless one‑click kit purchases. It also utilizes Shopify Scripts or Script Editor for any custom pricing logic and can push inventory updates via webhooks.",
+  "v1Plan": {
+    "day3": "Basic wizard page with species selection and static enclosure options.",
+    "week3": "Dynamic species database, product SKU mapping, add‑to‑cart functionality.",
+    "week10": "Full checkout integration, inventory sync, admin dashboard for kit management."
+  }
+}

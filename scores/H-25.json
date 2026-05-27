@@ -1,0 +1,42 @@
+{
+  "ref": "H-25",
+  "title": "TrioSocial",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "Combines Shopify gift card API, custom referral logic, and loyalty points via app extensions, achievable within 10 weeks by a 3‑person team."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "App available in Shopify App Store, merchants can install and start earning commissions on referrals immediately, enabling revenue in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Clear single‑sentence value: unified dashboard and campaign tool for loyalty, referral, and gift card flows."
+    },
+    "distribution": {
+      "score": 5,
+      "reason": "Targets high‑revenue DTC brands that can be reached through Shopify App Store and industry content."
+    },
+    "trapRisk": {
+      "score": 2,
+      "reason": "Combining loyalty, referral, and gift card into one app risks scope creep and complexity for a 3‑person team."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "Scalable to €10K→€1M by adding advanced analytics, multi‑channel campaigns, and tiered loyalty programs."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.1,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:25:51.662Z",
+  "technicalSnapshot": "The app will be built as a Shopify App using the Admin API, Gift Card API, and Customer API, with a Shopify App Extension for the dashboard and a Shopify App Store listing for distribution. Key integrations include Shopify’s Gift Card API for issuing and tracking balances, the Customer API for loyalty tier data, and custom referral logic stored in the app’s backend. The app will also use Shopify’s Script Editor for any cart‑level discounts and the Shopify App Store for self‑serve installation and billing.",
+  "v1Plan": {
+    "day3": "Set up Shopify app skeleton, create basic dashboard UI, integrate Gift Card API, and scaffold referral logic.",
+    "week3": "Launch MVP with loyalty points system, referral tracking, gift card issuance, dashboard view, and basic campaign tool.",
+    "week10": "Add advanced loyalty tiers, automated referral rewards, gift card balance display, campaign scheduling, analytics, and publish to the Shopify App Store."
+  },
+  "trapNote": "The three‑apps‑in‑one scope risks over‑engineering; the team should modularize features or focus on one core lever first."
+}

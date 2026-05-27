@@ -1,0 +1,41 @@
+{
+  "ref": "H-27",
+  "title": "Replenishment Drawer",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The app relies on Shopify Admin GraphQL API for order and customer data, Webhooks for real‑time updates, and a third‑party SMS service; a 3‑person team can implement a basic predictive model and SMS workflow within 3 days, extend it with LLM integration by week 3, and finish a production‑ready version by week 10."
+    },
+    "speedToRevenue": {
+      "score": 3,
+      "reason": "The app can be installed from the Shopify App Store and immediately trigger SMS reminders, but the merchant’s subscription fee is typically billed monthly, so revenue from the app itself may not appear until the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Per‑customer per‑SKU consumption model sends a \"your moisturiser is almost empty\" SMS at the predicted moment with a one‑tap reorder that builds a cart from anything red on the customer's \"vanity shelf.\""
+    },
+    "distribution": {
+      "score": 5,
+      "reason": "Targeting US skincare/supplements DTC brands with $100K–$1M revenue fits the $50K–$2M range, and the app can be distributed via the Shopify App Store and marketing content."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "No identified traps such as generative 3D/AR, real‑time voice/video, autonomous repricing, or three‑app scope; the solution is straightforward and low‑risk for a small team."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "The predictive model can be extended to additional SKUs, categories, and merchants, and upsell features like bundle suggestions or loyalty rewards can drive growth from €10K to €1M without pivot."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.2,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:26:16.912Z",
+  "technicalSnapshot": "The Replenishment Drawer app will be built as a Shopify App using the Admin GraphQL API to fetch orders, customers, and product data, Webhooks to capture order events, and the Shopify SMS API (or Twilio) to send timely reminders. It will integrate an LLM provider (e.g., OpenAI) for per‑SKU consumption predictions and use Shopify App Bridge for an admin UI. Key integrations include Shopify Admin API, Webhooks, SMS service, and LLM API, with optional analytics via Shopify Analytics or a third‑party dashboard.",
+  "v1Plan": {
+    "day3": "Set up Shopify app skeleton, register webhooks for order creation, implement basic average interval calculation, and schedule SMS via Twilio.",
+    "week3": "Add admin UI for configuration, integrate OpenAI LLM for per‑SKU predictions, and send SMS reminders with one‑tap reorder link.",
+    "week10": "Implement cart‑building logic from customer's vanity shelf, add analytics dashboard, refine prediction accuracy, and prepare for production release."
+  }
+}

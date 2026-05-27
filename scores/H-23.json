@@ -1,0 +1,41 @@
+{
+  "ref": "H-23",
+  "title": "SubscriptPerk",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "Score 4: The app leverages Shopify's Selling Plans API and Checkout UI extensions, requiring only front‑end JavaScript and a lightweight Node backend, enabling a 3‑day prototype, 3‑week full feature set, and 10‑week production release."
+    },
+    "speedToRevenue": {
+      "score": 3,
+      "reason": "Score 3: The app is available in the Shopify App Store for self‑serve installation, and merchants can start using perks immediately, but app revenue depends on the merchant’s subscription to the app, which may take a few cycles to materialize."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Score 5: Merchants can define a monthly perk calendar and the app automatically surfaces the current perk at checkout and fulfills it with the subscription order, driving repeat purchases and customer loyalty."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Score 4: The app targets apparel, beauty, and supplement DTC brands with annual revenue $200K–$5M+, a market that is well‑served through the Shopify App Store and content marketing, offering a realistic path to $50K–$2M in sales."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "Score 5: The solution avoids high‑risk features such as generative 3D/AR, real‑time voice/video, autonomous repricing, or a multi‑app scope, making it safe for a small team."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "Score 4: The perk system can scale to €10K by adding more subscription tiers, then to €1M by integrating advanced fulfillment, analytics, and cross‑sell features without pivoting away from the core subscription model."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.05,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:25:19.792Z",
+  "technicalSnapshot": "The app runs on Shopify’s platform using the Selling Plans API for subscription management, Checkout UI extensions to display perks at checkout, the Fulfillment API to automatically ship perk items, and the Admin API for perk calendar configuration. A lightweight Node.js backend handles webhook processing and perk fulfillment logic, while the front‑end uses Shopify Polaris for UI consistency.",
+  "v1Plan": {
+    "day3": "Deploy a basic Checkout UI extension that displays a placeholder perk and allows merchants to install the app.",
+    "week3": "Implement a perk calendar UI in the Shopify Admin, enable scheduling of monthly perks, and integrate with Selling Plans API to attach perks to subscription orders.",
+    "week10": "Add automated fulfillment of perk items via the Fulfillment API, provide analytics dashboards for perk performance, and support multiple subscription tiers and perk types."
+  }
+}

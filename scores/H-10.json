@@ -1,0 +1,44 @@
+{
+  "ref": "H-10",
+  "title": "QuizCart",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The solution is a Shopify checkout extension that can be built using the Checkout Extensions API, with a simple quiz UI and basic recommendation logic, allowing a 3‑person team to deliver a functional v1 in 3 days, polish in 3 weeks, and full feature set by week 10."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "The app can be published to the Shopify App Store as a self‑serve extension, and merchants can install it immediately, enabling paid revenue in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Move the product‑fit quiz from a pre‑purchase landing page into a Shopify checkout extension widget — so the recommendation happens at peak purchase intent, after they added to cart but before payment, lifting AOV and reducing returns."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Target US apparel/beauty/wellness DTC brands with $100K–$2M revenue are reachable through the Shopify App Store and content marketing, providing a clear path to $50K–$2M in DTC sales."
+    },
+    "trapRisk": {
+      "score": 2,
+      "reason": "No identified traps such as generative 3D/AR, real‑time voice/video, autonomous repricing, or multi‑app scope; the product is a straightforward checkout extension. [Gate INCUMBENT_WAR capped at 2]"
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "After initial quiz and recommendation features, the product can expand to include upsell bundles, cross‑sell suggestions, email follow‑ups, and integration with loyalty programs, scaling from €10K to €1M without pivot."
+    }
+  },
+  "gatesTriggered": [
+    "INCUMBENT_WAR"
+  ],
+  "fit": 3.95,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:21:42.337Z",
+  "technicalSnapshot": "QuizCart is built as a Shopify Checkout Extension using the Checkout Extensions API and App Bridge for UI, leveraging the Storefront API to fetch product data and the Admin API to write recommendation metadata. It stores quiz responses in a lightweight database or metafields, and uses Shopify's billing API for subscription revenue. Key integrations include Shopify's App Store for distribution, Shopify Analytics for tracking, and optional email marketing APIs for post‑purchase follow‑ups.",
+  "v1Plan": {
+    "day3": "Deploy a basic checkout extension skeleton with a quiz form, capture cart items, and store responses in app database.",
+    "week3": "Implement recommendation logic, fetch product catalog via Storefront API, display recommended products in checkout, and add basic analytics.",
+    "week10": "Finalize UI polish, add subscription billing, publish to App Store, set up A/B testing, and launch marketing campaign."
+  },
+  "trapNote": "Hard gates triggered: INCUMBENT_WAR"
+}

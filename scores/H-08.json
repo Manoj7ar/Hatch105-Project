@@ -1,0 +1,41 @@
+{
+  "ref": "H-08",
+  "title": "ZeroPage",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "Uses Shopify Theme App Extension, which can be built in 3 days with basic UI and integrated with OpenAI embeddings, meeting the 3‑day/3‑week/10‑week milestones."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "App Store self‑serve installation and instant revenue capture on OOS/404 pages, enabling paid usage in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Provides instant revenue recovery on OOS/404 pages by showing top‑3 in‑stock matches, a clear one‑sentence value."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Targeting $50K–$600K DTC brands via Shopify App Store and content marketing, within the $50K–$2M reach."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "No high‑risk traps; uses standard embeddings and theme extension, safe for a 3‑person team."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "Can scale from OOS/404 to product recommendations, cross‑sell, and analytics, enabling growth to €1M without pivot."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:21:22.914Z",
+  "technicalSnapshot": "ZeroPage is a Shopify Theme App Extension that intercepts Out‑of‑Stock and 404 pages, rendering a 'Similar picks' card powered by OpenAI's text‑embedding‑3‑small. It leverages the Shopify Theme Extension API for UI injection, the Storefront API for product data, and the Admin API for inventory checks. The extension communicates with a lightweight backend that performs embeddings and similarity scoring, returning top‑3 in‑stock matches. Key integrations include Shopify APIs (Theme Extension, Storefront, Admin), OpenAI embeddings, and optional analytics via Shopify Analytics API.",
+  "v1Plan": {
+    "day3": "Deploy a basic theme extension that intercepts OOS/404 pages and displays a placeholder 'Similar picks' card.",
+    "week3": "Integrate OpenAI embeddings, implement similarity scoring, and display top‑3 in‑stock matches.",
+    "week10": "Add analytics, performance optimizations, and a subscription billing flow via Shopify Billing API."
+  }
+}

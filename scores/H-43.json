@@ -1,0 +1,41 @@
+{
+  "ref": "H-43",
+  "title": "Occasion OS",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The app can be built using Shopify's App Bridge, UI extensions, and Admin API to create landing pages, filters, and email sequences within 20 minutes, making it feasible for a 3‑person team to deliver a v1 in 3 days, 3 weeks, and 10 weeks."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "The app is self‑serve via the Shopify App Store and can charge merchants immediately, enabling paid revenue in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Merchants can select an occasion from a dropdown and instantly deploy a complete landing page, countdown, filter, gift‑message capture, delivery badge, and email/SMS sequence in 20 minutes."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Target US DTC brands with $100K–$500K revenue are within the $50K–$2M range and can be reached through the Shopify App Store and content marketing."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "The solution avoids generative 3D/AR, real‑time voice/video, autonomous repricing, and multi‑app scope, keeping it safe for a small team."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "The platform can add new occasions, advanced personalization, and cross‑selling features to grow from €10K to €1M without pivoting."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:30:26.345Z",
+  "technicalSnapshot": "The solution leverages Shopify's App Bridge and UI extensions to embed a one‑click occasion selector into the merchant dashboard, uses the Admin API to create landing pages, discount codes, and gift‑message forms, and the Storefront API to render countdown timers and recipient filters on the storefront. Email and SMS sequences are powered by integration with Klaviyo or SendGrid via their APIs, while analytics and campaign scheduling tap into Shopify's Marketing API and the Shopify Analytics API for real‑time reporting.",
+  "v1Plan": {
+    "day3": "Deploy a Shopify app with UI extension that lets merchants pick an occasion and auto‑generate a landing page with countdown timer, gift‑message form, and basic email/SMS sequence skeleton.",
+    "week3": "Add recipient filter, delivery‑cutoff badge, integrate with Klaviyo for email/SMS, and enable pre‑filling of next year data from current year results.",
+    "week10": "Launch analytics dashboard, support multiple occasions, schedule campaigns, and integrate with Shopify Marketing API for retargeting and advanced customization."
+  }
+}

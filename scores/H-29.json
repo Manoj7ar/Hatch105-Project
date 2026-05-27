@@ -1,0 +1,41 @@
+{
+  "ref": "H-29",
+  "title": "DunningDesk",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The app relies on standard Shopify webhook and Admin API calls, with no need for custom extensions, making it feasible for a 3‑person team to deliver a functional v1 within 10 weeks."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "The app is a self‑serve Shopify App Store listing that charges a low monthly base plus a per‑recovered‑subscription fee, enabling merchants to generate revenue in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Plug into any subscription app via Shopify webhook; detect failed billing events; run a 7‑step smart recovery sequence (email + SMS, escalating with a discount offer at attempt 4); charge a success fee ($1 per recovered subscription) on top of a low monthly base."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Target DTC brands with $100K–$2M+ revenue can be reached through the Shopify App Store and content marketing, covering the $50K–$2M TAM."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "No identified traps such as generative 3D, real‑time voice/video, autonomous repricing, or multi‑app scope; the solution is straightforward and low‑risk."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "After initial recovery, the app can add upsell offers, analytics dashboards, and integrations with other subscription platforms, scaling from €10K to €1M without pivot."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:26:44.502Z",
+  "technicalSnapshot": "The solution is a Shopify App that listens to failed‑payment webhooks from any subscription app, uses the Shopify Admin API to retrieve subscription details, triggers a 7‑step email/SMS recovery sequence via external services (e.g., SendGrid/Twilio), and records success fees in a lightweight database. The app leverages Shopify App Bridge for a minimal UI, and is deployable on Heroku or Render with a standard OAuth flow.",
+  "v1Plan": {
+    "day3": "Set up a webhook listener for failed‑payment events and store them in a database.",
+    "week3": "Implement the 7‑step recovery sequence, integrate email/SMS services, and build a basic settings UI.",
+    "week10": "Finalize the app, complete App Store listing, conduct QA, and launch to merchants."
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "ref": "H-41",
+  "title": "NightWatch",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "Uses Shopify Admin API price mutation and standard App extensions, allowing a 3‑person team to deliver a functional v1 within 3 days, 3 weeks, and 10 weeks."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "Can be listed in the Shopify App Store as a self‑serve subscription, enabling merchants to pay in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "NightWatch automatically re‑prices SKUs via the Admin API and sends a plain‑English digest, giving merchants instant, actionable pricing control."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Target apparel/fashion/beauty DTC brands ($100K–$5M+) are reachable through the App Store and content marketing, covering the $50K–$2M TAM."
+    },
+    "trapRisk": {
+      "score": 2,
+      "reason": "Autonomous repricing is a known trap for small teams, raising liability and competitive risk."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "After initial pricing automation, the app can add analytics, dynamic rules, and multi‑merchant support to grow from €10K to €1M without pivoting."
+    }
+  },
+  "gatesTriggered": [
+    "AUTO_REPRICE"
+  ],
+  "fit": 3.95,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:29:51.771Z",
+  "technicalSnapshot": "NightWatch is a Shopify App built with the Admin API for price mutations, the Storefront API for competitor data, and uses Shopify App Bridge for UI. It requires integration with an email service (e.g., SendGrid) for digests, a background job scheduler (e.g., Cloud Functions or Heroku Scheduler), and a subscription billing system via Shopify Billing API.",
+  "v1Plan": {
+    "day3": "Create Shopify app skeleton, implement Admin API price mutation endpoint, set up basic UI to update a single SKU, and configure email service.",
+    "week3": "Add competitor monitoring module that scrapes competitor sites or uses APIs, schedule periodic price checks, implement automated price updates, and generate email digests.",
+    "week10": "Deploy full closed‑loop system with configurable rules, conflict resolution, analytics dashboard, subscription billing, and automated testing."
+  },
+  "trapNote": "Because autonomous repricing is a high‑risk trap, the team should limit scope to a simple rule‑based system and avoid complex AI pricing logic."
+}

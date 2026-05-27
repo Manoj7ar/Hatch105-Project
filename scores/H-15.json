@@ -1,0 +1,41 @@
+{
+  "ref": "H-15",
+  "title": "AdProof",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The app can be built using Shopify Admin API and App Extensions, with a 3‑person team able to deliver a functional v1 in 10 weeks by leveraging existing review data and ad‑creation libraries."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "The app will be listed in the Shopify App Store, allowing merchants to install and start generating paid Meta/TikTok ads within the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Pull your top‑rated photo reviews, auto‑compose them into Meta‑formatted static ads and TikTok‑formatted video testimonial clips, and push directly to your connected ad account — no agency, no Canva."
+    },
+    "distribution": {
+      "score": 5,
+      "reason": "Target apparel/beauty/wellness DTC brands with $500K–$5M revenue, a segment reachable via the Shopify App Store and content marketing."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "No identified traps such as generative 3D/AR, real‑time voice/video on PDP, autonomous repricing, or multi‑app scope; the solution is straightforward and low‑risk."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "The app can expand to additional ad platforms, richer creative formats, and analytics dashboards, enabling growth from €10K to €1M without pivot."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.4,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:23:03.355Z",
+  "technicalSnapshot": "AdProof is a Shopify App built with the Shopify Admin API and App Extensions, fetching product reviews via the Shopify Reviews API or third‑party review apps. It uses Shopify App Bridge for in‑store UI, and integrates with Meta Ads API and TikTok Ads API to create and publish static and video ad creatives directly from the merchant’s store. The app also leverages Shopify Billing API for subscription management and Shopify Analytics API for performance reporting.",
+  "v1Plan": {
+    "day3": "Set up the Shopify app skeleton, implement authentication, and fetch review data from the store.",
+    "week3": "Add ad composition logic to generate Meta static ads and TikTok video clips, and build a preview UI.",
+    "week10": "Integrate with Meta Ads API and TikTok Ads API to publish ads, implement billing, and add basic analytics."
+  }
+}

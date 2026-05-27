@@ -1,0 +1,41 @@
+{
+  "ref": "H-16",
+  "title": "CommissionKit",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The app can be built as a Shopify App Extension that listens to review events via webhooks, generates a unique referral code, and stores it in metafields within 3 days; Admin API integration for discount codes and Payouts API can be added by week 3, and a polished v1 is achievable by week 10."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "The app will be listed in the Shopify App Store, merchants can self‑serve install, and a subscription fee can be collected immediately upon installation, ensuring paid revenue in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Turn every review into a micro‑affiliate, instantly turning satisfied customers into traffic‑generating promoters."
+    },
+    "distribution": {
+      "score": 5,
+      "reason": "Target fashion/beauty/supplements DTC brands with $100K–$5M revenue are within the $50K–$2M DTC range, and the Shopify App Store provides direct access to this market."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "No generative 3D/AR, real‑time voice/video, autonomous repricing, or multi‑app scope; the concept is straightforward and low‑risk for a small team."
+    },
+    "expansion": {
+      "score": 5,
+      "reason": "The referral model can scale to multi‑tier commissions, analytics dashboards, and cross‑channel integrations, enabling growth from €10K to €1M without pivoting."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.55,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:23:15.261Z",
+  "technicalSnapshot": "CommissionKit is a Shopify App Extension that uses the Admin API to create discount codes and store referral data in metafields, the Payouts API for cash commissions, and Webhooks to capture review submissions from popular review apps (e.g., Yotpo, Judge.me). The app leverages App Bridge for a seamless admin UI, and optional integration with Shopify’s Referral Program API (if available) or custom metafield tracking for referral attribution. Key integrations include Shopify Storefront API for customer-facing referral links, Admin API for discount and payout management, and Payouts API for merchant payouts.",
+  "v1Plan": {
+    "day3": "Set up the app skeleton, register a webhook for review events, and implement a basic referral code generator that stores codes in metafields.",
+    "week3": "Add an admin UI to view referrals, integrate with Shopify Payouts API for cash payouts, and implement discount code creation for store credit commissions.",
+    "week10": "Deploy analytics dashboards, support multi‑tier commission structures, add automated email notifications, and optimize performance for production."
+  }
+}

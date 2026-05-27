@@ -1,0 +1,41 @@
+{
+  "ref": "H-48",
+  "title": "TrackReply",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The app relies on standard Shopify Order and Webhook APIs, carrier tracking integrations, and email/DM services, allowing a 3‑person team to deliver a functional prototype within 3 days, a working version by week 3, and a production‑ready release by week 10."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "It can be listed in the Shopify App Store with a subscription pricing model, enabling merchants to pay immediately after installation and generating revenue in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Instantly resolves customer inquiries about order status, eliminating support tickets and improving CSAT."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "The Shopify App Store and DTC brand content channels provide direct access to the $50K–$2M revenue segment, making acquisition scalable."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "No high‑risk features such as generative 3D, real‑time voice/video, autonomous repricing, or multi‑app scope are present, keeping the project low‑risk for a small team."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "Future features can include handling returns, refunds, and upsell suggestions, scaling the solution from €10K to €1M without pivoting away from order‑status automation."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:31:31.665Z",
+  "technicalSnapshot": "The solution is a Shopify App that uses the Admin API to fetch orders, Webhooks to listen for order updates, carrier APIs (e.g., USPS, FedEx) for live tracking, and email/DM services (SendGrid, Shopify Email) to send replies. It leverages Shopify App Bridge for UI, and can be built with Node.js/React.",
+  "v1Plan": {
+    "day3": "Set up Shopify app skeleton, webhook for order updates, basic email template.",
+    "week3": "Implement carrier tracking integration, auto‑reply logic, test with sample orders.",
+    "week10": "Deploy to App Store, add subscription billing, add analytics, finalize documentation."
+  }
+}

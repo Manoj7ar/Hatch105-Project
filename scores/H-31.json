@@ -1,0 +1,41 @@
+{
+  "ref": "H-31",
+  "title": "SMSFlat",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The SMSFlat app can be built using Shopify App Bridge, the Shopify Admin API, and a third‑party SMS provider API; a 3‑person team can deliver a basic one‑click install, pre‑built flows, and a flat‑rate billing interface within 3 days, 3 weeks, and 10 weeks."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "The app can be listed in the Shopify App Store, customers can subscribe to a flat monthly plan immediately after installation, and the first payment can be collected in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Flat monthly SMS allowance with no per‑message surprise billing; pre‑built Shopify flows that install in one click."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "The app targets sub‑$500K DTC brands, which are abundant on Shopify; the App Store and Shopify content channels provide direct reach to the $50K–$2M DTC market."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "The thesis does not involve generative 3D/AR, real‑time voice/video, autonomous repricing, or a three‑app scope, so it poses no high‑risk technical or incumbent threats."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "After initial flat‑rate SMS, the product can add tiered caps, advanced automation, analytics, and multi‑channel messaging to grow from €10K to €1M without pivoting."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:27:07.659Z",
+  "technicalSnapshot": "SMSFlat is a Shopify App built with App Bridge and the Admin API to manage customer data and flows; it integrates with a third‑party SMS provider via REST APIs, uses Shopify Flow for automated triggers, and leverages Shopify Billing API for flat‑rate subscriptions.",
+  "v1Plan": {
+    "day3": "One‑click install, basic SMS sending, and a single abandoned‑cart flow.",
+    "week3": "Add two more pre‑built flows (shipping update, win‑back), implement UI for flat‑rate billing, and enable basic analytics.",
+    "week10": "Introduce tiered SMS caps, advanced automation options, detailed usage analytics, and a dashboard for campaign performance."
+  }
+}

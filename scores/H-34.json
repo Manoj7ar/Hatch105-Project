@@ -1,0 +1,41 @@
+{
+  "ref": "H-34",
+  "title": "FlowSegment",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "Uses Shopify Admin, Flow, and Email APIs; can be built with existing SDKs and extensions in 3 days by a small team."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "App can be listed in Shopify App Store with self‑serve billing; first‑cycle revenue possible once merchants install and activate."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Provides a queue‑drip engine that eliminates Flow’s 100‑customer limit, giving merchants instant, reliable email automation for any segment size."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Targets US apparel/beauty/supplements DTC brands ($500K–$10M), a market reachable via App Store and content marketing."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "No high‑risk tech or incumbent war; the app builds on existing Shopify APIs and poses minimal liability."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "Can add SMS, push, and advanced segmentation features to grow from €10K to €1M without pivoting."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:27:53.260Z",
+  "technicalSnapshot": "FlowSegment is a Shopify App that leverages the Shopify Admin API, Flow API, and Shopify Email API to create a queue‑drip engine. It uses App Bridge for UI, Shopify App Extensions for Flow triggers, and the Shopify Billing API for subscription management. The app will also integrate with Shopify’s Webhooks for real‑time updates and the Shopify Email API for sending and retrying emails.",
+  "v1Plan": {
+    "day3": "Set up app skeleton, install Flow trigger, basic email queue skeleton.",
+    "week3": "Implement full queue engine, de‑duplication, retry logic, UI for segment selection, and basic analytics.",
+    "week10": "Publish to App Store, enable billing, add support, marketing materials, and initial customer onboarding."
+  }
+}

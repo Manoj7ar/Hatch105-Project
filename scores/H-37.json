@@ -1,0 +1,41 @@
+{
+  "ref": "H-37",
+  "title": "AdCreativeQuick",
+  "criteria": {
+    "buildability": {
+      "score": 3,
+      "reason": "The app can be built as a Shopify Admin extension using the Admin API to fetch product images, App Bridge for UI, and an external AI service; a 3‑person team can deliver a basic v1 in 3 days, a more polished version in 3 weeks, and a full App Store‑ready release in 10 weeks."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "The app will be self‑serve on the Shopify App Store, with a subscription billing via the Billing API, allowing merchants to install and pay within the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Upload a product image → AI selects 3 best crops, adds copy, and exports 16:9, 1:1, and carousel creatives in 15 seconds."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Target US DTC brands ($100K–$2M) are reachable through the Shopify App Store and content marketing; the app’s simple value proposition can attract a sizable portion of this market."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "No identified traps; the scope is focused on image processing and copy generation, avoiding complex real‑time or autonomous features."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "After initial ad‑creative export, the app can add multi‑platform publishing, advanced copy AI, and analytics, enabling growth from €10K to €1M without pivot."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:28:35.707Z",
+  "technicalSnapshot": "The app is a Shopify Admin extension that uses the Admin API to read product images, the App Bridge for UI, and the Billing API for subscription; it calls an external AI service for image cropping and copy generation, stores generated creatives in the app’s private store, and offers export via CSV or direct download. Optional integration with Shopify’s Marketing API can be added for future ad publishing.",
+  "v1Plan": {
+    "day3": "Basic UI to upload or select product images, fetch images via Admin API, call AI service for cropping, and export a single 16:9 creative.",
+    "week3": "Add copy generation, support 1:1 and carousel formats, store creatives in the app, and provide a simple download interface.",
+    "week10": "Implement subscription billing, App Store listing, analytics dashboard, and prepare for future multi‑platform publishing and advanced copy features."
+  }
+}

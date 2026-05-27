@@ -1,0 +1,44 @@
+{
+  "ref": "H-32",
+  "title": "CastingCall Live",
+  "criteria": {
+    "buildability": {
+      "score": 2,
+      "reason": "Building a live‑video streaming app with real‑time voice recognition and AI answering requires integrating Shopify App Bridge, Shopify Storefront API, Twilio Programmable Video, and OpenAI APIs, which is too complex for a 3‑person team to deliver a production‑ready v1 in 10 weeks."
+    },
+    "speedToRevenue": {
+      "score": 2,
+      "reason": "The app would need a subscription or per‑stream fee, but setting up billing, App Store approval, and a quick revenue cycle is difficult for a small team, making first‑cycle paid revenue unlikely."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Merchants can start a live product stream directly from the Shopify admin and instantly answer shopper questions with AI, eliminating the need for extra staff."
+    },
+    "distribution": {
+      "score": 3,
+      "reason": "The App Store can reach many DTC brands, but live‑video shopping is a niche feature that may limit adoption to a subset of merchants, making $50K–$2M reach uncertain."
+    },
+    "trapRisk": {
+      "score": 1,
+      "reason": "Realtime voice/video on the product detail page is a high‑risk trap for a 3‑person team due to latency, compliance, and platform limits."
+    },
+    "expansion": {
+      "score": 3,
+      "reason": "The product could grow by adding multi‑channel streaming and analytics, but scaling to €1M without pivoting requires significant infrastructure and marketing that a small team may not sustain."
+    }
+  },
+  "gatesTriggered": [
+    "REALTIME_AI"
+  ],
+  "fit": 2.65,
+  "verdict": "Weak Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:27:24.048Z",
+  "technicalSnapshot": "The app will be a Shopify App Bridge extension that injects a live‑video player into the Storefront via the Shopify Storefront API. It will use Twilio Programmable Video for low‑latency streaming, WebRTC for in‑browser playback, and OpenAI’s GPT‑4 for real‑time voice/text Q&A. The backend will run on a serverless platform (e.g., Vercel or Netlify Functions) to handle WebSocket connections, transcription via Whisper, and AI inference, while storing session data in Shopify metafields.",
+  "v1Plan": {
+    "day3": "Deploy a minimal Shopify app that registers a custom admin page to start a live stream and embeds a placeholder video player on the storefront.",
+    "week3": "Implement Twilio video integration, enable real‑time voice transcription, and display AI‑generated answers in the chat overlay.",
+    "week10": "Add billing via Shopify Billing API, optimize latency, and release the app to the Shopify App Store."
+  },
+  "trapNote": "Because realtime voice/video on the product page is a high‑risk trap, the team should focus on a simplified chat‑only version or limit streaming to the admin dashboard to reduce complexity."
+}

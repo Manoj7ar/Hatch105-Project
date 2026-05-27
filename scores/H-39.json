@@ -1,0 +1,41 @@
+{
+  "ref": "H-39",
+  "title": "ListingGuard",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The app can be built using Shopify Admin API and a lightweight Node.js backend, allowing a 3‑person team to deliver a functional audit tool within 3 days, 3‑week UI, and 10‑week feature set."
+    },
+    "speedToRevenue": {
+      "score": 3,
+      "reason": "ListingGuard can be submitted to the Shopify App Store as a self‑serve app, with instant billing via Shopify Payments, enabling revenue in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "The agent provides a nightly catalog audit and one‑click bulk fixes, directly improving SEO, conversion, and inventory accuracy."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "The app targets DTC brands in the $100K–$5M range, reachable through the Shopify App Store and content marketing, fitting the $50K–$2M DTC TAM."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "The solution avoids high‑risk features such as generative 3D, real‑time voice/video, autonomous repricing, or multi‑app scope, making it safe for a small team."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "Future enhancements like automated content creation, inventory alerts, and marketing integrations provide a clear path from €10K to €1M without pivot."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.05,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:29:01.726Z",
+  "technicalSnapshot": "ListingGuard is a Shopify App that leverages the Admin API to crawl products, images, and metafields, uses webhooks for real‑time updates, and integrates with Shopify Email or a third‑party email service for daily fix lists. The app can embed a UI via App Bridge or a Shopify App Extension to provide bulk‑edit functionality directly within the merchant’s admin. Optional integrations include Shopify Analytics for performance metrics and a lightweight Node.js or Ruby on Rails backend for processing and scheduling audits.",
+  "v1Plan": {
+    "day3": "Deploy a basic audit script that fetches product listings, images, and inventory via the Admin API and logs issues to a dashboard.",
+    "week3": "Add email notification of the nightly audit results and a bulk‑edit UI using App Bridge for one‑click fixes.",
+    "week10": "Implement advanced features such as automated alt‑text suggestions, inventory alerts, and a reporting dashboard with analytics integration."
+  }
+}

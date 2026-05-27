@@ -1,0 +1,41 @@
+{
+  "ref": "H-35",
+  "title": "Catalog-to-Creative",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The app can be built using Shopify Admin API, App Bridge, and external diffusion API within 10 weeks by a 3‑person team."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "Self‑serve billing via Shopify App Store allows customers to pay in the first cycle after a free trial."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "It locks the product image and instantly generates ad‑ready static and video creatives, eliminating retouching."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "The App Store and content marketing can reach $50K–$2M DTC brands in the US apparel/skincare/home segment."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "The solution avoids high‑risk traps such as 3D/AR mesh, realtime voice/video on PDP, autonomous repricing, and multi‑app scope."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "Additional creative formats, platform integrations, and tiered pricing can grow revenue from €10K to €1M without pivoting."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:28:07.462Z",
+  "technicalSnapshot": "The app will be a Shopify Admin extension built with Shopify App Bridge and the Admin API to read product data and images. It will call an external diffusion model (e.g., Stable Diffusion) to generate static images and a video generation service (e.g., RunwayML) for ad‑ready video. Generated assets will be stored in Shopify’s CDN via the Storefront API and linked to the product. Billing will use Shopify’s Billing API for subscription plans. The app will also expose a storefront script extension for on‑page preview and a Shopify App Store listing for distribution.",
+  "v1Plan": {
+    "day3": "Create Shopify app skeleton, implement product feed extraction, integrate with diffusion API to generate a single static image per product.",
+    "week3": "Add UI for selecting products, generate video creatives, preview in app, store assets in Shopify, implement basic analytics.",
+    "week10": "Implement subscription billing, launch on App Store, add marketing integrations, support, and analytics dashboard."
+  }
+}

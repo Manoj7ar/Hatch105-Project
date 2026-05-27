@@ -1,0 +1,41 @@
+{
+  "ref": "H-45",
+  "title": "SupplementStack",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The app can be built using Shopify Admin API to read product catalog, Storefront API for quiz UI, and Shopify Subscriptions API for subscription plans, enabling a 3‑person team to deliver a functional v1 within 3 days, 3 weeks, and 10 weeks."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "Merchants can install the app from the Shopify App Store, immediately start selling personalized supplement bundles, and generate revenue in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "A 4‑question goal quiz that assembles a personalized supplement protocol from the store’s catalog, with subscription‑plan pricing embedded in the recommendation."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Targeting supplements/wellness DTC brands ($200K–$5M) aligns with the Shopify App Store’s reach to $50K–$2M DTC merchants, enabling scalable distribution."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "The thesis does not involve generative 3D/AR, real‑time voice/video, autonomous repricing, or a three‑app scope, avoiding common traps for small teams."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "The subscription stacker can expand to additional supplement categories, add advanced recommendation logic, and integrate with marketing tools to grow from €10K to €1M without pivoting."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:30:57.486Z",
+  "technicalSnapshot": "The solution will be a Shopify App built with App Bridge and Shopify App Extensions, leveraging the Admin API to read product data, the Storefront API for quiz rendering, and the Subscriptions API (or ReCharge integration) to create recurring orders. It will also use Shopify Scripts for pricing logic and Shopify Analytics for performance tracking.",
+  "v1Plan": {
+    "day3": "Deploy a basic quiz UI that collects user answers and displays a static recommendation list.",
+    "week3": "Integrate with the Shopify Admin API to map quiz answers to product SKUs, create subscription plans via the Subscriptions API, and expose a merchant dashboard for configuration.",
+    "week10": "Publish the app to the Shopify App Store, add analytics, support multiple languages, and implement automated billing and renewal workflows."
+  }
+}

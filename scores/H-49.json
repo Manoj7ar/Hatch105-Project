@@ -1,0 +1,42 @@
+{
+  "ref": "H-49",
+  "title": "Restock OS",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "Leverages Shopify APIs (Inventory, Order, ScriptTag) and App Bridge to embed a widget, allowing a 3‑person team to prototype a skeleton in 3 days, complete core functionality by week 3, and ship a production‑ready app by week 10."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "The app can be listed in the Shopify App Store, installed instantly, and billed on the first subscription cycle, enabling revenue generation immediately after launch."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "A single PDP widget automatically selects between Save, Notify, or Pre‑order based on inventory, replacing three separate apps and delivering instant demand capture."
+    },
+    "distribution": {
+      "score": 5,
+      "reason": "Targeting US apparel/footwear/home DTC brands with $200K–$3M revenue aligns with the App Store’s reach to merchants in the $50K–$2M DTC segment, ensuring a viable distribution channel."
+    },
+    "trapRisk": {
+      "score": 3,
+      "reason": "Consolidating three distinct app functionalities into one widget risks scope creep and complexity for a small team, increasing the likelihood of delays or feature overload."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "After the core widget, the product can add analytics dashboards, multi‑channel inventory sync, and subscription management to grow from €10K to €1M without pivoting."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.2,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:31:45.636Z",
+  "technicalSnapshot": "Restock OS is a Shopify App that uses the Shopify Admin API for inventory and order data, the Storefront API for product page rendering, and App Bridge for embedding a widget on the PDP. It also relies on Shopify ScriptTag to inject JavaScript, Shopify Webhooks for inventory updates, and the Shopify Billing API for subscription management. The app can be built as a Shopify App Extension (App Block) to provide a seamless widget experience.",
+  "v1Plan": {
+    "day3": "Create a basic Shopify App skeleton with App Bridge and a placeholder widget that displays a static message.",
+    "week3": "Implement full widget logic to detect inventory state, toggle between Save/Notify/Pre‑order UI, integrate with Shopify Inventory API, and set up webhooks for real‑time updates.",
+    "week10": "Deploy production‑ready app, enable App Store listing, add billing, test on multiple merchants, and launch marketing materials."
+  },
+  "trapNote": "Focus first on delivering a single core widget; postpone adding extra features until after initial launch to avoid over‑extending the small team."
+}

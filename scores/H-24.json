@@ -1,0 +1,41 @@
+{
+  "ref": "H-24",
+  "title": "ChurnShield",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The app can be built using Shopify's Admin API, Billing API, and App Bridge to intercept subscription cancellations and display a modal, allowing a v1 to be shipped in 3 days, 3 weeks, and 10 weeks on Shopify."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "The app is self‑serve via the Shopify App Store, can be installed and configured instantly, and merchants can pay a subscription fee in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "When a subscriber initiates cancellation, the app instantly shows their loyalty tier, points balance, and a tier‑specific win‑back offer, turning the cancel screen into a loyalty upgrade pitch."
+    },
+    "distribution": {
+      "score": 3,
+      "reason": "Targeting US beauty/supplements/food DTC brands with $500K–$10M revenue, the app can reach $50K–$2M DTC merchants through the App Store and content marketing, providing a realistic distribution channel."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "The solution relies on standard Shopify APIs and does not involve generative 3D/AR, real‑time voice/video, autonomous repricing, or a three‑app scope, making it safe for a small team."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "After initial win‑back offers, the app can add predictive churn analytics, cross‑sell recommendations, and multi‑channel loyalty programs, enabling growth from €10K to €1M without pivoting."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.1,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:25:35.384Z",
+  "technicalSnapshot": "ChurnShield is a Shopify App built on the Admin API, Billing API, and Subscription API, using App Bridge to intercept the cancel action on the storefront, ScriptTag to inject a modal, and Webhooks to track subscription events. Loyalty tiers and points are stored in Shopify metafields or a lightweight external database, and the app offers a self‑serve installation via the Shopify App Store with a subscription pricing model.",
+  "v1Plan": {
+    "day3": "Set up app skeleton, register app extension, implement subscription webhook, create basic modal UI.",
+    "week3": "Implement loyalty tier logic, points tracking, win‑back offer generation, test modal on demo store.",
+    "week10": "Release to App Store, add analytics, support multiple tiers, publish documentation and marketing assets."
+  }
+}

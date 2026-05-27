@@ -1,0 +1,41 @@
+{
+  "ref": "H-33",
+  "title": "PrivyEscape",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The solution relies on Shopify theme app extensions and the Shopify Email API, avoiding heavy backend work and enabling a 3‑day prototype that can be built by a small team."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "The app can be self‑served from the Shopify App Store and merchants can pay immediately after installing, allowing revenue in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Exports all Privy pop‑up designs as Shopify‑native theme app extensions, maps all Privy email flows to Shopify Email automations, and migrates the subscriber list with suppression‑list preservation — complete escape in one workflow."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Target DTC brands with $50k–$1M+ revenue can be reached through the Shopify App Store and content marketing, covering the $50k–$2M TAM."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "No incumbents, science‑project tech, or liability issues are involved; the scope is a single migration tool, making it safe for a 3‑person team."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "After migration, merchants can continue using Shopify Email for ongoing email marketing, providing a clear path from initial migration to scaling email revenue toward €10K and beyond."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:27:40.184Z",
+  "technicalSnapshot": "PrivyEscape is built as a Shopify App that leverages the Theme App Extension API to export Privy pop‑up designs directly into a Shopify theme, uses the Shopify Email API to recreate email flows, and employs the Shopify Admin API to migrate subscriber lists while preserving suppression data. The app also integrates with Privy's API to fetch existing designs and flows, and uses Shopify's App Bridge for a seamless merchant experience.",
+  "v1Plan": {
+    "day3": "Build app skeleton, integrate Shopify Admin API, create theme app extension, and fetch Privy designs via Privy API.",
+    "week3": "Implement mapping of Privy email flows to Shopify Email automations, add subscriber list migration with suppression preservation, and build basic UI for the migration workflow.",
+    "week10": "Finalize migration workflow, handle edge cases, publish to the App Store, set pricing, and beta test with 3 merchants to iterate."
+  }
+}

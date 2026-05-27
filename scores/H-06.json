@@ -1,0 +1,41 @@
+{
+  "ref": "H-06",
+  "title": "Wholesale One",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "Uses only Shopify Admin API, Price Rules, Discount Codes, and Metafields; no custom platform needed, enabling a 3‑day MVP, 3‑week feature set, and 10‑week polish."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "App is self‑serve via Shopify App Store, subscription billing via Shopify Billing API, and can generate revenue in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Flat €49/mo includes tiered pricing, tax‑exempt flags, MOQ, net‑30 invoice link, and B2B‑only catalog—one app, one price, 30‑minute CSV setup."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Targets US DTC brands ($500K–$5M) reachable through the Shopify App Store and content marketing, covering the $50K–$2M TAM."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "No incumbent war, science‑project tech, or liability issues; the scope is narrow and well‑within a 3‑person team’s capacity."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "Provides a scalable B2B pricing engine that can grow from €10K to €1M by adding more tiers, advanced invoicing, and enterprise features without pivoting."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:20:46.555Z",
+  "technicalSnapshot": "The app leverages Shopify Admin API for product and price rule management, Metafields for B2B flags, Shopify Billing API for subscription, and optional Checkout API for net‑30 invoice links; it runs on a standard Node.js/React stack with App Bridge for UI integration.",
+  "v1Plan": {
+    "day3": "CSV import tool, basic tiered pricing rule creation, app store listing",
+    "week3": "Add tax‑exempt flags, MOQ enforcement, B2B‑only catalog toggle, net‑30 invoice link integration",
+    "week10": "Polish UI, performance, documentation, and subscription billing"
+  }
+}

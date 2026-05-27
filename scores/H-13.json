@@ -1,0 +1,41 @@
+{
+  "ref": "H-13",
+  "title": "GuessRight",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The app can be built as a Shopify App Extension using the Storefront API for the quiz UI, Admin API for discount code creation, and product metafields for attribute storage, all within a 3‑day prototype, 3‑week MVP, and 10‑week full release."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "Once installed from the Shopify App Store, merchants can configure the quiz in minutes, and the discount unlocks immediately, enabling paid revenue in the first sales cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Engage customers with a quiz that unlocks discounts, boosting conversion."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Target apparel/beauty/wellness DTC brands ($100K–$5M) are reachable via the Shopify App Store and content marketing, covering the $50K–$2M TAM."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "The solution relies on standard Shopify APIs and does not involve generative 3D/AR, real‑time voice/video, autonomous repricing, or a three‑app scope."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "Future features such as advanced analytics, multi‑product quizzes, and loyalty integrations can grow revenue from €10K to €1M without pivoting."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:22:31.335Z",
+  "technicalSnapshot": "GuessRight is a Shopify App Extension that renders a quiz block on product pages via the Storefront API, stores attribute data in product metafields, triggers discount codes through the Admin API, and listens to order events via webhooks for analytics. It leverages Shopify’s App Bridge for admin UI, uses the Shopify App Store for distribution, and integrates with existing Shopify discount and recommendation engines.",
+  "v1Plan": {
+    "day3": "Deploy a basic quiz block that reads product metafields and applies a single discount code upon correct guess.",
+    "week3": "Add admin UI for configuring quiz questions, integrate with Shopify’s discount API for dynamic code generation, and implement basic analytics via webhooks.",
+    "week10": "Introduce multi‑product support, recommendation engine for incorrect guesses, and a dashboard for conversion metrics."
+  }
+}

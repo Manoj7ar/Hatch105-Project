@@ -1,0 +1,37 @@
+{
+  "ref": "H-20",
+  "title": "FounderVoice",
+  "criteria": {
+    "buildability": {
+      "score": 1,
+      "reason": "Research-grade or realtime multimodal — not a 10-week v1. [Calibrated for Hatch dataset.]"
+    },
+    "speedToRevenue": {
+      "score": 3,
+      "reason": "Needs onboarding or data before full value."
+    },
+    "wedge": {
+      "score": 3,
+      "reason": "Understandable wedge with some scope breadth."
+    },
+    "distribution": {
+      "score": 5,
+      "reason": "Shopify App Store + tight DTC ICP."
+    },
+    "trapRisk": {
+      "score": 1,
+      "reason": "Known trap: science project or liability-heavy automation. [Calibrated for Hatch dataset.]"
+    },
+    "expansion": {
+      "score": 3,
+      "reason": "Bolt-on expansion possible."
+    }
+  },
+  "gatesTriggered": [
+    "REALTIME_AI"
+  ],
+  "fit": 2.6,
+  "verdict": "Trap or wrong team size",
+  "scoredWith": "heuristic",
+  "scoredAt": "2026-05-27T14:24:31.206Z"
+}

@@ -1,0 +1,41 @@
+{
+  "ref": "H-18",
+  "title": "ExchangeUp",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The app can be built using Shopify Admin API, Gift Card API, and webhooks, allowing a 3‑person team to deliver a functional MVP within 3 days, 3 weeks, and 10 weeks."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "By publishing in the Shopify App Store with a subscription model and instant credit issuance, merchants can install and pay immediately, generating revenue in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "The app instantly issues a spend‑now store credit when a return label is scanned, prompting a second purchase within 48 hours before the refund processes."
+    },
+    "distribution": {
+      "score": 5,
+      "reason": "Targeting US apparel/footwear DTC brands with $500K–$5M revenue aligns with the $50K–$2M DTC market reachable via the Shopify App Store and content marketing."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "The solution relies on standard Shopify APIs and does not involve generative 3D, real‑time voice/video, autonomous repricing, or a multi‑app scope, keeping it safe for a small team."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "After initial return‑credit feature, the app can add loyalty, cross‑sell, and analytics modules, scaling from €10K to €1M without pivoting."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.4,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:23:39.631Z",
+  "technicalSnapshot": "The app is a Shopify Admin API‑based extension that listens to the Returns API webhook when a return label is generated, immediately creates a Gift Card via the Gift Card API, and displays a UI extension prompt in the Shopify Admin and storefront using App Bridge. It also integrates with Shopify's App Store for distribution, uses Shopify's Billing API for subscription payments, and leverages Shopify's Storefront API for displaying the spend‑now prompt to customers.",
+  "v1Plan": {
+    "day3": "Set up Shopify app skeleton, configure webhook for return creation, implement Gift Card creation logic, and test on a development store.",
+    "week3": "Add UI extension to display spend‑now prompt, implement 48‑hour expiration logic, and perform end‑to‑end testing.",
+    "week10": "Submit app to Shopify App Store, set up billing, launch marketing, and provide support for early adopters."
+  }
+}

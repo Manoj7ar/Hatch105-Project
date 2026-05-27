@@ -1,0 +1,41 @@
+{
+  "ref": "H-26",
+  "title": "FaireBreak",
+  "criteria": {
+    "buildability": {
+      "score": 3,
+      "reason": "The app can be built as a Shopify App Extension using the Storefront API and Admin API to create a B2B portal, and the Faire API can be used to import stockist data, all within the 3‑person team’s capacity."
+    },
+    "speedToRevenue": {
+      "score": 3,
+      "reason": "The app can be listed in the Shopify App Store as a self‑serve install, and merchants can subscribe immediately, generating revenue in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Strip away Faire's 15% commission by giving Shopify merchants a one‑click 'migrate your Faire stockists' tool."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "The target EU DTC brands are already on Shopify, and the App Store plus content marketing can reach the $500K–$5M TAM, enabling $50K–$2M revenue potential."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "No high‑risk features such as generative 3D, real‑time voice/video, autonomous repricing, or a three‑app scope are present."
+    },
+    "expansion": {
+      "score": 3,
+      "reason": "The subscription model can grow from €10K to €1M by adding premium analytics and bulk order features without pivoting."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 3.65,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:26:04.486Z",
+  "technicalSnapshot": "The solution will be a Shopify App Extension that leverages the Admin API to create a custom B2B portal, uses the Storefront API for order placement, and integrates with the Faire API to import existing retailer relationships. Key integrations include Shopify Plus for B2B features, Shopify App Store for distribution, and Faire’s public API for data sync.",
+  "v1Plan": {
+    "day3": "Prototype API integration with Faire and basic UI mockup for migration button.",
+    "week3": "Working app extension with migration button, data import, and basic portal functionality.",
+    "week10": "Fully tested app, App Store listing, beta merchants onboarded, and revenue tracking enabled."
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "ref": "H-22",
+  "title": "HybridSave",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The app can be built using Shopify product page extensions and the Selling Plan API, allowing a lightweight widget and discount logic to be added without replacing checkout, achievable within 3 days for a minimal MVP."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "The app can be listed in the Shopify App Store and charge merchants a monthly fee, with the first payment collected immediately upon installation, enabling revenue in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "A lightweight widget that adds a 'Subscribe & Save X%' radio button to any product page, creating a Shopify selling plan with a discount—no customer portal or dunning—just the toggle and the first repeat charge."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Target DTC brands in skincare, pet, and candles ($100K–$2M) can be reached through the Shopify App Store and content marketing, providing a clear path to $50K–$2M in revenue."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "The solution avoids complex real-time features, heavy integrations, or multi-app scope, presenting a low risk of incumbent war or liability."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "After initial toggle, the product can evolve to include subscription analytics, automated email flows, and loyalty incentives, scaling from €10K to €1M without pivoting."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:25:05.285Z",
+  "technicalSnapshot": "The solution relies on Shopify's product page extensions to inject a toggle widget, the Selling Plan API to create discount-enabled subscription plans, and the Billing API for app subscription revenue. No checkout replacement or heavy backend is required, making it lightweight and fast to iterate.",
+  "v1Plan": {
+    "day3": "Deploy a basic Shopify app with a product page extension that renders a toggle and calls the Selling Plan API to create a discount plan.",
+    "week3": "Add an admin UI for configuring discount percentages, support multiple products, and implement error handling.",
+    "week10": "Integrate analytics dashboard, finalize App Store submission, and add support for multiple currencies and locales."
+  }
+}

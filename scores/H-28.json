@@ -1,0 +1,41 @@
+{
+  "ref": "H-28",
+  "title": "RechargeRecovery",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The app leverages existing Recharge webhook events, Shopify API for order data, and Postscript/Klaviyo for SMS/email, requiring no custom UI or heavy backend, making a 3‑person team able to deliver a functional v1 within 3 days, 3 weeks, and 10 weeks."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "It can be listed in the Shopify App Store as a self‑serve app, and merchants pay a subscription fee immediately after installation, enabling revenue in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "It intercepts Recharge failed‑charge webhooks and runs a smart multi‑channel recovery sequence, instantly reducing churn for merchants."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Recharge already serves a large DTC merchant base; the app can be promoted via the App Store and content marketing to reach $50K–$2M merchants."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "The solution avoids the listed traps (no generative 3D/AR, no real‑time voice/video, no autonomous repricing, no three‑app scope)."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "The architecture supports adding new recovery channels, payment methods, and analytics, enabling growth from €10K to €1M without pivoting."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:26:33.572Z",
+  "technicalSnapshot": "The app is built on Shopify’s API and App Store extensions, listens to Recharge’s failed‑charge webhook, uses the Visa/MC Account Updater API for payment updates, and integrates with Postscript and Klaviyo for SMS and email, all orchestrated via a lightweight Node.js backend.",
+  "v1Plan": {
+    "day3": "Create Shopify app skeleton, register webhook for Recharge failed‑charge, implement basic SMS via Postscript and email via Klaviyo.",
+    "week3": "Add Visa/MC Account Updater API integration, implement smart retry logic, and build pause‑vs‑cancel decision based on LTV tier.",
+    "week10": "Deploy production‑ready multi‑channel recovery workflow, add admin UI for configuration, provide analytics dashboard, and support multiple merchants."
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "ref": "H-42",
+  "title": "Birthday & Beyond",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The app can be built using Shopify CLI and the Admin API to create a lightweight app that injects a ScriptTag rendering pre‑built animated cards; a 3‑person team can deliver a working prototype in 3 days, a functional version in 3 weeks, and a polished release in 10 weeks."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "By leveraging Shopify's Billing API for a subscription plan and the App Store's self‑serve installation flow, merchants can install and pay within the first billing cycle, enabling revenue in the first month."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Create shareable animated occasion cards that boost customer engagement and social sharing."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "The app targets US apparel/beauty/jewellery DTC brands with $50K–$500K revenue, a segment well‑served by the Shopify App Store and content marketing, making it reachable within the $50K–$2M DTC range."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "No generative 3D, real‑time voice/video, autonomous repricing, or multi‑app scope; the solution is straightforward and low‑risk for a small team."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "Additional occasion moments, email integration, analytics, and upsell features can be added incrementally, scaling from €10K to €1M without pivoting."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:30:11.945Z",
+  "technicalSnapshot": "The solution will be a Shopify App built with Shopify CLI, using the Admin API to manage app settings, the Storefront API or ScriptTag to inject client‑side JavaScript that renders animated SVG/HTML cards on product pages, the Billing API for subscription revenue, and optional integration with Shopify Email API for sending occasion cards via email. The app will also use App Bridge for admin UI and Shopify App Store for distribution.",
+  "v1Plan": {
+    "day3": "Create a basic Shopify app skeleton with Admin API access, installable via App Store, and a simple UI to upload pre‑built animated card assets.",
+    "week3": "Implement ScriptTag injection to render animated cards on product pages, allow merchants to select occasion types, and expose a basic admin dashboard.",
+    "week10": "Add email integration using Shopify Email API to send occasion cards, implement analytics tracking, and polish UI for a production release."
+  }
+}

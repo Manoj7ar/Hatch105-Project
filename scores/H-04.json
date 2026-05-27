@@ -1,0 +1,41 @@
+{
+  "ref": "H-04",
+  "title": "PixelCart",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "A 3‑person team can build a Shopify app extension that uploads an image, calls GPT‑4o Vision, parses attributes, and queries the Storefront API within 3 days, with 3‑week refinement and 10‑week launch."
+    },
+    "speedToRevenue": {
+      "score": 3,
+      "reason": "The app can be self‑serve via the Shopify App Store and billed monthly, but first‑cycle revenue depends on merchant adoption of a niche image‑to‑product feature."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Merchants instantly turn lifestyle images into structured product queries in under 2 seconds, boosting conversion."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Targeting $100K–$1M fashion/home brands is reachable through the Shopify App Store and content marketing, covering the $50K–$2M DTC TAM."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "The thesis avoids generative 3D/AR, real‑time voice/video, autonomous repricing, and multi‑app scope, presenting a low‑risk, small‑team‑friendly solution."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "Adding more categories, languages, and premium analytics can scale the product from €10K to €1M without pivoting."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.05,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:20:17.651Z",
+  "technicalSnapshot": "PixelCart is a Shopify App Store extension built with App Bridge and a Shopify Admin API backend. It uses the Storefront API to query product catalogs and the GPT‑4o Vision API to extract structured attributes from uploaded lifestyle images. The app provides a lightweight UI component that merchants embed on product pages, enabling instant image‑to‑product search and cart integration.",
+  "v1Plan": {
+    "day3": "Deploy a minimal Shopify app skeleton with image upload UI, GPT‑4o Vision call, and attribute display.",
+    "week3": "Integrate Storefront API queries to match extracted attributes to catalog items, display results, and allow adding to cart.",
+    "week10": "Add analytics, billing, performance optimizations, and submit the app to the Shopify App Store for public release."
+  }
+}

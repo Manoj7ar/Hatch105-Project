@@ -1,0 +1,41 @@
+{
+  "ref": "H-17",
+  "title": "CartCanvas",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "Utilizes Shopify's cart drawer extension and App Bridge, requiring only front‑end JavaScript and a lightweight backend for image generation, enabling a 3‑day prototype, 3‑week MVP, and 10‑week production release."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "The app can be listed in the Shopify App Store, offers a free trial, and merchants can immediately start generating shareable content, generating revenue within the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "A single button turns a checkout cart into a brand‑styled 9:16 PNG with a referral QR, ready for Stories."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Targeting US fashion/beauty/wellness DTC brands with $50K–$500K revenue, the App Store and content marketing provide direct access to the $50K–$2M DTC market."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "No generative 3D/AR, real‑time voice/video, autonomous repricing, or multi‑app scope; the solution is a focused cart‑drawer extension."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "After initial share feature, the app can add multi‑platform sharing, analytics, and upsell widgets, scaling from €10K to €1M without pivot."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:23:28.296Z",
+  "technicalSnapshot": "CartCanvas is a Shopify App that installs a cart‑drawer extension via the Theme Extension API, uses Shopify App Bridge for secure communication, and calls the Storefront API to fetch cart items. The front‑end renders a 9:16 PNG mosaic using a lightweight image‑generation service, embeds a QR code generated client‑side, and stores configuration in the Shopify Admin API. Billing is handled through Shopify Billing API, and analytics are collected via the Shopify Analytics API.",
+  "v1Plan": {
+    "day3": "Deploy a basic Shopify app with cart‑drawer extension and a placeholder share button that displays a static PNG.",
+    "week3": "Implement dynamic mosaic generation using an external image service, add QR code generation, brand styling options, and publish the app to the Shopify App Store.",
+    "week10": "Add analytics dashboard, multi‑format sharing (Stories, Reels), subscription billing, and performance optimizations for production release."
+  }
+}

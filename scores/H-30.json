@@ -1,0 +1,41 @@
+{
+  "ref": "H-30",
+  "title": "ScheduleStack",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The app relies on existing Shopify Email and Admin APIs, allowing a 3‑person team to build a functional prototype within 3 days, extend it by week 3, and ship a full v1 by week 10 without custom infrastructure."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "It can be listed in the Shopify App Store as a self‑serve subscription, enabling merchants to install and pay for the service in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "It delivers a clear value: “Schedule each email cohort at its predicted peak engagement window based on historical open times.”"
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "The Shopify App Store reaches a wide range of DTC brands ($100k–$10M), and the app’s focus on email marketing aligns with their existing workflows."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "The solution avoids the identified traps—no generative 3D/AR, no real‑time voice/video, no autonomous repricing, and it is a single‑app scope."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "Future growth can add multi‑channel scheduling, advanced predictive models, and analytics dashboards, scaling from €10K to €1M without pivoting."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:26:57.084Z",
+  "technicalSnapshot": "ScheduleStack is a Shopify App built on the Shopify Admin and Email APIs, using GraphQL for data retrieval and the Shopify App Bridge for UI integration. It requires OAuth scopes for read‑email‑events, write‑email‑schedules, and read‑customers, and optionally uses Shopify Billing API for subscription management. The app runs on a lightweight Node.js backend with a React front‑end, hosted on a serverless platform for scalability.",
+  "v1Plan": {
+    "day3": "Create the Shopify App skeleton, implement OAuth, fetch email open timestamps via the Email API, and build a basic UI to display predicted send times.",
+    "week3": "Add segmentation logic, a simple predictive model (average open time per segment), and a UI to schedule campaigns through the Email API.",
+    "week10": "Implement advanced prediction (e.g., ML model), support multi‑channel scheduling, add an analytics dashboard, set up billing, and publish the app to the Shopify App Store."
+  }
+}

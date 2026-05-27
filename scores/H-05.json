@@ -1,0 +1,41 @@
+{
+  "ref": "H-05",
+  "title": "CartGenius",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "Uses Shopify Functions Cart Transform API, a lightweight, serverless extension that can be deployed in minutes, enabling rapid v1 in 3 days."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "App can be listed in Shopify App Store and customers can install and pay within the first checkout cycle, enabling revenue in the first week."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Provides instant bundle discount detection and one-click rebundle, directly improving margin and perceived value."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Target DTC brands are already on Shopify and can discover the app via App Store and content marketing, enabling reach to $50K–$2M merchants."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "No high-risk features; uses standard Shopify Functions, no complex tech or incumbent war."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "After initial bundle rebundler, can add tiered discounts, loyalty points, and cross-product recommendations, scaling revenue without pivot."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:20:35.466Z",
+  "technicalSnapshot": "CartGenius is built entirely on Shopify’s serverless Functions platform, leveraging the Cart Transform API to intercept and modify cart contents in real time. It integrates with the Shopify Admin API to create and manage discount codes, uses Shopify Metafields to store merchant‑defined bundle rules, and employs App Bridge to render a one‑click rebundle UI within the cart page. No external backend is required, allowing rapid iteration and deployment directly from the Shopify ecosystem.",
+  "v1Plan": {
+    "day3": "Deploy a basic Shopify Function that detects qualifying carts and presents a one‑click rebundle offer via App Bridge.",
+    "week3": "Add configurable bundle thresholds stored in metafields, dynamic discount calculation, and a merchant‑configurable UI for rule management.",
+    "week10": "Implement analytics dashboard, support multiple bundle types, integrate with Shopify Discounts API for automatic discount code creation, and publish the app to the Shopify App Store."
+  }
+}

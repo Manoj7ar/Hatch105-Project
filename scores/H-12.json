@@ -1,0 +1,41 @@
+{
+  "ref": "H-12",
+  "title": "FlashFair",
+  "criteria": {
+    "buildability": {
+      "score": 3,
+      "reason": "The app can be built using Shopify Admin API to create time‑bound discount codes and a lightweight front‑end that injects a banner, achievable by a 3‑person team within 3 days, 3 weeks, and 10 weeks."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "Merchants can install the app from the Shopify App Store and activate a flash event immediately, generating revenue in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Merchants schedule blind flash events that trigger a mystery discount at a random time, creating urgency and repeat visits."
+    },
+    "distribution": {
+      "score": 5,
+      "reason": "The app targets fashion/beauty/supplements DTC brands with $100K–$5M revenue, fitting the $50K–$2M DTC distribution window."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "No high‑risk features such as generative 3D, real‑time voice/video, autonomous repricing, or multi‑app scope are present, making it safe for a small team."
+    },
+    "expansion": {
+      "score": 5,
+      "reason": "The product can grow by adding multi‑event scheduling, analytics, and integration with email marketing, scaling from €10K to €1M without pivot."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.3,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:22:16.743Z",
+  "technicalSnapshot": "The app will be built as a Shopify App using the Admin API to create and manage discount codes, the Storefront API to apply discounts in real time, and App Bridge for a seamless merchant UI. It will also use Shopify Functions or ScriptTag to inject a live banner that displays the mystery discount when the random trigger fires. Integration with Shopify App Store for distribution and billing, and optional integration with email marketing platforms for post‑sale follow‑up, will provide a complete solution.",
+  "v1Plan": {
+    "day3": "Create a basic Shopify app skeleton with Admin API integration to generate discount codes and a simple UI to schedule a flash event.",
+    "week3": "Implement random time generation within a specified window, live banner injection via ScriptTag, and test on a demo store; publish App Store listing.",
+    "week10": "Launch beta with real merchants, add analytics dashboard, support, and documentation; iterate based on feedback."
+  }
+}

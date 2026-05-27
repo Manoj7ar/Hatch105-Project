@@ -1,0 +1,37 @@
+[
+  {
+    "ref": "H-51",
+    "title": "RefundRadar",
+    "one_liner": "Slack alert when refund rate spikes above 7-day baseline",
+    "example_customer": "US DTC brands, $100K–$2M",
+    "wedge": "Shopify webhook on refunds; posts to Slack with SKU breakdown and suspected cause — no ML, rules only. $29/mo."
+  },
+  {
+    "ref": "H-52",
+    "title": "MirrorFit",
+    "one_liner": "Generative full-body digital twin try-on from a single selfie",
+    "example_customer": "apparel DTC, $500K–$5M",
+    "wedge": "Customer uploads selfie; diffusion model reconstructs body mesh and drapes every SKU in catalog in realtime on PDP."
+  },
+  {
+    "ref": "H-53",
+    "title": "TagDoctor",
+    "one_liner": "Bulk-fix product tags and collections from a spreadsheet UI",
+    "example_customer": "DTC brands, $50K–$1M",
+    "wedge": "Admin UI maps CSV columns to tags/collections; preview diff; one-click apply via Shopify Admin API. Ship in a week."
+  },
+  {
+    "ref": "H-54",
+    "title": "VoiceShop",
+    "one_liner": "Realtime founder voice answers every PDP question via cloned voice",
+    "example_customer": "beauty DTC, $200K–$2M",
+    "wedge": "GPT-4o Realtime API + 60s voice clone; shoppers speak questions; answers stream in founder voice on every product page."
+  },
+  {
+    "ref": "H-55",
+    "title": "CartNudge",
+    "one_liner": "One-click post-add upsell block in cart drawer",
+    "example_customer": "US supplements DTC, $100K–$800K",
+    "wedge": "Theme app extension shows single complementary SKU from last-90-day co-purchase pairs; merchant sets margin floor. $19/mo flat."
+  }
+]

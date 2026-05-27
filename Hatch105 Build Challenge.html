@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hatch105 · The Build Challenge</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-base:#161616;--bg-surface:#1f1f1f;--bg-elevated:#292929;
+  --border:#2a2a2a;--border-mid:#3a3a3a;
+  --text-primary:#ffffff;--text-secondary:#c0c0c0;--text-tertiary:#6e6e6e;
+  --accent:#B0E2EF;--accent-dim:rgba(176,226,239,.10);--accent-border:rgba(176,226,239,.32);
+  --mint:#bbedd9;--blue:#addff6;--sky:#B0E2EF;--grad:linear-gradient(90deg,#bbedd9 0%,#addff6 100%);
+  --font-sans:'Public Sans',system-ui,sans-serif;--font-mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg-base);color:var(--text-primary);font-family:var(--font-sans);font-size:15px;line-height:1.65;font-weight:400;-webkit-font-smoothing:antialiased}
+::selection{background:rgba(176,226,239,.35);color:#0a0a0a}
+h1,h2,h3{font-weight:700;letter-spacing:-.02em}
+.mono{font-family:var(--font-mono)}
+.grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+a{color:var(--sky);text-decoration:none}a:hover{text-decoration:underline}
+.topbar{border-bottom:1px solid var(--border)}
+.tb-in{max-width:860px;margin:0 auto;padding:16px 28px}
+.wordmark{font-size:19px;font-weight:800;letter-spacing:-.03em}
+.wrap{max-width:860px;margin:0 auto;padding:0 28px 90px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;background:var(--grad);color:#161616;font-weight:700;font-size:11px;font-family:var(--font-mono);letter-spacing:.02em}
+.pill-out{display:inline-flex;align-items:center;gap:6px;padding:3px 11px;border-radius:999px;background:transparent;color:var(--sky);border:1px solid rgba(173,223,246,.4);font-size:11px;font-weight:500;font-family:var(--font-mono);letter-spacing:.04em}
+.hero{padding:56px 0 34px;border-bottom:1px solid var(--border)}
+.hero h1{font-size:46px;line-height:1.04;letter-spacing:-.038em;margin:24px 0 16px}
+.hero .lede{font-size:18px;color:var(--text-secondary);max-width:680px}
+.meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+h2{font-size:13px;font-family:var(--font-mono);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sky);margin:44px 0 14px;display:flex;align-items:center;gap:10px}
+h2::before{content:'';width:22px;height:2px;background:var(--grad);border-radius:2px}
+p{margin:12px 0;color:var(--text-secondary)}
+p strong,li strong{color:var(--text-primary);font-weight:600}
+.big{color:var(--text-primary);font-size:16px}
+.card{border:1px solid var(--border);border-radius:14px;background:var(--bg-surface);padding:8px 26px;margin:14px 0}
+.step{display:flex;gap:18px;padding:18px 0;border-bottom:1px solid var(--border)}
+.step:last-child{border-bottom:none}
+.step .num{font-family:var(--font-mono);font-weight:700;font-size:13px;color:#161616;background:var(--grad);width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step .b{flex:1}.step .b h3{font-size:16px;margin-bottom:3px}.step .b p{margin:4px 0 0}
+ul{margin:10px 0 10px 2px;padding-left:20px}li{margin:8px 0;color:var(--text-secondary)}
+.dod{list-style:none;padding-left:0}.dod li{padding-left:28px;position:relative}.dod li::before{content:'✓';position:absolute;left:0;color:var(--mint);font-weight:700}
+.callout{border:1px solid var(--accent-border);background:var(--accent-dim);border-radius:12px;padding:18px 22px;margin:18px 0}
+.callout .t{font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--sky);font-weight:700;margin-bottom:6px}
+.callout p{color:var(--text-primary);margin:0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+.tile{border:1px solid var(--border);border-radius:12px;background:var(--bg-surface);padding:16px 18px}
+.tile .k{font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-tertiary)}
+.tile .v{margin-top:4px;color:var(--text-primary);font-weight:600}
+.foot{margin-top:46px;padding-top:20px;border-top:1px solid var(--border);font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary)}
+@media(max-width:680px){.hero h1{font-size:33px}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="tb-in"><div class="wordmark">Hatch<span class="grad">105</span></div></div></div>
+<div class="wrap">
+
+<section class="hero">
+  <div style="margin-bottom:4px"><span class="pill">THE BUILD CHALLENGE</span></div>
+  <h1>Rank the ideas.<br>Then build the thing<br>that <span class="grad">ranks them for you.</span></h1>
+  <p class="lede">Happy Stack Labs researches hundreds of startup ideas and builds the strongest. We need someone who can turn a pile of raw theses into a ranked, defensible call about what to build next, and build the system that does it, repeatably.</p>
+  <div class="meta">
+    <span class="pill-out">3–5 focused hours</span>
+    <span class="pill-out">your tools, AI encouraged</span>
+    <span class="pill-out">30-min live walkthrough</span>
+  </div>
+</section>
+
+<h2>The opportunity</h2>
+<p class="big">Thanks for taking this on. We're trying to work out the last couple of spots in <strong>Hatch</strong> this year, which is running with <strong>Happy Stack Labs</strong> (<a href="https://www.happystack.com/lab" target="_blank">happystack.com/lab</a>), and this challenge is how we're figuring that out. Nothing's set in stone on teams or roles yet. We just want to see how you think and build on a real problem.</p>
+<p>Happy Stack Labs is the engine behind it. It researches the e-commerce and SaaS space, comes up with hundreds of startup ideas, and builds the best ones into real companies. This task is a small version of that job: take a pile of raw ideas, make a sharp call on what's worth building, and build something that gets you there.</p>
+
+<h2>The challenge</h2>
+<div class="card">
+  <div class="step"><div class="num">1</div><div class="b">
+    <h3>Take the 50 theses</h3>
+    <p><strong>50 real theses</strong> from the Happy Stack Labs research — narrative only (title, one-liner, example customer, the wedge). No scores, no rankings. Files: <span class="mono">candidate_theses.csv / .json</span>.</p>
+  </div></div>
+  <div class="step"><div class="num">2</div><div class="b">
+    <h3>Build a system that ranks them</h3>
+    <p>Which idea should a <strong>Hatch team this year</strong> actually build — something a 3-person team can <strong>stand up, get to revenue within 10 weeks, and grow into a real company</strong>? <strong>You pick the criteria and write them down</strong>, so anyone can see why an idea ranked where it did and where you made a judgment call. Don't deeply research all 50: use light research only where it changes the decision, source any real market number or competitor, and label guesses as guesses.</p>
+  </div></div>
+  <div class="step"><div class="num">3</div><div class="b">
+    <h3>Make it work on new ideas, live</h3>
+    <p>This is the spine of the whole thing. On the call we give you <strong>5 new theses in the same format</strong>, and your system ingests them and returns an <strong>updated ranking of everything</strong>, with a short line on where each new one landed and why. <strong>If it only works because you hand-curated the first 50, it'll fall over here. That's intentional.</strong></p>
+  </div></div>
+</div>
+
+<div class="callout"><div class="t">What this really tests</div><p>This isn't a hand-made ranking exercise. It's a test of whether you can build a small, inspectable system that makes good ranking decisions and updates when new ideas arrive.</p></div>
+
+<h2>How Hatch reads an idea</h2>
+<p>Choosing your own ranking criteria is part of the test, so this isn't a rubric to fill in. But these are the lenses <strong>we</strong> use, to point you at the right target. A great ranking has a clear view on questions like these, and the best candidates bring sharper ones we didn't list:</p>
+<ul>
+  <li><strong>Buildability in a 10-week sprint:</strong> what could a 3-person team realistically stand up and ship — what's the v1 in <strong>3 days · 3 weeks · 10 weeks</strong>?</li>
+  <li><strong>Speed to revenue:</strong> realistic to <strong>make money inside 10 weeks</strong>? And which ideas could grow to <strong>€10K</strong>, then <strong>€1M</strong> long-term?</li>
+</ul>
+<p class="mono" style="font-size:12px;color:var(--text-tertiary)">Reason about relative speed and feasibility. We're not after invented €-by-month forecasts, we're after judgment.</p>
+
+<h2>Definition of done</h2>
+<ul class="dod">
+  <li>A <strong>working ranking system</strong> — any stack, any tools (AI encouraged).</li>
+  <li>A <strong>ranked list of all 50</strong>, with a <strong>short rationale for your top 3</strong>.</li>
+  <li>A <strong>brief explanation of your ranking criteria</strong> — the logic the system uses.</li>
+  <li><strong>For your #1</strong>: 2–3 sentences on the <strong>smallest version you'd try to sell or ship first</strong>.</li>
+  <li><strong>Live re-rank</strong>: on the call we give you <strong>5 new theses in the same CSV/JSON format</strong>, and your system re-ranks the full set using the <strong>same logic</strong> (with a short rationale for where the new ones land), not a fresh hand-made judgment.</li>
+  <li>A <strong>30-minute walkthrough call</strong>: show us how it works, then run our 5 live.</li>
+</ul>
+<div class="callout"><div class="t">Ground rules</div><p>Budget <strong>3–5 focused hours</strong>, this stops you overbuilding. A scrappy system that works beats a polished app: we care more about the ranking logic, your reasoning, and the live re-rank than the interface. The system should be <strong>repeatable</strong> — same criteria, broadly the same result, with any judgment calls visible. Use any tools and AI you like; if you use AI, keep the criteria and scoring logic inspectable.</p></div>
+
+<h2>What we're really looking for</h2>
+<div class="grid">
+  <div class="tile"><div class="k">Judgment</div><div class="v">A real feel for what a 3-person team can build <em>and sell</em>, not just what scores big on paper.</div></div>
+  <div class="tile"><div class="k">Rigor</div><div class="v">Evidence over vibes. You know which numbers are solid and which are guesses.</div></div>
+  <div class="tile"><div class="k">Systems</div><div class="v">You built a machine, not a list. New input in, sensible ranking out.</div></div>
+  <div class="tile"><div class="k">Instinct</div><div class="v">You can spot the idea that looks huge but is a trap for a small team, and say why.</div></div>
+</div>
+
+<div class="callout">
+  <div class="t">One honest hint</div>
+  <p>Some of these look like obvious winners and aren't — the market's real, but building or selling it is a swamp for a small team. The best submissions don't just rank the easy wins; they catch the traps and explain them.</p>
+</div>
+
+<h2>Logistics</h2>
+<p>Budget <strong>3–5 focused hours</strong>, inside a 24-hour window. We'll do a quick background call first, then you'll have roughly 24 hours. <strong>Send us what you've got about an hour before the walkthrough</strong> so we can look it over first. Then a <strong>30-minute call</strong>: you take us through it and we run 5 new theses live. Questions welcome, building the right thing beats guessing.</p>
+
+<div class="foot">Hatch105 · Build Challenge · Confidential — the theses are real and not for sharing.</div>
+
+</div>
+</body>
+</html>

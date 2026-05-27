@@ -1,0 +1,41 @@
+{
+  "ref": "H-38",
+  "title": "SupplyPilot",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "Uses standard Shopify Admin API for inventory and order data, plus email integration; no complex real‑time or AR features, making a 3‑person team able to deliver a functional v1 within 10 weeks."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "Can be listed in the Shopify App Store as a self‑serve subscription; merchants can approve a PO and pay immediately, enabling revenue in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Automatically drafts and sends supplier purchase orders, eliminating manual spreadsheet work."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Inventory management is a core need for DTC brands; the App Store and content marketing can reach the $50K–$2M segment."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "No incumbent‑war, science‑project, or liability‑heavy features; the scope is straightforward and safe for a small team."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "After initial PO automation, the product can add forecasting, multi‑warehouse support, and supplier integration, scaling to €10K→€1M without pivot."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:28:49.753Z",
+  "technicalSnapshot": "SupplyPilot is a Shopify App that leverages the Admin API to monitor inventory levels, calculate reorder quantities using 90‑day velocity, and draft purchase order emails. It uses the Shopify Email API or an external SMTP service to send PO emails, and the App Bridge for a seamless merchant UI. Key integrations include Inventory API, Order API, Email API, and optional webhook support for supplier notifications.",
+  "v1Plan": {
+    "day3": "Deploy a basic Shopify app with admin UI, inventory monitoring, and configurable reorder points; draft PO email preview.",
+    "week3": "Implement full reorder calculation, one‑click approve/decline screen, and email sending via SMTP; add error handling and basic analytics.",
+    "week10": "Release production‑ready version with automated email dispatch, multi‑supplier support, webhook integration, and a dashboard for PO history and performance."
+  }
+}

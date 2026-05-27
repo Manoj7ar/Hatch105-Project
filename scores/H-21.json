@@ -1,0 +1,44 @@
+{
+  "ref": "H-21",
+  "title": "POSReturn Pro",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "Uses Shopify POS APIs and app extensions, allowing rapid UI customization and refund routing logic within 3 days for a minimal prototype."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "App available in Shopify App Store, self‑serve checkout, and can generate paid revenue in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Provides a clear, step‑by‑step return wizard that reduces errors and ensures correct refund routing, directly improving operational efficiency."
+    },
+    "distribution": {
+      "score": 3,
+      "reason": "Targeting mid‑size DTC brands with $500k–$10M revenue, reachable through Shopify App Store and content marketing. [Gate POS_ENTERPRISE capped at 3]"
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "No high‑risk features such as generative 3D, real‑time voice, autonomous repricing, or multi‑app scope; safe for a small team."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "Can add analytics, loyalty integration, and multi‑channel return support to scale from €10K to €1M without pivot."
+    }
+  },
+  "gatesTriggered": [
+    "POS_ENTERPRISE"
+  ],
+  "fit": 4.1,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:24:53.152Z",
+  "technicalSnapshot": "POSReturn Pro is built as a Shopify POS app extension that hooks into the POS return flow via the Shopify POS API and Admin API. It customizes the return wizard UI, implements refund‑destination routing logic, and enforces a 2‑minute void window. The app also integrates with Shopify Loyalty Points and Gift Card APIs to correctly re‑route loyalty‑coupon orders, and uses webhooks for real‑time status updates. All core functionality runs on Shopify’s secure app platform, ensuring compliance and scalability.",
+  "v1Plan": {
+    "day3": "Create app skeleton, register POS extension, implement basic return wizard UI, and set up refund‑destination selection field.",
+    "week3": "Add full wizard flow, implement refund routing logic, enforce 2‑minute void window, integrate with loyalty‑coupon APIs, and perform unit testing.",
+    "week10": "Polish UI, add analytics dashboard, finalize documentation, submit to Shopify App Store, and launch marketing campaign."
+  },
+  "trapNote": "Hard gates triggered: POS_ENTERPRISE"
+}

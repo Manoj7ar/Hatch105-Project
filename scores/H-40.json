@@ -1,0 +1,41 @@
+{
+  "ref": "H-40",
+  "title": "RetailIQ",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The app can be built using Shopify’s Admin GraphQL API, webhooks, and App Bridge with a Node.js backend and React front‑end, enabling a 3‑person team to deliver a functional scorecard within 10 weeks."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "The app can be listed in the Shopify App Store as a paid subscription, allowing merchants to install and pay within the first month, meeting the speed‑to‑revenue requirement."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "The app delivers a concise weekly scorecard highlighting key metrics and AI‑identified priorities, directly addressing merchants’ need for actionable insights."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "The Shopify App Store and DTC content channels can reach the $50K–$1M merchant segment, enabling distribution at scale."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "The solution avoids high‑risk features such as real‑time voice/video, autonomous repricing, or complex 3D/AR, making it safe for a small team."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "The app can expand by adding advanced analytics, automated email triggers, and integrations with marketing platforms, scaling revenue from €10K to €1M without pivot."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:29:32.510Z",
+  "technicalSnapshot": "The Shopify surface will rely on the Admin GraphQL API for data retrieval, webhooks for real‑time updates, and App Bridge for embedding the dashboard within the merchant’s admin. The front‑end will use Shopify Polaris for UI consistency, while the back‑end (Node.js/Express) will handle authentication via OAuth, data aggregation, and AI inference (e.g., a lightweight logistic regression or OpenAI API). Key integrations include Shopify’s Billing API for subscription management, optional email‑marketing connectors (Klaviyo, Mailchimp) for automated alerts, and a cloud storage service (AWS S3) for storing historical metrics.",
+  "v1Plan": {
+    "day3": "Set up the Shopify app skeleton, register the app, implement OAuth authentication, and create a basic dashboard UI using Polaris.",
+    "week3": "Implement data collection from orders, customers, and products via Admin API; compute baseline health metrics; build the weekly scorecard UI; set up webhooks for order updates; integrate a simple AI churn prediction model.",
+    "week10": "Finalize UI polish, add benchmark comparisons, implement AI‑flagged priority metrics, enable subscription billing via Shopify Billing API, publish to the App Store, and create onboarding documentation and marketing assets."
+  }
+}

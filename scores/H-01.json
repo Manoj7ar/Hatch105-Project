@@ -1,0 +1,41 @@
+{
+  "ref": "H-01",
+  "title": "ThresholdIQ",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The app can be built as a Shopify App Extension using the Cart API and App Bridge, allowing a 3‑person team to deliver a functional bar within 3 days, a full math engine by week 3, and a polished release by week 10."
+    },
+    "speedToRevenue": {
+      "score": 3,
+      "reason": "By publishing the app in the Shopify App Store with a free tier and a paid add‑on, merchants can install and start generating revenue from the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "The bar displays the exact amount needed to reach the next average‑order‑value tier, instantly motivating customers to add more items."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Targeting US apparel, beauty, and supplement brands with $50K–$5M sales aligns with the App Store’s reach to mid‑size DTC merchants, making distribution straightforward."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "The solution avoids complex real‑time media, autonomous repricing, or multi‑app scopes, keeping the risk low for a small team."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "Future features such as upsell suggestions, loyalty integration, and advanced analytics can scale the app from €10K to €1M without pivoting."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.05,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:18:53.031Z",
+  "technicalSnapshot": "ThresholdIQ will be a Shopify App Extension (App Block) that uses the Cart API to read live cart data, the Storefront API to fetch order‑distribution histograms, and the Admin API to store configuration. It will integrate with Shopify App Bridge for UI, Shopify Analytics for performance tracking, and optionally with Shopify Scripts for dynamic pricing.",
+  "v1Plan": {
+    "day3": "Deploy a basic App Block that displays a free‑shipping bar reading the cart total.",
+    "week3": "Add dynamic threshold calculation based on historical order distribution and allow merchants to configure thresholds.",
+    "week10": "Publish the app to the Shopify App Store, add premium features, and integrate analytics dashboards."
+  }
+}

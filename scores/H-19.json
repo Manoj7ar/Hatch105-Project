@@ -1,0 +1,41 @@
+{
+  "ref": "H-19",
+  "title": "Return-to-Resale Router",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The solution relies on standard Shopify Order, Fulfillment, and Returns APIs and can be built as a Shopify App with extensions; a 3‑person team can deliver a basic rule engine in 3 days, a UI dashboard by week 3, and full functionality by week 10."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "The app can be listed in the Shopify App Store as a self‑serve subscription; early adopters can pay in the first billing cycle once return routing is enabled."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Merchant gets a clear value: “Route every return by rules into the highest‑margin destination with a visual margin dashboard.”"
+    },
+    "distribution": {
+      "score": 5,
+      "reason": "Target US apparel/footwear/accessories DTC brands with $200K–$2M revenue fit the $50K–$2M DTC range reachable via the App Store and content marketing."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "No generative 3D/AR, real‑time voice/video, autonomous repricing, or three‑app scope; the concept is straightforward and low‑risk for a small team."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "The platform can add resale marketplace integration, advanced analytics, and multi‑brand support to grow from €10K to €1M without pivoting."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.4,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:23:57.153Z",
+  "technicalSnapshot": "The app will be built as a Shopify App using App Bridge and Shopify App Extensions, leveraging the Order, Fulfillment, and Returns APIs for rule‑based return routing, the Admin API for rule configuration, and the Shopify Flow API for automated workflows. A lightweight rule engine will process return events, calculate margin impacts, and expose a dashboard via the Shopify Admin UI. Optional integrations with external resale marketplaces (e.g., ThredUp, Poshmark) can be added later for resale fulfillment.",
+  "v1Plan": {
+    "day3": "Implement webhook listener for return events and a basic rule engine that routes returns to a default destination.",
+    "week3": "Add a Shopify Admin UI for rule configuration, a margin dashboard, and basic subscription billing.",
+    "week10": "Deploy full rule set, integrate with resale marketplace APIs, provide advanced analytics, and enable multi‑brand support."
+  }
+}

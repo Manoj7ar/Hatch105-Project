@@ -1,0 +1,41 @@
+{
+  "ref": "H-47",
+  "title": "GorgiasLite",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The helpdesk app can be built using Shopify App Bridge and Admin API; a 3‑person team can deliver a basic ticketing UI, order lookup, and basic macros within 3 days, and extend to a polished v1 by week 10."
+    },
+    "speedToRevenue": {
+      "score": 5,
+      "reason": "The app is listed in the Shopify App Store, is self‑serve, and customers pay the $19/month subscription immediately upon installation."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Flat monthly price with unlimited tickets (within fair‑use), order lookup in sidebar, canned responses, and macros gives merchants predictable, scalable support without per‑ticket costs."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Targeting DTC brands under $1M rev, the app can reach the $50K–$2M DTC market via the Shopify App Store and content marketing."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "No generative 3D/AR, real‑time voice/video, autonomous repricing, or multi‑app scope; the solution is straightforward and low‑risk for a small team."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "Future features such as AI‑powered canned responses, advanced analytics, and integrations with other Shopify apps can grow revenue from €10K to €1M without pivoting."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.45,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:31:19.584Z",
+  "technicalSnapshot": "The app will be built as a Shopify App using App Bridge for UI, Admin API for ticket CRUD and order lookup, Billing API for subscription, and optional email integration via SendGrid; it will run on a Node.js backend with a React front‑end, hosted on Heroku or Render.",
+  "v1Plan": {
+    "day3": "Set up app skeleton, OAuth, ticket CRUD, order lookup sidebar, basic UI.",
+    "week3": "Add canned responses, macros, email integration, basic analytics, deploy to sandbox.",
+    "week10": "Implement unlimited tickets with fair‑use cap, subscription billing, performance tuning, marketing assets, launch to App Store."
+  }
+}

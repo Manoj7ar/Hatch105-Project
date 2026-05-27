@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 36" fill="none" role="img" aria-label="Hatch105">
+  <defs>
+    <linearGradient id="hatch105-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#bbedd9"/>
+      <stop offset="100%" stop-color="#addff6"/>
+    </linearGradient>
+  </defs>
+  <text
+    x="0"
+    y="28"
+    font-family="system-ui, -apple-system, 'Segoe UI', sans-serif"
+    font-size="26"
+    font-weight="700"
+    letter-spacing="-0.03em"
+    fill="#0f172a"
+  >Hatch</text>
+  <text
+    x="72"
+    y="28"
+    font-family="system-ui, -apple-system, 'Segoe UI', sans-serif"
+    font-size="26"
+    font-weight="700"
+    letter-spacing="-0.03em"
+    fill="url(#hatch105-grad)"
+  >105</text>
+</svg>

@@ -1,0 +1,37 @@
+{
+  "ref": "H-03",
+  "title": "FittingRoom3D",
+  "criteria": {
+    "buildability": {
+      "score": 1,
+      "reason": "Research-grade or realtime multimodal — not a 10-week v1. [Calibrated for Hatch dataset.]"
+    },
+    "speedToRevenue": {
+      "score": 3,
+      "reason": "Needs onboarding or data before full value."
+    },
+    "wedge": {
+      "score": 3,
+      "reason": "Understandable wedge with some scope breadth."
+    },
+    "distribution": {
+      "score": 3,
+      "reason": "Reachable but needs outbound or education."
+    },
+    "trapRisk": {
+      "score": 1,
+      "reason": "Known trap: science project or liability-heavy automation. [Calibrated for Hatch dataset.]"
+    },
+    "expansion": {
+      "score": 3,
+      "reason": "Bolt-on expansion possible."
+    }
+  },
+  "gatesTriggered": [
+    "G3D"
+  ],
+  "fit": 2.3,
+  "verdict": "Trap or wrong team size",
+  "scoredWith": "heuristic",
+  "scoredAt": "2026-05-27T14:19:54.610Z"
+}

@@ -1,0 +1,37 @@
+{
+  "ref": "H-11",
+  "title": "SessionMind",
+  "criteria": {
+    "buildability": {
+      "score": 1,
+      "reason": "Typical Shopify app scope. [Calibrated for Hatch dataset.]"
+    },
+    "speedToRevenue": {
+      "score": 3,
+      "reason": "Needs onboarding or data before full value."
+    },
+    "wedge": {
+      "score": 2,
+      "reason": "Vague outcome or broad analytics play. [Calibrated for Hatch dataset.]"
+    },
+    "distribution": {
+      "score": 3,
+      "reason": "Reachable but needs outbound or education."
+    },
+    "trapRisk": {
+      "score": 1,
+      "reason": "Known trap: science project or liability-heavy automation."
+    },
+    "expansion": {
+      "score": 5,
+      "reason": "Wedge expands in same merchant workflow."
+    }
+  },
+  "gatesTriggered": [
+    "REALTIME_AI"
+  ],
+  "fit": 2.45,
+  "verdict": "Trap or wrong team size",
+  "scoredWith": "heuristic",
+  "scoredAt": "2026-05-27T14:21:57.599Z"
+}

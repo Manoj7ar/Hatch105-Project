@@ -1,0 +1,41 @@
+{
+  "ref": "H-44",
+  "title": "Unwrap",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The app can be built using Shopify's App Bridge and Storefront API to inject a lightweight JavaScript widget that renders pre-generated template images on the PDP, allowing a 3‑person team to deliver a functional v1 within 3 days, 3 weeks, and 10 weeks."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "By publishing the solution as a self‑serve Shopify App Store app with a subscription model, merchants can install and pay within the first billing cycle, enabling revenue generation immediately."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "The app lets merchants display 25 ready‑made designer gift‑wrap templates directly on the PDP, instantly enhancing the shopping experience and encouraging higher order values."
+    },
+    "distribution": {
+      "score": 5,
+      "reason": "Targeting US apparel, beauty, and home DTC brands with $50K–$400K annual revenue aligns with the Shopify App Store’s reach, making the product highly distributable to the $50K–$2M DTC segment."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "The solution avoids high‑risk features such as generative 3D, real‑time video, autonomous repricing, or multi‑app scope, keeping the project safe for a small team."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "Future growth can be achieved by adding more template styles, bulk customization, and integration with shipping carriers, scaling from €10K to €1M without pivoting."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.4,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:30:42.814Z",
+  "technicalSnapshot": "The solution will be a Shopify App built with Node.js and React, leveraging App Bridge for secure communication, the Storefront API to fetch product data, and Shopify’s metafields to store template metadata. Rendering will be handled by a lightweight JavaScript widget injected into the PDP via the theme’s liquid files, using pre‑generated PNGs for each template. The app will use the Admin API to manage template assets and the App Store distribution for installation. Optional integrations include Shopify’s Script Editor for dynamic pricing and Shopify Shipping APIs for handling wrapped orders.",
+  "v1Plan": {
+    "day3": "Create a basic Shopify App skeleton, develop a JavaScript widget that displays a single template image on the PDP, and test on a demo store.",
+    "week3": "Add support for 5 designer templates, allow merchants to upload custom messages via metafields, and expose a simple admin UI for template selection.",
+    "week10": "Expand to 25 templates, auto‑generate the 26th template based on brand colorway, implement full App Store listing, and provide documentation and support."
+  }
+}

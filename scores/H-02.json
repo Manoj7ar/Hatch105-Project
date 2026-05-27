@@ -1,0 +1,35 @@
+{
+  "ref": "H-02",
+  "title": "LookCart",
+  "criteria": {
+    "buildability": {
+      "score": 3,
+      "reason": "Non-trivial data/ML pipeline."
+    },
+    "speedToRevenue": {
+      "score": 3,
+      "reason": "Needs onboarding or data before full value."
+    },
+    "wedge": {
+      "score": 3,
+      "reason": "Understandable wedge with some scope breadth."
+    },
+    "distribution": {
+      "score": 3,
+      "reason": "Reachable but needs outbound or education."
+    },
+    "trapRisk": {
+      "score": 4,
+      "reason": "No dominant incumbent on exact wedge."
+    },
+    "expansion": {
+      "score": 3,
+      "reason": "Bolt-on expansion possible."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 3.1,
+  "verdict": "Borderline — cut scope",
+  "scoredWith": "heuristic",
+  "scoredAt": "2026-05-27T14:19:15.390Z"
+}

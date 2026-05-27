@@ -1,0 +1,41 @@
+{
+  "ref": "H-36",
+  "title": "CreativeRack",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "The app can be built using Shopify's Admin API and App Bridge, with GPT‑4o for content generation and Meta Ads API for publishing, all within a 10‑week timeline for a 3‑person team."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "The app will be listed in the Shopify App Store, allowing merchants to install and subscribe immediately, generating revenue in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Connect to the Shopify product catalog, auto‑generate 5 hook/copy/image variants per product using GPT‑4o + product photos, then push the winning test directly into Meta Ads Manager with one click — replacing both the creative brief and the media buyer's setup time."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Targeting apparel/beauty/home DTC brands with $1K–$50K spend is a reachable segment that can be acquired through the Shopify App Store and content marketing, supporting $50K–$2M revenue potential."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "The solution avoids known traps such as generative 3D/AR, real‑time voice/video, autonomous repricing, and multi‑app scope, making it safe for a small team."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "After initial Meta integration, the app can add additional ad platforms, advanced analytics, and AI‑driven optimization, enabling growth from €10K to €1M without pivoting."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:28:21.685Z",
+  "technicalSnapshot": "The app will be a Shopify Admin API + App Bridge extension that reads the product catalog, stores variant data in a lightweight database, uses GPT‑4o for content generation, and pushes creatives to Meta Ads via the Meta Marketing API. Key integrations include Shopify Admin API, Shopify App Bridge, GPT‑4o, and Meta Ads API.",
+  "v1Plan": {
+    "day3": "Set up Shopify app skeleton, authenticate, fetch product list, store in local DB.",
+    "week3": "Integrate GPT‑4o to generate 5 variants per product, build UI to preview and select winning variant.",
+    "week10": "Implement Meta Ads API integration to create campaigns and push selected variant, add subscription billing, and publish to App Store."
+  }
+}

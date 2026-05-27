@@ -1,0 +1,41 @@
+{
+  "ref": "H-46",
+  "title": "Fit-Me",
+  "criteria": {
+    "buildability": {
+      "score": 4,
+      "reason": "Uses standard Shopify Admin API and App Extension to pull order data and display recommendations, enabling a 3‑person team to ship a functional v1 within 10 weeks."
+    },
+    "speedToRevenue": {
+      "score": 4,
+      "reason": "App is available in Shopify App Store, merchants can install and start receiving size recommendations immediately, and can subscribe in the first billing cycle."
+    },
+    "wedge": {
+      "score": 5,
+      "reason": "Provides instant, data‑driven size recommendations that reduce returns and improve conversion."
+    },
+    "distribution": {
+      "score": 4,
+      "reason": "Targeted DTC brands can be reached through Shopify App Store and content marketing, fitting the $50K–$2M revenue range."
+    },
+    "trapRisk": {
+      "score": 5,
+      "reason": "No high‑risk features; relies on standard APIs and data analysis, safe for a small team."
+    },
+    "expansion": {
+      "score": 4,
+      "reason": "Model can scale to additional product lines and add features like predictive sizing for new SKUs, enabling growth to €1M without pivot."
+    }
+  },
+  "gatesTriggered": [],
+  "fit": 4.25,
+  "verdict": "Strong Hatch fit",
+  "scoredWith": "groq",
+  "scoredAt": "2026-05-27T14:31:07.275Z",
+  "technicalSnapshot": "The app uses Shopify Admin API to fetch order and exchange data, stores a size‑confidence model in a backend database, and exposes recommendations via a Shopify App Extension on the product page using App Bridge. It also uses Shopify Billing API for subscription and Shopify App Store for distribution.",
+  "v1Plan": {
+    "day3": "Set up Shopify app skeleton, register app, create basic UI, set up billing, and design data model skeleton.",
+    "week3": "Implement data ingestion from Admin API, compute a simple size recommendation algorithm, expose via App Extension on product page, and test with sample data.",
+    "week10": "Deploy production, add confidence scoring, integrate with Shopify App Store, add analytics, finalize billing, and launch."
+  }
+}
