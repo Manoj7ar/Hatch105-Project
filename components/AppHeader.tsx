@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 
 const links = [
   { href: "/", label: "Rankings" },
+  { href: "/compare", label: "Compare" },
   { href: "/chat", label: "Ask dataset" },
 ] as const;
 
@@ -32,10 +33,8 @@ export function AppHeader({ fullWidth = false }: AppHeaderProps) {
               key={href}
               href={href}
               className={cn(
-                "rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
-                pathname === href
-                  ? "bg-slate-100 text-slate-900"
-                  : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
+                "hatch-nav-link",
+                pathname === href && "hatch-nav-link--active"
               )}
             >
               {label}

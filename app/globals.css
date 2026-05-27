@@ -2,6 +2,11 @@
 
 :root {
   color-scheme: light;
+  /* Groq brand — Neon Zest / Deep Ember */
+  --groq-orange: #f43e01;
+  --groq-orange-hover: #c23101;
+  --groq-orange-muted: rgba(244, 62, 1, 0.14);
+  --groq-orange-ring: rgba(244, 62, 1, 0.28);
   --background: #ffffff;
   --surface: #ffffff;
   --surface-muted: #f1f5f9;
@@ -24,6 +29,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-groq-orange: var(--groq-orange);
+  --color-groq-orange-hover: var(--groq-orange-hover);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -37,8 +44,186 @@ body {
 }
 
 ::selection {
-  background: #e2e8f0;
+  background: var(--groq-orange-muted);
   color: var(--foreground);
+}
+
+/* Shared Hatch + Groq accent utilities (app-wide) */
+.hatch-focus-ring {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.hatch-focus-ring:focus,
+.hatch-focus-ring:focus-within,
+.hatch-focus-ring:focus-visible {
+  outline: none;
+  border-color: var(--groq-orange);
+  box-shadow:
+    0 0 0 1px var(--groq-orange),
+    0 0 0 4px var(--groq-orange-ring);
+}
+
+.hatch-tab {
+  border-radius: 0.375rem;
+  padding: 0.375rem 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #64748b;
+  transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.hatch-tab:hover {
+  color: #0f172a;
+}
+
+.hatch-tab--active {
+  background: #ffffff;
+  color: var(--groq-orange);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.hatch-tab--ai.hatch-tab--active {
+  color: var(--groq-orange);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    inset 0 -2px 0 var(--groq-orange);
+}
+
+.hatch-nav-link {
+  border-radius: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #64748b;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.hatch-nav-link:hover {
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+.hatch-nav-link--active {
+  background: #fff0eb;
+  color: var(--groq-orange);
+}
+
+.hatch-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--groq-orange);
+}
+
+.hatch-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 9999px;
+  background: #fff0eb;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--groq-orange);
+  box-shadow: inset 0 0 0 1px #f9c4b0;
+}
+
+.hatch-row-new {
+  background: rgba(255, 240, 235, 0.55);
+}
+
+.hatch-row-focus {
+  background: #fffaf8;
+  box-shadow: inset 0 0 0 1px var(--groq-orange-ring);
+}
+
+.hatch-spinner {
+  color: var(--groq-orange);
+}
+
+.hatch-link {
+  font-weight: 600;
+  color: var(--groq-orange);
+  text-underline-offset: 2px;
+}
+
+.hatch-link:hover {
+  color: var(--groq-orange-hover);
+  text-decoration: underline;
+}
+
+.hatch-accent-border {
+  border-left: 4px solid var(--groq-orange);
+}
+
+.hatch-drop-target {
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.hatch-drop-target--over {
+  border-color: var(--groq-orange);
+  box-shadow: 0 0 0 3px var(--groq-orange-ring);
+}
+
+.hatch-drag-chip {
+  cursor: grab;
+  transition: box-shadow 0.15s ease;
+}
+
+.hatch-drag-chip:active {
+  box-shadow: 0 0 0 2px var(--groq-orange);
+}
+
+.hatch-suggestion-pill {
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.hatch-suggestion-pill:hover:not(:disabled),
+.hatch-suggestion-pill:focus-visible:not(:disabled) {
+  border-color: var(--groq-orange);
+  box-shadow: 0 0 0 2px var(--groq-orange-ring);
+  outline: none;
+}
+
+.hatch-mention-active {
+  background: #fff0eb;
+  color: var(--groq-orange);
+}
+
+.hatch-textarea-shell {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  background: #fafafa;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.hatch-textarea-shell:focus-within {
+  border-color: var(--groq-orange);
+  background: #ffffff;
+  box-shadow:
+    0 0 0 1px var(--groq-orange),
+    0 0 0 4px var(--groq-orange-ring);
+}
+
+.hatch-tray {
+  border: 1px solid #f9c4b0;
+  border-top: 3px solid var(--groq-orange);
 }
 
 @keyframes shimmer {
@@ -56,9 +241,343 @@ body {
   animation: shimmer 1.5s ease-in-out infinite;
 }
 
+/* Chat: thinking state */
+@keyframes thinking-dot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+.thinking-dots span {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  background: var(--groq-orange);
+  opacity: 0.55;
+  animation: thinking-dot 1.2s ease-in-out infinite;
+}
+
+.thinking-dots span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.thinking-dots span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes thinking-skeleton {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.thinking-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--groq-orange-muted) 0%,
+    rgba(255, 240, 235, 0.9) 50%,
+    var(--groq-orange-muted) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite, thinking-skeleton 1.8s ease-in-out infinite;
+}
+
+/* Chat: streamed line reveal */
+@keyframes stream-line-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes stream-cursor-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.stream-markdown .stream-block {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.stream-markdown .stream-block-revealed {
+  animation: stream-line-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.stream-markdown .stream-block-growing,
+.stream-markdown .stream-block-done {
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
+
+.stream-markdown .stream-block-growing + .stream-cursor,
+.stream-markdown > .stream-cursor:last-child {
+  animation: stream-cursor-blink 1s step-end infinite;
+}
+
+.stream-markdown .stream-block :is(p, h2, h3, ul, ol, table) {
+  margin-top: 0;
+}
+
+.stream-markdown .stream-block + .stream-block :is(h2, h3) {
+  margin-top: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thinking-dots span,
+  .thinking-skeleton,
+  .stream-markdown .stream-block-revealed {
+    animation: none;
+  }
+
+  .stream-markdown .stream-block {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .composer-fade {
   pointer-events: none;
   background: linear-gradient(to bottom, transparent, #ffffff);
+}
+
+/* Chat composer — Groq orange focus ring */
+.chat-composer-shell {
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.05),
+    0 2px 8px rgba(0, 0, 0, 0.08);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.chat-composer-shell:focus-within {
+  border-color: var(--groq-orange);
+  box-shadow:
+    0 0 0 1px var(--groq-orange),
+    0 0 0 4px var(--groq-orange-ring),
+    0 2px 12px var(--groq-orange-muted);
+}
+
+.chat-composer-send {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  height: 2.25rem;
+  width: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+
+.chat-composer-send--ready {
+  background-color: var(--groq-orange);
+  color: #ffffff;
+  box-shadow: 0 1px 4px var(--groq-orange-muted);
+}
+
+.chat-composer-send--ready:hover {
+  background-color: var(--groq-orange-hover);
+}
+
+.chat-composer-send--ready:active {
+  transform: scale(0.96);
+}
+
+.chat-composer-send--disabled {
+  cursor: not-allowed;
+  background-color: #f3f3ee;
+  color: #9c9c90;
+}
+
+/* Live re-rank design system (light + Groq orange AI states) */
+.rerank-shell {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 1rem;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.rerank-shell-header {
+  border-bottom: 1px solid #f1f5f9;
+  padding: 1.25rem 1.5rem;
+}
+
+.rerank-input-shell {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  background: #fafafa;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.rerank-input-shell:focus-within {
+  border-color: var(--groq-orange);
+  background: #ffffff;
+  box-shadow:
+    0 0 0 1px var(--groq-orange),
+    0 0 0 4px var(--groq-orange-ring);
+}
+
+.rerank-input-shell--valid:focus-within {
+  border-color: var(--groq-orange);
+}
+
+.rerank-input-shell--error {
+  border-color: #fca5a5;
+  background: #fffbfb;
+}
+
+.rerank-format-toggle button {
+  border-radius: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #64748b;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.rerank-format-toggle button[data-active="true"] {
+  background: #fff0eb;
+  color: var(--groq-orange);
+}
+
+.rerank-preview-chip,
+.hatch-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 9999px;
+  background: #fff0eb;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--groq-orange);
+  box-shadow: inset 0 0 0 1px #f9c4b0;
+}
+
+.rerank-progress-label,
+.hatch-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--groq-orange);
+}
+
+.rerank-format-guide {
+  border-radius: 0.75rem;
+  border: 1px dashed #e2e8f0;
+  background: #fafafa;
+  padding: 1rem;
+}
+
+.rerank-progress-panel {
+  margin-top: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid #f9c4b0;
+  background: linear-gradient(180deg, #fffaf8 0%, #ffffff 100%);
+  padding: 1rem 1.25rem;
+}
+
+.rerank-progress-panel--active {
+  animation: rerank-panel-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes rerank-panel-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+  50% {
+    box-shadow: 0 0 0 3px var(--groq-orange-muted);
+  }
+}
+
+.rerank-progress-track {
+  height: 0.5rem;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: #f1f5f9;
+}
+
+.rerank-progress-fill {
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, var(--groq-orange-hover), var(--groq-orange));
+  transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.rerank-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.625rem;
+  transition: background-color 0.2s ease;
+}
+
+.rerank-progress-row--running {
+  background: #fff0eb;
+  box-shadow: inset 0 0 0 1px #f9c4b0;
+}
+
+.rerank-progress-row--done {
+  background: #f8fafc;
+}
+
+.rerank-progress-row--failed {
+  background: #fef2f2;
+}
+
+.rerank-status-pill {
+  flex-shrink: 0;
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #94a3b8;
+}
+
+.rerank-progress-row--running .rerank-status-pill {
+  color: var(--groq-orange);
+}
+
+.rerank-placement-card {
+  border-left: 3px solid var(--groq-orange);
+  background: #ffffff;
 }
 
 .chat-markdown.streaming table {

@@ -1,7 +1,7 @@
 import { streamText, type ModelMessage } from "ai";
 import { buildDatasetContext } from "@/lib/dataset-context";
 import { buildChatSystemPrompt } from "@/lib/prompts/chat-system";
-import { getScoringModel } from "@/lib/models";
+import { getChatModel } from "@/lib/models";
 import { expandTeamMentions } from "@/lib/teams";
 
 export const maxDuration = 60;
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
     const system = buildChatSystemPrompt(dataset);
 
     const result = streamText({
-      model: getScoringModel(),
+      model: getChatModel(),
       system,
       messages: toModelMessages(messages),
       temperature: 0.3,

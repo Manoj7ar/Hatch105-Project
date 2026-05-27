@@ -20,6 +20,7 @@ type ChatComposerProps = {
   showClear?: boolean;
   onClear?: () => void;
   teams: TeamOption[];
+  onScoreIdea?: () => void;
 };
 
 export function ChatComposer({
@@ -30,6 +31,7 @@ export function ChatComposer({
   showClear,
   onClear,
   teams,
+  onScoreIdea,
 }: ChatComposerProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [caret, setCaret] = useState(0);
@@ -138,12 +140,7 @@ export function ChatComposer({
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 pb-4">
-      <div
-        className={cn(
-          "relative flex items-end rounded-[28px] border border-black/10 bg-white",
-          "shadow-[0_0_0_1px_rgba(0,0,0,0.05),0_2px_8px_rgba(0,0,0,0.08)]"
-        )}
-      >
+      <div className="chat-composer-shell relative flex items-end rounded-[28px] border bg-white">
         {mentionActive && (
           <MentionAutocomplete
             teams={filteredTeams}
@@ -185,10 +182,8 @@ export function ChatComposer({
           disabled={!canSend}
           aria-label="Send message"
           className={cn(
-            "absolute bottom-2 right-2 flex h-9 w-9 items-center justify-center rounded-full transition-colors",
-            canSend
-              ? "bg-[#0d0d0d] text-white hover:bg-[#2d2d2d]"
-              : "cursor-not-allowed bg-[#e8e8e8] text-[#8e8e8e]"
+            "chat-composer-send",
+            canSend ? "chat-composer-send--ready" : "chat-composer-send--disabled"
           )}
         >
           <ArrowUp className="h-5 w-5" strokeWidth={2.5} />
@@ -198,15 +193,26 @@ export function ChatComposer({
         <p className="text-center text-xs text-[#8e8e8e]">
           Answers use only the Hatch105 thesis dataset. Use @ for team names.
         </p>
-        {showClear && onClear && (
-          <button
-            type="button"
-            onClick={onClear}
-            className="shrink-0 text-xs text-[#8e8e8e] hover:text-[#0d0d0d]"
-          >
-            Clear chat
-          </button>
-        )}
+        <div className="flex shrink-0 gap-3">
+          {onScoreIdea && (
+            <button
+              type="button"
+              onClick={onScoreIdea}
+              className="text-xs font-medium text-[var(--groq-orange)] hover:text-[var(--groq-orange-hover)]"
+            >
+              Score this idea
+            </button>
+          )}
+          {showClear && onClear && (
+            <button
+              type="button"
+              onClick={onClear}
+              className="text-xs text-[#8e8e8e] hover:text-[#0d0d0d]"
+            >
+              Clear chat
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

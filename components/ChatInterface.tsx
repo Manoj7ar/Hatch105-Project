@@ -5,6 +5,7 @@ import { ChatComposer } from "./chat/ChatComposer";
 import { ChatEmptyState } from "./chat/ChatEmptyState";
 import { ChatMessageRow } from "./chat/ChatMessageRow";
 import type { TeamOption } from "@/lib/teams";
+import { ScoreHandoffModal } from "./chat/ScoreHandoffModal";
 
 type Message = {
   id: string;
@@ -21,6 +22,8 @@ export function ChatInterface() {
     null
   );
   const [teams, setTeams] = useState<TeamOption[]>([]);
+  const [scoreModalOpen, setScoreModalOpen] = useState(false);
+  const [scoreModalText, setScoreModalText] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -47,6 +50,17 @@ export function ChatInterface() {
     async (text: string) => {
       const trimmed = text.trim();
       if (!trimmed || loading) return;
+
+      if (
+        /^\/score\b/i.test(trimmed) ||
+        /^score this idea/i.test(trimmed) ||
+        (trimmed.startsWith("{") && trimmed.includes('"ref"'))
+      ) {
+        const body = trimmed.replace(/^\/score\s*/i, "").trim();
+        setScoreModalText(body.startsWith("{") ? body : "");
+        setScoreModalOpen(true);
+        return;
+      }
 
       const userMsg: Message = {
         id: crypto.randomUUID(),
@@ -141,11 +155,13 @@ export function ChatInterface() {
               return (
                 <ChatMessageRow
                   key={msg.id}
+                  messageId={msg.id}
                   role={msg.role}
                   content={msg.content}
                   isThinking={isThinking}
                   isStreaming={isStreaming}
                   teamTitles={teamTitles}
+                  teams={teams}
                 />
               );
             })}
@@ -173,8 +189,19 @@ export function ChatInterface() {
           showClear={messages.length > 0}
           onClear={clearChat}
           teams={teams}
+          onScoreIdea={() => setScoreModalOpen(true)}
         />
       </div>
+
+      {scoreModalOpen && (
+        <ScoreHandoffModal
+          initialText={scoreModalText}
+          onClose={() => {
+            setScoreModalOpen(false);
+            setScoreModalText("");
+          }}
+        />
+      )}
     </div>
   );
 }

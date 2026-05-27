@@ -1,0 +1,37 @@
+[
+  {
+    "ref": "H-08",
+    "title": "ZeroPage",
+    "one_liner": "Theme extension that turns 404/OOS pages into shoppable recovery surfaces.",
+    "example_customer": "DTC brands on Shopify losing traffic to dead links",
+    "wedge": "Checkout-adjacent recovery via theme app extension — not a full replatform"
+  },
+  {
+    "ref": "H-03",
+    "title": "FittingRoom3D",
+    "one_liner": "Generative 3D try-on for apparel.",
+    "example_customer": "Fashion merchants",
+    "wedge": "Realtime generative 3D mesh on every PDP"
+  },
+  {
+    "ref": "H-47",
+    "title": "GorgiasLite",
+    "one_liner": "Lightweight helpdesk sidebar for Shopify.",
+    "example_customer": "Sub-$1M DTC",
+    "wedge": "vs Gorgias — simpler sidebar for small teams"
+  },
+  {
+    "ref": "H-41",
+    "title": "NightWatch",
+    "one_liner": "Autonomous repricing agent.",
+    "example_customer": "Catalog-heavy stores",
+    "wedge": "Closed-loop repricing without human approval"
+  },
+  {
+    "ref": "H-48",
+    "title": "TrackReply",
+    "one_liner": "WISMO deflection via tracking integrations.",
+    "example_customer": "Shopify App Store DTC",
+    "wedge": "Per-ticket savings on support — App Store distribution"
+  }
+]

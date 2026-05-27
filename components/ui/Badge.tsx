@@ -1,13 +1,14 @@
 import { cn } from "@/lib/utils";
 
-type Variant = "default" | "success" | "warning" | "muted" | "new";
+type Variant = "default" | "success" | "warning" | "muted" | "new" | "groq";
 
 const variants: Record<Variant, string> = {
   default: "bg-slate-100 text-slate-700",
   success: "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100",
   warning: "bg-amber-50 text-amber-800 ring-1 ring-amber-100",
   muted: "bg-slate-50 text-slate-500",
-  new: "bg-blue-50 text-blue-700 ring-1 ring-blue-100",
+  new: "bg-[#fff0eb] text-[var(--groq-orange)] ring-1 ring-[#f9c4b0]",
+  groq: "bg-[#fff0eb] text-[var(--groq-orange)] ring-1 ring-[#f9c4b0]",
 };
 
 export function Badge({

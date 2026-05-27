@@ -1,6 +1,6 @@
 # Hatch105 Thesis Ranker
 
-Inspectable ranking system for the [Hatch105 Build Challenge](Hatch105%20Build%20Challenge.html): scores 50 Happy Stack Labs theses on **Hatch Fit** (buildability, speed to revenue, wedge, distribution, trap risk, expansion) and re-ranks when new theses arrive.
+Inspectable ranking system for the [Hatch105 Build Challenge](Initial-dataset/Hatch105%20Build%20Challenge.html): scores 50 Happy Stack Labs theses on **Hatch Fit** (buildability, speed to revenue, wedge, distribution, trap risk, expansion) and re-ranks when new theses arrive.
 
 ## Quick start
 
@@ -13,7 +13,7 @@ npm run dev                # http://localhost:3000
 
 ## Ask the dataset (grounded chat)
 
-Open **http://localhost:3000/chat** — a ChatGPT-style interface that answers **only** from your local thesis rankings (no web search). Each request reloads `candidate_theses.json`, `scores/*.json`, and the rubric into the Groq system prompt.
+Open **http://localhost:3000/chat** — a ChatGPT-style interface that answers **only** from your local thesis rankings (no web search). Each request reloads `Initial-dataset/candidate_theses.json`, `scores/*.json`, and the rubric into the Groq system prompt.
 
 Requires `GROQ_API_KEY` in `.env.local`. The server injects rankings + scores + rubric into each request (compact snapshot for Groq token limits; top 8 theses include full criterion notes). To score new ideas, use **Live re-rank** on the Rankings page (chat does not score).
 
@@ -39,7 +39,7 @@ See [CRITERIA.md](CRITERIA.md) — weights, 1–5 anchors, hard gates (`G3D`, `R
 
 ```bash
 # Groq (recommended for challenge)
-GROQ_API_KEY=gsk_... GROQ_MODEL=openai/gpt-oss-20b npm run seed
+GROQ_API_KEY=gsk_... GROQ_MODEL=llama-3.3-70b-versatile npm run seed
 
 # Heuristic only
 SCORING_MODE=heuristic npm run seed
@@ -49,9 +49,9 @@ Groq scoring adds per-thesis **technical snapshot**, **3d / 3w / 10w v1 plan**, 
 
 ## How we teach Groq to rank the dataset
 
-This is **not** fine-tuning a custom model. We keep Groq’s general model (`openai/gpt-oss-20b`) and **instruct** it on every scoring run using our rubric and thesis text, then **validate and persist** the result so rankings stay inspectable.
+This is **not** fine-tuning a custom model. We use Groq’s **`llama-3.3-70b-versatile`** by default for chat, briefs, and scoring (override with `GROQ_MODEL`). Optional `GROQ_SCORING_MODEL=openai/gpt-oss-20b` if you want GPT-OSS only for structured thesis JSON.
 
-1. **Input** — Each row from `candidate_theses.json` (team name, one-liner, customer, wedge) plus the full [CRITERIA.md](CRITERIA.md) rubric (condensed in [`lib/prompts/rubric-summary.ts`](lib/prompts/rubric-summary.ts)).
+1. **Input** — Each row from [`Initial-dataset/candidate_theses.json`](Initial-dataset/candidate_theses.json) (team name, one-liner, customer, wedge) plus the full [CRITERIA.md](CRITERIA.md) rubric (condensed in [`lib/prompts/rubric-summary.ts`](lib/prompts/rubric-summary.ts)).
 2. **Prompt** — [`lib/prompts/score-thesis.ts`](lib/prompts/score-thesis.ts) tells the model to score six criteria (1–5), write one-sentence reasons, output a verdict, technical snapshot, 10-week v1 plan, and trap note when relevant.
 3. **Structured output** — [`lib/scorer.ts`](lib/scorer.ts) uses the AI SDK `generateObject` path (with JSON parse fallback) so each thesis becomes a typed object matching [`LlmScoreOutputSchema`](lib/types.ts).
 4. **Deterministic gates** — [`lib/gates.ts`](lib/gates.ts) always runs **after** the LLM (e.g. `G3D`, `REALTIME_AI`) so traps cannot be ignored.
@@ -72,21 +72,44 @@ Batch scoring (`npm run seed`) walks all 50 theses. When Groq returns malformed 
 3. For **live re-rank**, set environment variables:
    - `GROQ_API_KEY`
    - `GROQ_MODEL` (optional, default `llama-3.3-70b-versatile`)
+   - `GROQ_SCORING_MODEL` (optional, e.g. `openai/gpt-oss-20b` for scoring only)
    - `SCORING_MODE=auto`
 
 ```bash
 npx vercel --prod
 ```
 
+## Power features
+
+| Feature | Where |
+|---------|--------|
+| **Evidence tags** (sourced / inferred / guess) | Thesis detail panel, compare, markdown export |
+| **Human override + paper trail** | Thesis panel → Edit override → `overrides/H-XX.json` |
+| **Research this team** | Grounded (competitor cache) or External (Firecrawl) → re-score with citations |
+| **Competitor cache** | [`data/competitors.json`](data/competitors.json) injected when wedge mentions `vs X` |
+| **Shopify surface checker** | Flags impossible surfaces before scoring |
+| **Batch re-rank** | Live re-rank tab → progress bars + retry failed |
+| **Compare tray** | `/compare` — up to 4 teams, mobile-friendly |
+| **Portfolio Kanban** | Rankings → Portfolio tab (localStorage) |
+| **Keyboard shortcuts** | `/` search · `j`/`k` navigate · `Enter` open · `?` help |
+| **Executive brief** | Rankings → Executive brief (Groq memo from current ranking) |
+| **Chat handoffs** | Score this idea · Add to compare chips on comparison tables |
+| **Regression tests** | `npm test` — gates + heuristic golden theses |
+
+Score archives on overwrite: `scores/archive/{criteriaVersion}/`.
+
 ## Project structure
 
 ```
+Initial-dataset/     Challenge brief + candidate_theses.csv / .json
 lib/
   scorer.ts          Groq + heuristic, gates applied after LLM
   prompts/           Rubric prompt for Groq
   gates.ts           Deterministic trap caps
 scores/              Persisted per-thesis JSON (inspectable)
-app/api/             ranking + rerank
+app/api/             ranking, rerank, batch, research, overrides, brief
+data/competitors.json
+overrides/           Human governance trail
 components/          UI
 fixtures/            Sample theses for dry-run
 scripts/             seed + CLI rank
@@ -98,4 +121,4 @@ Re-run `npm run seed` with Groq to refresh rankings. Heuristic default was **Tra
 
 ---
 
-*Theses are confidential — do not redistribute candidate_theses files.*
+*Theses are confidential — do not redistribute `Initial-dataset/` files.*

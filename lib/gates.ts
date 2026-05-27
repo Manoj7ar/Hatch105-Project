@@ -1,5 +1,7 @@
-import type { Thesis } from "./types";
+import type { Thesis, EvidenceTag } from "./types";
 import type { CriterionKey } from "./types";
+
+type CriterionInput = { score: number; reason: string; evidence?: EvidenceTag };
 
 export type GateId = "G3D" | "REALTIME_AI" | "INCUMBENT_WAR" | "POS_ENTERPRISE" | "AUTO_REPRICE";
 
@@ -58,14 +60,18 @@ export function applyHardGates(thesis: Thesis): GateResult {
 }
 
 export function applyCapsToCriteria(
-  criteria: Record<CriterionKey, { score: number; reason: string }>,
+  criteria: Record<CriterionKey, CriterionInput>,
   caps: Partial<Record<CriterionKey, number>>,
   gatesTriggered: GateId[]
-): Record<CriterionKey, { score: number; reason: string }> {
-  const out = { ...criteria };
+): Record<CriterionKey, CriterionInput & { evidence: EvidenceTag }> {
+  const out = { ...criteria } as Record<CriterionKey, CriterionInput & { evidence: EvidenceTag }>;
+  for (const key of Object.keys(out) as CriterionKey[]) {
+    if (!out[key].evidence) out[key].evidence = "inferred";
+  }
   for (const [key, cap] of Object.entries(caps) as [CriterionKey, number][]) {
     if (out[key].score > cap) {
       out[key] = {
+        ...out[key],
         score: cap,
         reason: `${out[key].reason} [Gate ${gatesTriggered.join(",")} capped at ${cap}]`,
       };

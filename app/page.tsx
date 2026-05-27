@@ -7,6 +7,7 @@ export default function Home() {
       <AppHeader />
 
       <main className="mx-auto max-w-4xl bg-white px-6 py-10">
+        <p className="hatch-label mb-2">Rankings</p>
         <h1 className="mb-10 text-3xl font-semibold tracking-tight text-slate-900">
           Startup thesis rankings
         </h1>

@@ -25,9 +25,13 @@ export function generateRankingMarkdown(state: RankingState): string {
     lines.push("");
     for (const key of Object.keys(CRITERION_LABELS) as CriterionKey[]) {
       const c = t.criteria[key];
+      const ev = c.evidence ?? "inferred";
       lines.push(
-        `- **${CRITERION_LABELS[key]}:** ${c.score}/5 — ${c.reason}`
+        `- **${CRITERION_LABELS[key]}:** ${c.score}/5 (${ev}) — ${c.reason}`
       );
+    }
+    if (t.overrideNote) {
+      lines.push(`- **Human override:** ${t.overrideNote}`);
     }
     if (t.gatesTriggered.length) {
       lines.push(`- **Gates:** ${t.gatesTriggered.join(", ")}`);

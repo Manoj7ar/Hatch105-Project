@@ -1,33 +1,43 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { RankedThesis, RankingState } from "@/lib/types";
+import { ideaPath } from "@/lib/idea-path";
 import { cn } from "@/lib/utils";
-import { Download, Loader2 } from "lucide-react";
+import { Download, FileText, Loader2 } from "lucide-react";
 import { ExecutiveCard } from "./ExecutiveCard";
 import { TopThreeCards } from "./TopThreeCards";
 import { RankingTable } from "./RankingTable";
-import { ThesisPanel } from "./ThesisPanel";
 import { RerankPanel } from "./RerankPanel";
 import { Button } from "./ui/Button";
+import { FocusInput } from "./ui/FocusInput";
+import { GroqIcon } from "./ui/GroqIcon";
+import { CompareTray } from "./CompareTray";
+import { PortfolioBoard } from "./PortfolioBoard";
 
-type Tab = "all" | "top3" | "traps" | "rerank";
+type Tab = "all" | "top3" | "traps" | "rerank" | "portfolio";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "all", label: "All ideas" },
   { id: "top3", label: "Top 3" },
   { id: "traps", label: "Traps" },
   { id: "rerank", label: "Live re-rank" },
+  { id: "portfolio", label: "Portfolio" },
 ];
 
 export function RankingDashboard() {
+  const router = useRouter();
   const [state, setState] = useState<RankingState | null>(null);
   const [markdown, setMarkdown] = useState("");
   const [tab, setTab] = useState<Tab>("all");
-  const [selected, setSelected] = useState<RankedThesis | null>(null);
+  const [highlightIndex, setHighlightIndex] = useState(0);
+  const [search, setSearch] = useState("");
+  const [showShortcuts, setShowShortcuts] = useState(false);
+  const searchRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(true);
   const [rerankInput, setRerankInput] = useState("");
-  const [reranking, setReranking] = useState(false);
+  const [briefLoading, setBriefLoading] = useState(false);
   const [placements, setPlacements] = useState<
     { ref: string; rank: number; summary: string }[]
   >([]);
@@ -54,36 +64,87 @@ export function RankingDashboard() {
     load();
   }, [load]);
 
+  const filteredRows = useCallback(
+    (rows: RankedThesis[]) => {
+      const q = search.trim().toLowerCase();
+      if (!q) return rows;
+      return rows.filter(
+        (r) =>
+          r.title.toLowerCase().includes(q) ||
+          r.ref.toLowerCase().includes(q)
+      );
+    },
+    [search]
+  );
+
+  const listRaw =
+    tab === "top3"
+      ? state?.top3 ?? []
+      : tab === "traps"
+        ? state?.traps ?? []
+        : state?.ranked ?? [];
+
+  const list = filteredRows(listRaw);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setSelected(null);
+      const tag = (e.target as HTMLElement)?.tagName;
+      const typing = tag === "INPUT" || tag === "TEXTAREA";
+
+      if (e.key === "Escape") {
+        setShowShortcuts(false);
+        return;
+      }
+
+      if (e.key === "?" && !typing) {
+        e.preventDefault();
+        setShowShortcuts((s) => !s);
+        return;
+      }
+
+      if (e.key === "/" && !typing) {
+        e.preventDefault();
+        searchRef.current?.focus();
+        return;
+      }
+
+      if (tab !== "all" && tab !== "traps" && tab !== "top3") return;
+      if (typing || list.length === 0) return;
+
+      if (e.key === "j") {
+        e.preventDefault();
+        setHighlightIndex((i) => Math.min(i + 1, list.length - 1));
+      }
+      if (e.key === "k") {
+        e.preventDefault();
+        setHighlightIndex((i) => Math.max(i - 1, 0));
+      }
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const row = list[highlightIndex];
+        if (row) router.push(ideaPath(row.ref));
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [tab, list, highlightIndex, router]);
 
-  const handleRerank = async () => {
-    if (!rerankInput.trim()) return;
-    setReranking(true);
+  useEffect(() => {
+    setHighlightIndex(0);
+  }, [search, tab]);
+
+  const onRerankComplete = (data: {
+    state: RankingState;
+    placements: { ref: string; rank: number; summary: string }[];
+    markdown: string;
+    newRefs: string[];
+  }) => {
     setError(null);
-    try {
-      const res = await fetch("/api/rerank", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: rerankInput }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Re-rank failed");
-      setState(data.state);
-      setMarkdown(data.markdown ?? "");
-      setPlacements(data.placements ?? []);
-      setNewRefs(new Set(data.newRefs ?? []));
-      setTab("all");
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Re-rank failed");
-    } finally {
-      setReranking(false);
-    }
+    setState(data.state);
+    setMarkdown(data.markdown);
+    setPlacements(data.placements);
+    setNewRefs(new Set(data.newRefs ?? []));
+    setTab("all");
   };
 
   const downloadMd = () => {
@@ -96,10 +157,30 @@ export function RankingDashboard() {
     URL.revokeObjectURL(url);
   };
 
+  const downloadBrief = async () => {
+    setBriefLoading(true);
+    try {
+      const res = await fetch("/api/brief", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Brief failed");
+      const blob = new Blob([data.markdown], { type: "text/markdown" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = data.filename ?? "Hatch105-Executive-Brief.md";
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Brief failed");
+    } finally {
+      setBriefLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex min-h-[320px] flex-col items-center justify-center gap-3 text-slate-500">
-        <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
+        <Loader2 className="hatch-spinner h-6 w-6 animate-spin" />
         <p className="text-sm">Loading rankings…</p>
       </div>
     );
@@ -121,21 +202,13 @@ export function RankingDashboard() {
 
   if (!state) return null;
 
-  const list =
-    tab === "top3"
-      ? state.top3
-      : tab === "traps"
-        ? state.traps
-        : state.ranked;
-
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 pb-24">
       <ExecutiveCard state={state} />
 
-      {/* Toolbar */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <nav
-          className="inline-flex rounded-lg bg-slate-100/80 p-1"
+          className="inline-flex flex-wrap rounded-lg bg-slate-100/80 p-1"
           role="tablist"
         >
           {TABS.map(({ id, label }) => (
@@ -146,10 +219,9 @@ export function RankingDashboard() {
               aria-selected={tab === id}
               onClick={() => setTab(id)}
               className={cn(
-                "rounded-md px-3.5 py-1.5 text-sm font-medium transition-colors",
-                tab === id
-                  ? "bg-white text-slate-900 shadow-sm"
-                  : "text-slate-600 hover:text-slate-900"
+                "hatch-tab",
+                tab === id && "hatch-tab--active",
+                id === "rerank" && tab === id && "hatch-tab--ai"
               )}
             >
               {label}
@@ -160,11 +232,31 @@ export function RankingDashboard() {
           ))}
         </nav>
 
-        <Button variant="secondary" onClick={downloadMd} className="shrink-0">
-          <Download className="h-4 w-4" />
-          Export markdown
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <FocusInput
+            ref={searchRef}
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search teams… (/)"
+            className="sm:w-48"
+          />
+          <Button variant="groq" onClick={downloadBrief} disabled={briefLoading}>
+            <GroqIcon size={16} inverted />
+            {briefLoading ? "Memo…" : "Executive brief"}
+          </Button>
+          <Button variant="secondary" onClick={downloadMd} className="shrink-0">
+            <Download className="h-4 w-4" />
+            Export
+          </Button>
+        </div>
       </div>
+
+      {showShortcuts && (
+        <p className="rounded-lg bg-slate-50 px-4 py-2 text-xs text-slate-600">
+          <kbd className="font-mono">/</kbd> search · <kbd className="font-mono">j</kbd>/<kbd className="font-mono">k</kbd> navigate · <kbd className="font-mono">Enter</kbd> open · <kbd className="font-mono">?</kbd> help
+        </p>
+      )}
 
       {error && (
         <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-700">
@@ -177,10 +269,11 @@ export function RankingDashboard() {
           value={rerankInput}
           onChange={setRerankInput}
           onFile={async (f) => setRerankInput(await f.text())}
-          onSubmit={handleRerank}
-          loading={reranking}
-          placements={placements}
+          onComplete={onRerankComplete}
+          externalError={tab === "rerank" ? error : null}
         />
+      ) : tab === "portfolio" ? (
+        <PortfolioBoard ranked={state.ranked} />
       ) : tab === "top3" ? (
         <TopThreeCards items={state.top3} />
       ) : (
@@ -193,14 +286,12 @@ export function RankingDashboard() {
           <RankingTable
             rows={list}
             newRefs={newRefs}
-            onSelect={setSelected}
+            highlightRef={list[highlightIndex]?.ref}
           />
         </>
       )}
 
-      {selected && (
-        <ThesisPanel thesis={selected} onClose={() => setSelected(null)} />
-      )}
+      <CompareTray />
     </div>
   );
 }

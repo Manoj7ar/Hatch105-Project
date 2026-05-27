@@ -34,6 +34,16 @@ export function findTeamsByPrefixFrom(
   return scored.slice(0, limit).map((s) => s.team);
 }
 
+export function resolveTeamTitleToRef(
+  title: string,
+  teams: { ref: string; title: string }[]
+): string | null {
+  const match = teams.find(
+    (t) => t.title.toLowerCase() === title.trim().toLowerCase()
+  );
+  return match?.ref ?? null;
+}
+
 export function getMentionState(
   text: string,
   caretIndex: number,

@@ -52,7 +52,7 @@ export function MentionAutocomplete({
             }}
             className={cn(
               "flex w-full flex-col items-start gap-0.5 px-3 py-2 text-left transition-colors",
-              i === activeIndex ? "bg-slate-100" : "hover:bg-slate-50"
+              i === activeIndex ? "hatch-mention-active" : "hover:bg-slate-50"
             )}
           >
             <span className="text-sm font-medium text-[#0d0d0d]">{team.title}</span>

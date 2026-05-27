@@ -1,0 +1,145 @@
+[
+  {
+    "id": "gorgias",
+    "aliases": ["Gorgias", "gorgias"],
+    "citeAs": "Gorgias — Shopify helpdesk sidebar, automation rules, revenue from support",
+    "facts": [
+      "Native Shopify integration with sidebar on orders and customers",
+      "Competes on support automation and macro workflows, not greenfield builds",
+      "Pricing scales with ticket volume — wedge apps must avoid feature parity"
+    ]
+  },
+  {
+    "id": "recharge",
+    "aliases": ["Recharge", "recharge"],
+    "citeAs": "Recharge — subscriptions, selling plans, subscriber portal",
+    "facts": [
+      "Dominant Shopify subscription billing and customer portal",
+      "Selling Plan APIs are the extension surface for subscription adjacents",
+      "Dunning and churn tools cluster around Recharge ecosystem"
+    ]
+  },
+  {
+    "id": "yotpo",
+    "aliases": ["Yotpo", "yotpo"],
+    "citeAs": "Yotpo — reviews, loyalty, SMS bundle for DTC",
+    "facts": [
+      "Suite player across reviews, loyalty, and retention marketing",
+      "Hard to displace on reviews alone; loyalty/referral modules overlap many theses",
+      "Enterprise upsell motion — long sales for full suite"
+    ]
+  },
+  {
+    "id": "klaviyo",
+    "aliases": ["Klaviyo", "klaviyo"],
+    "citeAs": "Klaviyo — email/SMS CDP tied to Shopify events",
+    "facts": [
+      "Owns lifecycle messaging and segmentation for most scaling DTC brands",
+      "Flows triggered by Shopify webhooks — integration depth is table stakes",
+      "Competing on 'another email tool' is a trap; need a distinct job"
+    ]
+  },
+  {
+    "id": "loop",
+    "aliases": ["Loop Returns", "Loop", "loop returns"],
+    "citeAs": "Loop — returns portal and exchange flows",
+    "facts": [
+      "Standard for returns/exchanges on Shopify Plus and growth brands",
+      "Returnless refund and exchange upsell are crowded",
+      "POS and B2B returns are harder surfaces"
+    ]
+  },
+  {
+    "id": "privy",
+    "aliases": ["Privy", "privy"],
+    "citeAs": "Privy — popups, email capture, basic automation",
+    "facts": [
+      "Lightweight conversion popups and list growth",
+      "Often replaced when brands graduate to Klaviyo-heavy stacks",
+      "Migration and escape narratives are credible wedges"
+    ]
+  },
+  {
+    "id": "octane",
+    "aliases": ["Octane AI", "Octane", "octane"],
+    "citeAs": "Octane AI — quizzes and zero-party data in Shopify",
+    "facts": [
+      "Quiz and recommendation flows on PDP and post-purchase",
+      "Checkout extension policies constrain where quizzes can run",
+      "Differentiation needs a narrower job than 'another quiz app'"
+    ]
+  },
+  {
+    "id": "judge_me",
+    "aliases": ["Judge.me", "Judge Me"],
+    "citeAs": "Judge.me — reviews widget and UGC",
+    "facts": [
+      "Popular low-cost reviews app on Shopify App Store",
+      "Commodity feature set — trap to build 'better reviews' alone"
+    ]
+  },
+  {
+    "id": "smile",
+    "aliases": ["Smile.io", "Smile"],
+    "citeAs": "Smile.io — loyalty points and referrals",
+    "facts": [
+      "Points-based loyalty with referral module",
+      "Overlaps Yotpo loyalty and standalone referral tools"
+    ]
+  },
+  {
+    "id": "skio",
+    "aliases": ["Skio", "skio"],
+    "citeAs": "Skio — Recharge alternative subscriptions",
+    "facts": [
+      "Modern subscription portal competing with Recharge",
+      "Migration stories are high-touch but valid wedge"
+    ]
+  },
+  {
+    "id": "aftership",
+    "aliases": ["AfterShip", "aftership"],
+    "citeAs": "AfterShip — tracking and post-purchase notifications",
+    "facts": [
+      "WISMO and shipment tracking standard for DTC",
+      "Narrow tracking wedge must beat bundled suite value"
+    ]
+  },
+  {
+    "id": "bold",
+    "aliases": ["Bold", "Bold Commerce"],
+    "citeAs": "Bold — legacy Shopify apps (bundles, subscriptions history)",
+    "facts": [
+      "Historical player; many merchants on legacy Bold stacks",
+      "Migration and simplification wedges still resonate"
+    ]
+  },
+  {
+    "id": "shopify_plus",
+    "aliases": ["Shopify Plus", "Plus checkout"],
+    "citeAs": "Shopify Plus — checkout extensibility and B2B",
+    "facts": [
+      "Checkout UI extensions require Plus for many merchants",
+      "Functions and Checkout Extensibility are the modern surface",
+      "Claims of deep checkout mutation without Plus are often invalid"
+    ]
+  },
+  {
+    "id": "meta_shop",
+    "aliases": ["Facebook Shop", "Instagram Shop", "Meta"],
+    "citeAs": "Meta commerce — social storefronts",
+    "facts": [
+      "Social selling integrations compete with native Shopify channels",
+      "Attribution and catalog sync are integration-heavy"
+    ]
+  },
+  {
+    "id": "stripe",
+    "aliases": ["Stripe", "stripe"],
+    "citeAs": "Stripe — payments rails behind Shopify Payments",
+    "facts": [
+      "Billing and payment method updates often go through Stripe APIs",
+      "Dunning adjacent tools must respect Shopify Payments constraints"
+    ]
+  }
+]

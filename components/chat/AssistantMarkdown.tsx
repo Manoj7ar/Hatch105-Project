@@ -7,6 +7,17 @@ import { cn } from "@/lib/utils";
 import { formatTeamText } from "./formatTeamText";
 import { ScoreCell, parseScoreValue } from "./ScoreCell";
 import type { ReactNode } from "react";
+import { CompareChips } from "./CompareChips";
+import { StreamingMarkdown } from "./StreamingMarkdown";
+import type { TeamOption } from "@/lib/teams";
+
+function extractTeamNamesFromTables(content: string, teamTitles: string[]): string[] {
+  const found: string[] = [];
+  for (const title of teamTitles) {
+    if (content.includes(title)) found.push(title);
+  }
+  return found;
+}
 
 function flattenToText(node: ReactNode): string {
   if (node == null) return "";
@@ -19,7 +30,9 @@ function flattenToText(node: ReactNode): string {
 type AssistantMarkdownProps = {
   content: string;
   isStreaming?: boolean;
+  messageId?: string;
   teamTitles?: string[];
+  teams?: TeamOption[];
 };
 
 function TextWithRefs({
@@ -138,14 +151,15 @@ function buildComponents(teamTitles: string[]): Components {
 export function AssistantMarkdown({
   content,
   isStreaming = false,
+  messageId,
   teamTitles = [],
+  teams = [],
 }: AssistantMarkdownProps) {
   const components = buildComponents(teamTitles);
+  const compareTitles = extractTeamNamesFromTables(content, teamTitles);
 
-  if (!content.trim()) {
-    return isStreaming ? (
-      <span className="inline-block animate-pulse text-[#0d0d0d]">▍</span>
-    ) : null;
+  if (!content.trim() && !isStreaming) {
+    return null;
   }
 
   return (
@@ -155,11 +169,20 @@ export function AssistantMarkdown({
         isStreaming && "streaming"
       )}
     >
-      <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
-        {content}
-      </ReactMarkdown>
-      {isStreaming && (
-        <span className="ml-0.5 inline-block animate-pulse text-[#0d0d0d]">▍</span>
+      {isStreaming && content.trim() ? (
+        <StreamingMarkdown
+          content={content}
+          isStreaming={isStreaming}
+          messageId={messageId}
+          components={components}
+        />
+      ) : content.trim() ? (
+        <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+          {content}
+        </ReactMarkdown>
+      ) : null}
+      {!isStreaming && teams.length > 0 && compareTitles.length >= 2 && (
+        <CompareChips teams={teams} titlesInMessage={compareTitles} />
       )}
     </div>
   );
