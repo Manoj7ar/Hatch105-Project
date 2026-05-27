@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" role="img" aria-label="Hatch105">
+  <defs>
+    <linearGradient id="hatch105-icon-grad" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#bbedd9"/>
+      <stop stop-color="#addff6"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="8" fill="url(#hatch105-icon-grad)"/>
+  <path
+    fill="#0f172a"
+    d="M8.5 9.5h4.25v4.75h6.5V9.5H23.5v13H19.25v-4.75h-6.5v4.75H8.5V9.5z"
+  />
+</svg>

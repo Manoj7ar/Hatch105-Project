@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import type { RankedThesis, RankingState } from "@/lib/types";
 import { ideaPath } from "@/lib/idea-path";
 import { cn } from "@/lib/utils";
-import { Download, FileText, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { ExecutiveCard } from "./ExecutiveCard";
 import { TopThreeCards } from "./TopThreeCards";
 import { RankingTable } from "./RankingTable";
@@ -204,13 +204,10 @@ export function RankingDashboard() {
 
   return (
     <div className="space-y-8 pb-24">
-      <ExecutiveCard state={state} />
+      <ExecutiveCard state={state} onExportRanking={downloadMd} />
 
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <nav
-          className="inline-flex flex-wrap rounded-lg bg-slate-100/80 p-1"
-          role="tablist"
-        >
+      <div className="space-y-3">
+        <nav className="hatch-tablist" role="tablist">
           {TABS.map(({ id, label }) => (
             <button
               key={id}
@@ -219,35 +216,36 @@ export function RankingDashboard() {
               aria-selected={tab === id}
               onClick={() => setTab(id)}
               className={cn(
-                "hatch-tab",
+                "hatch-tab hatch-tab--segment",
                 tab === id && "hatch-tab--active",
                 id === "rerank" && tab === id && "hatch-tab--ai"
               )}
             >
               {label}
               {id === "all" && (
-                <span className="ml-1.5 text-slate-400">{state.ranked.length}</span>
+                <span className="ml-1 tabular-nums text-slate-400">{state.ranked.length}</span>
               )}
             </button>
           ))}
         </nav>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-nowrap items-center justify-end gap-2">
           <FocusInput
             ref={searchRef}
             type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search teams… (/)"
-            className="sm:w-48"
+            className="min-w-0 flex-1 sm:max-w-xs"
           />
-          <Button variant="groq" onClick={downloadBrief} disabled={briefLoading}>
+          <Button
+            variant="groq"
+            onClick={downloadBrief}
+            disabled={briefLoading}
+            className="shrink-0"
+          >
             <GroqIcon size={16} inverted />
             {briefLoading ? "Memo…" : "Executive brief"}
-          </Button>
-          <Button variant="secondary" onClick={downloadMd} className="shrink-0">
-            <Download className="h-4 w-4" />
-            Export
           </Button>
         </div>
       </div>

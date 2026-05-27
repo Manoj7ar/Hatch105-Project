@@ -1,7 +1,14 @@
+import { Download } from "lucide-react";
 import type { RankingState } from "@/lib/types";
 import { Badge } from "./ui/Badge";
+import { Button } from "./ui/Button";
 
-export function ExecutiveCard({ state }: { state: RankingState }) {
+type ExecutiveCardProps = {
+  state: RankingState;
+  onExportRanking?: () => void;
+};
+
+export function ExecutiveCard({ state, onExportRanking }: ExecutiveCardProps) {
   const { executivePick: pick } = state;
 
   return (
@@ -19,9 +26,23 @@ export function ExecutiveCard({ state }: { state: RankingState }) {
             <span className="font-mono font-semibold text-slate-700">{pick.fit}</span>
           </p>
         </div>
-        <Badge variant={pick.fit >= 4.2 ? "success" : "default"}>
-          {pick.fit >= 4.2 ? "Strong Hatch fit" : "Top pick"}
-        </Badge>
+        <div className="flex flex-wrap items-center gap-2">
+          {onExportRanking && (
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={onExportRanking}
+              className="shrink-0 px-2.5 text-slate-600"
+              title="Download RANKING.md"
+            >
+              <Download className="h-4 w-4" aria-hidden />
+              Export ranking
+            </Button>
+          )}
+          <Badge variant={pick.fit >= 4.2 ? "success" : "default"}>
+            {pick.fit >= 4.2 ? "Strong Hatch fit" : "Top pick"}
+          </Badge>
+        </div>
       </div>
 
       <p className="mt-5 text-[15px] leading-relaxed text-slate-600">{pick.mvp}</p>
