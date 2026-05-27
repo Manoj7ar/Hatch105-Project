@@ -21,6 +21,8 @@ type ChatComposerProps = {
   onClear?: () => void;
   teams: TeamOption[];
   onScoreIdea?: () => void;
+  /** Increment to focus textarea and place caret at end (e.g. after @mention prefill). */
+  focusToken?: number;
 };
 
 export function ChatComposer({
@@ -32,6 +34,7 @@ export function ChatComposer({
   onClear,
   teams,
   onScoreIdea,
+  focusToken = 0,
 }: ChatComposerProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [caret, setCaret] = useState(0);
@@ -66,6 +69,16 @@ export function ChatComposer({
   useEffect(() => {
     resize();
   }, [value, resize]);
+
+  useEffect(() => {
+    if (!focusToken) return;
+    const el = textareaRef.current;
+    if (!el) return;
+    el.focus();
+    const end = value.length;
+    el.setSelectionRange(end, end);
+    setCaret(end);
+  }, [focusToken, value.length]);
 
   const syncMention = useCallback(
     (text: string, caretIndex: number) => {

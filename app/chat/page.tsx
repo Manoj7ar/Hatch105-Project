@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { AppHeader } from "@/components/AppHeader";
 import { ChatInterface } from "@/components/ChatInterface";
 
@@ -11,7 +12,15 @@ export default function ChatPage() {
     <div className="flex h-dvh flex-col bg-white">
       <AppHeader fullWidth />
       <main className="flex min-h-0 flex-1 flex-col">
-        <ChatInterface />
+        <Suspense
+          fallback={
+            <div className="flex flex-1 items-center justify-center text-sm text-slate-500">
+              Loading chat…
+            </div>
+          }
+        >
+          <ChatInterface />
+        </Suspense>
       </main>
     </div>
   );

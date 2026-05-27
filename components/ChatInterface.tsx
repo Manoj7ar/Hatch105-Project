@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ChatComposer } from "./chat/ChatComposer";
 import { ChatEmptyState } from "./chat/ChatEmptyState";
 import { ChatMessageRow } from "./chat/ChatMessageRow";
@@ -14,8 +15,12 @@ type Message = {
 };
 
 export function ChatInterface() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const mentionPrefillRef = useRef<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [composerFocusToken, setComposerFocusToken] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pendingAssistantId, setPendingAssistantId] = useState<string | null>(
@@ -43,6 +48,34 @@ export function ChatInterface() {
       })
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (teams.length === 0) return;
+
+    const refParam = searchParams.get("ref")?.trim();
+    const qParam = searchParams.get("q")?.trim();
+    const prefillKey = refParam ? `ref:${refParam.toUpperCase()}` : qParam ? `q:${qParam}` : null;
+
+    if (!prefillKey || mentionPrefillRef.current === prefillKey) return;
+
+    let mentionText: string | null = null;
+
+    if (refParam) {
+      const team = teams.find(
+        (t) => t.ref.toUpperCase() === refParam.toUpperCase()
+      );
+      if (team) mentionText = `@${team.title} `;
+    } else if (qParam) {
+      mentionText = qParam.endsWith(" ") ? qParam : `${qParam} `;
+    }
+
+    if (!mentionText) return;
+
+    mentionPrefillRef.current = prefillKey;
+    setInput(mentionText);
+    setComposerFocusToken((n) => n + 1);
+    router.replace("/chat", { scroll: false });
+  }, [teams, searchParams, router]);
 
   const teamTitles = teams.map((t) => t.title);
 
@@ -189,6 +222,7 @@ export function ChatInterface() {
           showClear={messages.length > 0}
           onClear={clearChat}
           teams={teams}
+          focusToken={composerFocusToken}
           onScoreIdea={() => setScoreModalOpen(true)}
         />
       </div>

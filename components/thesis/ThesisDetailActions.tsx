@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { GroqIcon } from "@/components/ui/GroqIcon";
 import { useCompare } from "@/lib/compare-store";
 import Link from "next/link";
-import { ideaPath } from "@/lib/idea-path";
+import { chatMentionPath, ideaPath } from "@/lib/idea-path";
 
 export function ThesisDetailActions({
   thesis,
@@ -32,7 +32,6 @@ export function ThesisDetailActions({
   const [savingOverride, setSavingOverride] = useState(false);
 
   const inCompare = has(thesis.ref);
-  const chatHint = encodeURIComponent(`Tell me about @${thesis.title}`);
 
   const refresh = () => router.refresh();
 
@@ -96,7 +95,7 @@ export function ThesisDetailActions({
           Edit override
         </Button>
         <Link
-          href={`/chat?q=${chatHint}`}
+          href={chatMentionPath(thesis.ref)}
           className="inline-flex items-center rounded-lg bg-white px-3 py-2 text-xs font-medium text-[var(--groq-orange)] ring-1 ring-[#f9c4b0] hover:bg-[#fff0eb]"
         >
           Ask in chat
