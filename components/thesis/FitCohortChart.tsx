@@ -34,7 +34,7 @@ export function FitCohortChart({
   return (
     <figure className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
       <figcaption className="hatch-label mb-3">Hatch fit in cohort</figcaption>
-      <p className="text-3xl font-semibold tabular-nums text-[var(--groq-orange)]">
+      <p className="text-3xl font-semibold tabular-nums text-slate-900">
         {thesis.fit}
         <span className="ml-2 text-sm font-normal text-slate-500">
           top {percentile}% · rank {thesis.rank}/{benchmarks.count}
@@ -51,7 +51,7 @@ export function FitCohortChart({
           title={`Cohort median ${benchmarks.medianFit}`}
         />
         <div
-          className="absolute -top-1 h-5 w-5 -translate-x-1/2 rounded-full border-2 border-white bg-[var(--groq-orange)] shadow"
+          className="absolute -top-1 h-5 w-5 -translate-x-1/2 rounded-full border-2 border-white bg-slate-700 shadow-sm"
           style={{ left: `${Math.min(100, Math.max(0, posPct))}%` }}
         />
       </div>

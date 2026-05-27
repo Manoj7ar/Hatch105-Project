@@ -197,6 +197,20 @@ body {
   text-decoration: underline;
 }
 
+/* Company profile pages — slate UI; Groq orange only on AI actions */
+.thesis-detail .hatch-link {
+  color: #475569;
+}
+
+.thesis-detail .hatch-link:hover {
+  color: #0f172a;
+}
+
+.thesis-detail .hatch-focus-ring:focus-visible {
+  border-color: #94a3b8;
+  box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.35);
+}
+
 .hatch-accent-border {
   border-left: 4px solid var(--groq-orange);
 }

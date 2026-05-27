@@ -42,7 +42,7 @@ export function ThesisDetailPage({
     Math.round((thesis.fit - benchmarks.medianFit) * 100) / 100;
 
   return (
-    <article className="space-y-10">
+    <article className="thesis-detail space-y-10">
       <Link
         href="/"
         className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800"
@@ -61,9 +61,7 @@ export function ThesisDetailPage({
             <div className="mt-2 flex flex-wrap items-center gap-2">
               <span className="font-mono text-sm text-slate-400">{thesis.ref}</span>
               <span className="hatch-chip">Rank #{thesis.rank}</span>
-              <Badge variant={thesis.scoredWith.includes("groq") ? "groq" : "muted"}>
-                {scoredLabel}
-              </Badge>
+              <Badge variant="muted">{scoredLabel}</Badge>
               <Badge variant={verdictVariant(thesis.verdict)}>{thesis.verdict}</Badge>
               {thesis.overrideNote && (
                 <Badge variant="warning" className="text-[10px]">
@@ -76,7 +74,7 @@ export function ThesisDetailPage({
             <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
               Hatch Fit
             </p>
-            <p className="font-mono text-4xl font-semibold tabular-nums text-[var(--groq-orange)]">
+            <p className="font-mono text-4xl font-semibold tabular-nums text-slate-900">
               {thesis.fit}
             </p>
           </div>
@@ -160,7 +158,7 @@ export function ThesisDetailPage({
                 </div>
                 <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-200">
                   <div
-                    className="h-full rounded-full bg-[var(--groq-orange)]"
+                    className="h-full rounded-full bg-slate-600"
                     style={{ width: `${(c.score / 5) * 100}%` }}
                   />
                 </div>
@@ -263,7 +261,7 @@ export function ThesisDetailPage({
         {adjacent.prev ? (
           <Link
             href={ideaPath(adjacent.prev.ref)}
-            className="inline-flex items-center gap-1 text-sm font-medium text-slate-700 hover:text-[var(--groq-orange)]"
+            className="inline-flex items-center gap-1 text-sm font-medium text-slate-600 hover:text-slate-900"
           >
             <ChevronLeft className="h-4 w-4" />
             <span className="max-w-[12rem] truncate">{adjacent.prev.title}</span>
@@ -274,7 +272,7 @@ export function ThesisDetailPage({
         {adjacent.next ? (
           <Link
             href={ideaPath(adjacent.next.ref)}
-            className="inline-flex items-center gap-1 text-sm font-medium text-slate-700 hover:text-[var(--groq-orange)]"
+            className="inline-flex items-center gap-1 text-sm font-medium text-slate-600 hover:text-slate-900"
           >
             <span className="max-w-[12rem] truncate">{adjacent.next.title}</span>
             <ChevronRight className="h-4 w-4" />

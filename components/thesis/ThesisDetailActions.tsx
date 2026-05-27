@@ -96,7 +96,7 @@ export function ThesisDetailActions({
         </Button>
         <Link
           href={chatMentionPath(thesis.ref)}
-          className="inline-flex items-center rounded-lg bg-white px-3 py-2 text-xs font-medium text-[var(--groq-orange)] ring-1 ring-[#f9c4b0] hover:bg-[#fff0eb]"
+          className="inline-flex items-center rounded-lg bg-white px-3 py-2 text-xs font-medium text-slate-700 ring-1 ring-slate-200 hover:bg-slate-50"
         >
           Ask in chat
         </Link>
@@ -135,9 +135,9 @@ export function ThesisDetailActions({
         </div>
       )}
 
-      <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <section className="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
         <h2 className="hatch-label">Research & Groq</h2>
-        <div className="mt-3 flex gap-2">
+        <div className="mt-3 inline-flex rounded-lg bg-slate-100/90 p-0.5">
           {(["grounded", "external"] as const).map((m) => (
             <button
               key={m}
@@ -145,8 +145,8 @@ export function ThesisDetailActions({
               onClick={() => setResearchMode(m)}
               className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
                 researchMode === m
-                  ? "bg-[var(--groq-orange)] text-white"
-                  : "bg-slate-100 text-slate-600 hover:bg-[#fff0eb] hover:text-[var(--groq-orange)]"
+                  ? "bg-white text-slate-900 shadow-sm ring-1 ring-slate-200/80"
+                  : "text-slate-600 hover:text-slate-900"
               }`}
             >
               {m === "grounded" ? "Grounded" : "External"}
@@ -155,7 +155,7 @@ export function ThesisDetailActions({
         </div>
         <div className="mt-3 flex flex-wrap gap-2">
           <Button
-            variant="outline-accent"
+            variant="secondary"
             className="text-xs"
             disabled={researching}
             onClick={() => handleResearch(false)}
@@ -192,7 +192,7 @@ export function ThesisDetailActions({
                 {c.url && (
                   <a
                     href={c.url}
-                    className="ml-1 text-[var(--groq-orange)] underline"
+                    className="ml-1 text-slate-600 underline hover:text-slate-900"
                     target="_blank"
                     rel="noreferrer"
                   >

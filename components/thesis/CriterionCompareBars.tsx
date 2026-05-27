@@ -37,12 +37,12 @@ export function CriterionCompareBars({
               </div>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="w-10 shrink-0 text-[10px] text-[var(--groq-orange)]">
+                  <span className="w-10 shrink-0 text-[10px] text-slate-600">
                     Team
                   </span>
                   <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-100">
                     <div
-                      className="h-full rounded-full bg-[var(--groq-orange)]"
+                      className="h-full rounded-full bg-slate-600"
                       style={{ width: `${(team / 5) * 100}%` }}
                     />
                   </div>

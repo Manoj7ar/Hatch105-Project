@@ -101,8 +101,8 @@ export function CriterionRadarChart({
         />
         <polygon
           points={teamPoly}
-          fill="var(--groq-orange-muted)"
-          stroke="var(--groq-orange)"
+          fill="rgba(51, 65, 85, 0.12)"
+          stroke="#475569"
           strokeWidth={2}
         />
         {teamValues.map((v, i) => {
@@ -114,14 +114,14 @@ export function CriterionRadarChart({
               cx={p.x}
               cy={p.y}
               r={3}
-              fill="var(--groq-orange)"
+              fill="#334155"
             />
           );
         })}
       </svg>
       <div className="mt-3 flex justify-center gap-4 text-xs text-slate-600">
         <span className="flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded-full bg-[var(--groq-orange)]" />
+          <span className="h-2 w-2 rounded-full bg-slate-600" />
           {thesis.ref}
         </span>
         <span className="flex items-center gap-1.5">
