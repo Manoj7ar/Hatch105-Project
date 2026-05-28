@@ -5,8 +5,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ChatComposer } from "./chat/ChatComposer";
 import { ChatEmptyState } from "./chat/ChatEmptyState";
 import { ChatMessageRow } from "./chat/ChatMessageRow";
-import type { TeamOption } from "@/lib/teams";
+import { useTeams } from "@/hooks/useTeams";
 import { ScoreHandoffModal } from "./chat/ScoreHandoffModal";
+import {
+  notifyRankingUpdated,
+  rankedRefsFromState,
+} from "@/lib/ranking-sync";
+import type { RankingState } from "@/lib/types";
 
 type Message = {
   id: string;
@@ -26,7 +31,7 @@ export function ChatInterface() {
   const [pendingAssistantId, setPendingAssistantId] = useState<string | null>(
     null
   );
-  const [teams, setTeams] = useState<TeamOption[]>([]);
+  const { teams } = useTeams();
   const [scoreModalOpen, setScoreModalOpen] = useState(false);
   const [scoreModalText, setScoreModalText] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -39,15 +44,6 @@ export function ChatInterface() {
   useEffect(() => {
     scrollToBottom();
   }, [messages, loading, scrollToBottom]);
-
-  useEffect(() => {
-    fetch("/api/teams")
-      .then((r) => r.json())
-      .then((data: { teams?: TeamOption[] }) => {
-        if (data.teams) setTeams(data.teams);
-      })
-      .catch(() => {});
-  }, []);
 
   useEffect(() => {
     if (teams.length === 0) return;
@@ -233,6 +229,9 @@ export function ChatInterface() {
           onClose={() => {
             setScoreModalOpen(false);
             setScoreModalText("");
+          }}
+          onScored={(state) => {
+            notifyRankingUpdated(rankedRefsFromState(state.ranked));
           }}
         />
       )}

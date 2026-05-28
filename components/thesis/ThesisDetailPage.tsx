@@ -11,6 +11,7 @@ import { FitCohortChart } from "./FitCohortChart";
 import { ThesisDetailActions } from "./ThesisDetailActions";
 import { ThesisDetailBody } from "./ThesisDetailBody";
 import type { CohortBenchmarks } from "@/lib/thesis-detail";
+import type { ResearchResult } from "@/lib/research";
 import { getFitPercentile, ideaPath } from "@/lib/thesis-detail";
 import {
   getWhyThisRank,
@@ -32,11 +33,13 @@ export function ThesisDetailPage({
   benchmarks,
   adjacent,
   ranked,
+  research = null,
 }: {
   thesis: RankedThesis;
   benchmarks: CohortBenchmarks;
   adjacent: { prev: RankedThesis | null; next: RankedThesis | null };
   ranked: RankedThesis[];
+  research?: ResearchResult | null;
 }) {
   const why = getWhyThisRank(thesis, benchmarks, ranked);
   const similar = getSimilarTheses(thesis, ranked);
@@ -136,7 +139,11 @@ export function ThesisDetailPage({
           </div>
         }
         actions={
-          <ThesisDetailActions thesis={thesis} topPickRef={benchmarks.topPick.ref} />
+          <ThesisDetailActions
+            thesis={thesis}
+            topPickRef={benchmarks.topPick.ref}
+            research={research}
+          />
         }
         charts={
           <section className="grid gap-4 lg:grid-cols-3">

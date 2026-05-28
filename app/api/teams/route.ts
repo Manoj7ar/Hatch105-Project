@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { getTeamsFromRanking } from "@/lib/teams";
 import { getRankingState } from "@/lib/data";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const { ranked } = getRankingState();
@@ -15,7 +17,10 @@ export async function GET() {
         verdict,
       })
     );
-    return NextResponse.json({ teams });
+    return NextResponse.json(
+      { teams },
+      { headers: { "Cache-Control": "no-store" } }
+    );
   } catch (e) {
     const message = e instanceof Error ? e.message : "Failed to load teams";
     return NextResponse.json({ error: message }, { status: 500 });

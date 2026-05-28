@@ -1,4 +1,4 @@
-import { loadCandidateTheses, getRankingState } from "./data";
+import { getRankingState } from "./data";
 import type { RankedThesis } from "./types";
 import { findTeamsByPrefixFrom } from "./teams-mention";
 
@@ -13,8 +13,11 @@ export type Team = {
 
 export type TeamOption = Team;
 
-function normalizeSearchKey(title: string): string {
-  return title.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+function normalizeSearchKey(title: string, ref: string): string {
+  return `${title} ${ref}`
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
 }
 
 function thesisToTeam(row: {
@@ -27,30 +30,16 @@ function thesisToTeam(row: {
   return {
     ref: row.ref,
     title: row.title,
-    searchKey: normalizeSearchKey(row.title),
+    searchKey: normalizeSearchKey(row.title, row.ref),
     rank: row.rank,
     fit: row.fit,
     verdict: row.verdict,
   };
 }
 
+/** Every scored company (base 50 + live re-rank extras) for @mentions and chat. */
 export function getAllTeams(): Team[] {
-  const theses = loadCandidateTheses();
-  const scores = getRankingState().ranked;
-  const rankByRef = new Map(scores.map((r) => [r.ref, r]));
-
-  return theses
-    .map((t) => {
-      const ranked = rankByRef.get(t.ref);
-      return thesisToTeam({
-        ref: t.ref,
-        title: t.title,
-        rank: ranked?.rank,
-        fit: ranked?.fit,
-        verdict: ranked?.verdict,
-      });
-    })
-    .sort((a, b) => a.title.localeCompare(b.title));
+  return getTeamsFromRanking(getRankingState().ranked);
 }
 
 export function getTeamsFromRanking(ranked: RankedThesis[]): Team[] {
@@ -71,9 +60,13 @@ export function findTeamsByPrefix(query: string, limit = 8): Team[] {
   return findTeamsByPrefixFrom(query, getAllTeams(), limit);
 }
 
-/** Expand @TeamName → @TeamName (ref H-XX) for model grounding */
+/** Expand @TeamName or @H-XX → @TeamName (ref H-XX) for model grounding */
 export function expandTeamMentions(text: string): string {
-  const teams = getAllTeams().sort((a, b) => b.title.length - a.title.length);
+  const teams = getAllTeams().sort((a, b) => {
+    const lenA = Math.max(a.title.length, a.ref.length);
+    const lenB = Math.max(b.title.length, b.ref.length);
+    return lenB - lenA;
+  });
   if (!teams.length || !text.includes("@")) return text;
 
   type Span = { start: number; end: number; team: Team };
@@ -83,8 +76,13 @@ export function expandTeamMentions(text: string): string {
     if (text[i] !== "@") continue;
     const after = text.slice(i + 1);
     for (const team of teams) {
-      if (!after.startsWith(team.title)) continue;
-      const end = i + 1 + team.title.length;
+      const refHit = after.toLowerCase().startsWith(team.ref.toLowerCase());
+      const titleHit = after.startsWith(team.title);
+      if (!refHit && !titleHit) continue;
+
+      const end = refHit
+        ? i + 1 + team.ref.length
+        : i + 1 + team.title.length;
       const tail = text.slice(end);
       if (tail.startsWith(" (ref ")) break;
       spans.push({ start: i, end, team });
@@ -122,4 +120,3 @@ export function formatTeamLabel(
   }
   return team.title;
 }
-

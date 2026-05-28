@@ -6,8 +6,13 @@ config();
 
 import { readFileSync } from "fs";
 import { parseThesesInput } from "../lib/parse";
-import { scoreThesis } from "../lib/scorer";
-import { saveScore, loadAllScores, loadCandidateTheses } from "../lib/data";
+import { scoreThesisForRanking } from "../lib/score-pipeline";
+import {
+  saveScore,
+  loadAllScores,
+  loadCandidateTheses,
+  mergeExtraTheses,
+} from "../lib/data";
 import { rankScores, placementSummary } from "../lib/rank";
 import { generateRankingMarkdown, buildRankingState } from "../lib/markdown";
 import { writeFileSync } from "fs";
@@ -40,17 +45,16 @@ async function main() {
   console.log(`Scoring ${newTheses.length} new thesis(es)...`);
 
   for (const t of newTheses) {
-    const score = await scoreThesis(t);
+    const score = await scoreThesisForRanking(t);
     saveScore(score);
     console.log(`  ${t.ref} → fit ${score.fit}`);
   }
 
   const base = loadCandidateTheses();
-  const allTheses = merge
-    ? [...base, ...newTheses.filter((n) => !base.some((b) => b.ref === n.ref))]
-    : [...loadAllScores().map(() => null), ...newTheses].length
-      ? [...base, ...newTheses]
-      : base;
+  const added = newTheses.filter((n) => !base.some((b) => b.ref === n.ref));
+  if (merge && added.length > 0) mergeExtraTheses(added);
+
+  const allTheses = merge ? [...base, ...added] : [...base, ...newTheses];
 
   const scores = loadAllScores().filter((s) =>
     allTheses.some((t) => t.ref === s.ref)

@@ -55,7 +55,10 @@ export function MentionAutocomplete({
               i === activeIndex ? "hatch-mention-active" : "hover:bg-slate-50"
             )}
           >
-            <span className="text-sm font-medium text-[#0d0d0d]">{team.title}</span>
+            <span className="text-sm font-medium text-[#0d0d0d]">
+              {team.title}
+              <span className="ml-1.5 font-normal text-[#8e8e8e]">{team.ref}</span>
+            </span>
             {team.rank != null && (
               <span className="text-xs text-[#8e8e8e]">
                 #{team.rank}

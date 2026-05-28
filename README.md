@@ -12,7 +12,7 @@ Built with **Next.js**, **Groq** (optional), and persisted `scores/*.json` so hu
 |------------|--------|
 | Ranked list of all 50 theses | [http://localhost:3000](http://localhost:3000) → **All ideas** |
 | Written rubric + hard gates | [CRITERIA.md](CRITERIA.md) + [`lib/gates.ts`](lib/gates.ts) |
-| Full company profile + cohort charts | `/ideas/H-01` … `/ideas/H-50` |
+| Full company profile + cohort charts | `/ideas/H-XX` (base 50 + live re-rank extras) |
 | **Live re-rank** (batch ingest + progress) | **Live re-rank** tab or CLI |
 | Grounded dataset chat (`@` mentions) | [/chat](http://localhost:3000/chat) |
 | Compare up to 4 teams | [/compare](http://localhost:3000/compare) |
@@ -97,6 +97,10 @@ npm run rank -- --input fixtures/new_theses.json --merge
 
 [`fixtures/new_theses.json`](fixtures/new_theses.json) includes five sample ideas (H-51–H-55) for dry runs.
 
+**Persistence after refresh:** each live re-rank writes `scores/H-XX.json` and merges full thesis rows into **`data/extra_theses.json`** (and the writable root copy when different). Rankings, **Ask dataset** chat, **@mentions** (by team name or `H-XX`), company pages, compare, research, and portfolio all use the same merged list (base 50 + extras). On Vercel, commit new `scores/*.json` and `data/extra_theses.json` for production; `/tmp` alone is cleared on cold starts.
+
+**Full company profiles for new ideas:** live re-rank runs **grounded research** (saved under `research/H-XX.json`) then **full-detail Groq scoring** (criterion reasons, technical snapshot, 3-day / 3-week / 10-week plan, trap note, research citations in the score file). `/ideas/H-XX` shows the same expanded layout as the base cohort (charts, Why this rank, similar theses, Research & Groq). Opening a profile for an older extra that was scored before this pipeline will auto-backfill once (research + re-score if `GROQ_API_KEY` is set).
+
 ---
 
 ## Chat
@@ -133,7 +137,7 @@ Each thesis has a dedicated route: **`/ideas/H-XX`**
 | Command | Description |
 |---------|-------------|
 | `npm run dev` | Development server |
-| `npm run build` | Production build (pre-renders 50 idea pages) |
+| `npm run build` | Production build (pre-renders idea pages for base + `data/extra_theses.json`) |
 | `npm run seed` | Score all candidate theses |
 | `npm run rank -- --input <file> [--merge]` | CLI live re-rank |
 | `npm test` | Vitest — gates + heuristic golden cases |
@@ -162,6 +166,7 @@ Initial-dataset/          Challenge brief + candidate_theses.{json,csv}
 CRITERIA.md               Rubric (human-readable source of truth)
 fixtures/                 Sample theses for live re-rank practice
 scores/                   One JSON file per thesis (committed for deploy)
+data/extra_theses.json    Live re-rank theses (commit for deploy)
 data/competitors.json     Grounded research cache for "vs X" wedges
 lib/
   scorer.ts               Groq + heuristic scoring

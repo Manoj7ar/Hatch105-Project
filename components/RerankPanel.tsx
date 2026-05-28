@@ -25,12 +25,18 @@ export function RerankPanel({
   onChange,
   onFile,
   onComplete,
+  onClearComplete,
   externalError,
 }: {
   value: string;
   onChange: (v: string) => void;
   onFile: (file: File) => void;
   onComplete: (data: BatchCompleteData) => void;
+  onClearComplete?: (data: {
+    state: RankingState;
+    markdown: string;
+    removedRefs: string[];
+  }) => void;
   externalError?: string | null;
 }) {
   const [format, setFormat] = useState<InputFormat>("auto");
@@ -42,6 +48,22 @@ export function RerankPanel({
   >([]);
   const [localError, setLocalError] = useState<string | null>(null);
   const [phase, setPhase] = useState<"idle" | "scoring" | "done">("idle");
+  const [addedCount, setAddedCount] = useState(0);
+  const [clearing, setClearing] = useState(false);
+
+  const refreshAddedCount = useCallback(async () => {
+    try {
+      const res = await fetch("/api/rerank/extras");
+      const data = await res.json();
+      if (res.ok) setAddedCount(data.count ?? 0);
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  useEffect(() => {
+    void refreshAddedCount();
+  }, [refreshAddedCount, phase]);
 
   const preview = useMemo(
     () => (value.trim() ? previewThesesInput(value, format) : null),
@@ -70,11 +92,12 @@ export function RerankPanel({
           markdown: data.markdown ?? "",
           newRefs: data.newRefs ?? jobItems.filter((i) => i.status === "done").map((i) => i.ref),
         });
+        void refreshAddedCount();
         return true;
       }
       return false;
     },
-    [onComplete]
+    [onComplete, refreshAddedCount]
   );
 
   useEffect(() => {
@@ -153,6 +176,44 @@ export function RerankPanel({
     externalError ?? localError ?? (preview && !preview.ok ? preview.errors.join(" ") : null);
 
   const canSubmit = preview?.ok === true && !scoring;
+
+  const clearPreviousAdd = async () => {
+    if (addedCount === 0 || clearing || scoring) return;
+    const label =
+      addedCount === 1
+        ? "1 live re-rank idea"
+        : `${addedCount} live re-rank ideas`;
+    if (
+      !window.confirm(
+        `Remove ${label} from rankings, chat @mentions, and saved scores? The original 50 ideas stay.`
+      )
+    ) {
+      return;
+    }
+
+    setClearing(true);
+    setLocalError(null);
+    try {
+      const res = await fetch("/api/rerank/extras", { method: "DELETE" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Could not clear additions");
+
+      setPlacements([]);
+      setPhase("idle");
+      setItems([]);
+      setJobId(null);
+      onClearComplete?.({
+        state: data.state,
+        markdown: data.markdown ?? "",
+        removedRefs: data.removedRefs ?? [],
+      });
+      await refreshAddedCount();
+    } catch (e) {
+      setLocalError(e instanceof Error ? e.message : "Clear failed");
+    } finally {
+      setClearing(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -305,6 +366,21 @@ export function RerankPanel({
           </ul>
         </div>
       )}
+
+      <div className="flex justify-center pt-2">
+        <button
+          type="button"
+          disabled={addedCount === 0 || clearing || scoring}
+          onClick={() => void clearPreviousAdd()}
+          className="text-xs text-slate-500 underline-offset-2 transition-colors hover:text-slate-800 hover:underline disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          {clearing
+            ? "Clearing…"
+            : addedCount > 0
+              ? `Clear previous add (${addedCount})`
+              : "Clear previous add"}
+        </button>
+      </div>
     </div>
   );
 }

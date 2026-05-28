@@ -3,8 +3,9 @@ import type { Metadata } from "next";
 import { AppHeader } from "@/components/AppHeader";
 import { ThesisDetailPage } from "@/components/thesis/ThesisDetailPage";
 import { CompareTray } from "@/components/CompareTray";
-import { loadCandidateTheses } from "@/lib/data";
-import { getRankingState } from "@/lib/data";
+import { getRankingState, loadAllTheses, loadResearch } from "@/lib/data";
+import { ensureThesisProfile } from "@/lib/ensure-thesis-profile";
+import type { ResearchResult } from "@/lib/research";
 import {
   getAdjacentRefs,
   getCohortBenchmarks,
@@ -13,9 +14,11 @@ import {
 
 type PageProps = { params: Promise<{ ref: string }> };
 
+export const dynamic = "force-dynamic";
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
-  const theses = loadCandidateTheses();
-  return theses.map((t) => ({ ref: t.ref }));
+  return loadAllTheses().map((t) => ({ ref: t.ref }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -32,9 +35,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function IdeaDetailRoute({ params }: PageProps) {
   const { ref } = await params;
   const state = getRankingState();
-  const thesis = getRankedThesisByRef(ref, state.ranked);
+  let thesis = getRankedThesisByRef(ref, state.ranked);
 
   if (!thesis) notFound();
+
+  thesis = await ensureThesisProfile(ref, thesis);
+
+  const research = loadResearch(ref) as ResearchResult | null;
 
   const benchmarks = getCohortBenchmarks(state.ranked);
   const adjacent = getAdjacentRefs(state.ranked, thesis.ref);
@@ -48,6 +55,7 @@ export default async function IdeaDetailRoute({ params }: PageProps) {
           benchmarks={benchmarks}
           adjacent={adjacent}
           ranked={state.ranked}
+          research={research}
         />
       </main>
       <CompareTray />

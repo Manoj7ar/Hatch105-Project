@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { parseThesesInput } from "@/lib/parse";
-import { loadCandidateTheses } from "@/lib/data";
+import { loadAllTheses, loadCandidateTheses } from "@/lib/data";
 import { startBatchJob, finalizeRanking } from "@/lib/rerank-batch";
 import { getJob } from "@/lib/job-store";
 import type { Thesis } from "@/lib/types";
@@ -15,8 +15,8 @@ export async function POST(req: NextRequest) {
     if (body.text) {
       theses = parseThesesInput(body.text, body.format ?? "auto");
     } else if (body.refs?.length) {
-      const base = loadCandidateTheses();
-      theses = base.filter((t) => body.refs.includes(t.ref));
+      const all = loadAllTheses();
+      theses = all.filter((t) => body.refs.includes(t.ref));
     } else if (body.theses?.length) {
       theses = body.theses;
     } else {

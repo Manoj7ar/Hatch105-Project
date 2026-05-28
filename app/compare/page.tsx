@@ -10,6 +10,7 @@ import { EvidenceChip } from "@/components/EvidenceChip";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { ideaPath } from "@/lib/idea-path";
+import { RANKING_UPDATED_EVENT } from "@/lib/ranking-sync";
 
 export default function ComparePage() {
   const { refs } = useCompare();
@@ -17,17 +18,28 @@ export default function ComparePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    (async () => {
+    let cancelled = false;
+
+    const loadRows = async () => {
       setLoading(true);
       try {
-        const res = await fetch("/api/ranking");
+        const res = await fetch("/api/ranking", { cache: "no-store" });
         const data = await res.json();
         const ranked = (data.state?.ranked ?? []) as RankedThesis[];
-        setRows(ranked.filter((r: RankedThesis) => refs.includes(r.ref)));
+        if (!cancelled) {
+          setRows(ranked.filter((r: RankedThesis) => refs.includes(r.ref)));
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
-    })();
+    };
+
+    void loadRows();
+    window.addEventListener(RANKING_UPDATED_EVENT, loadRows);
+    return () => {
+      cancelled = true;
+      window.removeEventListener(RANKING_UPDATED_EVENT, loadRows);
+    };
   }, [refs]);
 
   return (

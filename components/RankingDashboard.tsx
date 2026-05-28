@@ -18,6 +18,10 @@ import { PortfolioBoard } from "./PortfolioBoard";
 import { TrapStories } from "./traps/TrapStories";
 import { TensionTable } from "./traps/TensionTable";
 import { groupTrapStories, listCohortTensions } from "@/lib/thesis-insights";
+import {
+  notifyRankingUpdated,
+  rankedRefsFromState,
+} from "@/lib/ranking-sync";
 
 type Tab = "all" | "top3" | "traps" | "rerank" | "portfolio";
 
@@ -51,11 +55,15 @@ export function RankingDashboard() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/ranking");
+      const res = await fetch("/api/ranking", { cache: "no-store" });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Failed to load");
-      setState(data.state);
+      const nextState = data.state as RankingState;
+      setState(nextState);
       setMarkdown(data.markdown ?? "");
+      if (nextState?.ranked) {
+        notifyRankingUpdated(rankedRefsFromState(nextState.ranked));
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Load failed");
     } finally {
@@ -136,6 +144,12 @@ export function RankingDashboard() {
     setHighlightIndex(0);
   }, [search, tab]);
 
+  const applyRankingUpdate = useCallback((next: RankingState, md: string) => {
+    setState(next);
+    setMarkdown(md);
+    notifyRankingUpdated(rankedRefsFromState(next.ranked));
+  }, []);
+
   const onRerankComplete = (data: {
     state: RankingState;
     placements: { ref: string; rank: number; summary: string }[];
@@ -143,11 +157,20 @@ export function RankingDashboard() {
     newRefs: string[];
   }) => {
     setError(null);
-    setState(data.state);
-    setMarkdown(data.markdown);
+    applyRankingUpdate(data.state, data.markdown);
     setPlacements(data.placements);
     setNewRefs(new Set(data.newRefs ?? []));
     setTab("all");
+  };
+
+  const onClearPreviousAdd = (data: {
+    state: RankingState;
+    markdown: string;
+  }) => {
+    setError(null);
+    applyRankingUpdate(data.state, data.markdown);
+    setPlacements([]);
+    setNewRefs(new Set());
   };
 
   const downloadMd = () => {
@@ -271,6 +294,7 @@ export function RankingDashboard() {
           onChange={setRerankInput}
           onFile={async (f) => setRerankInput(await f.text())}
           onComplete={onRerankComplete}
+          onClearComplete={onClearPreviousAdd}
           externalError={tab === "rerank" ? error : null}
         />
       ) : tab === "portfolio" ? (

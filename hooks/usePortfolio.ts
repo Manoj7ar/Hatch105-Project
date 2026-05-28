@@ -1,6 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import {
+  RANKING_UPDATED_EVENT,
+  type RankingUpdatedDetail,
+} from "@/lib/ranking-sync";
 
 export type PortfolioColumn = "considering" | "building" | "passed";
 
@@ -26,10 +30,33 @@ function load(): PortfolioState {
 }
 
 export function usePortfolio() {
-  const [state, setState] = useState<PortfolioState>(EMPTY);
+  const [state, setState] = useState<PortfolioState>(() => load());
 
   useEffect(() => {
-    setState(load());
+    const onRankingUpdated = (event: Event) => {
+      const detail = (event as CustomEvent<RankingUpdatedDetail>).detail;
+      const valid = detail?.rankedRefs;
+      if (!valid?.length) return;
+      const allowed = new Set(valid);
+      setState((prev) => {
+        const next: PortfolioState = {
+          considering: prev.considering.filter((r) => allowed.has(r)),
+          building: prev.building.filter((r) => allowed.has(r)),
+          passed: prev.passed.filter((r) => allowed.has(r)),
+        };
+        if (
+          next.considering.length === prev.considering.length &&
+          next.building.length === prev.building.length &&
+          next.passed.length === prev.passed.length
+        ) {
+          return prev;
+        }
+        return next;
+      });
+    };
+    window.addEventListener(RANKING_UPDATED_EVENT, onRankingUpdated);
+    return () =>
+      window.removeEventListener(RANKING_UPDATED_EVENT, onRankingUpdated);
   }, []);
 
   useEffect(() => {

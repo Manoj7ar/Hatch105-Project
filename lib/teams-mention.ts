@@ -16,13 +16,16 @@ export function findTeamsByPrefixFrom(
   limit = 8
 ): Team[] {
   const q = normalizeSearchKey(query).replace(/\s+/g, "");
+  const qRef = query.toLowerCase().replace(/[^a-z0-9]/g, "");
 
   const scored = teams
     .map((team) => {
       const key = team.searchKey.replace(/\s+/g, "");
+      const refKey = team.ref.toLowerCase().replace(/[^a-z0-9]/g, "");
       let score = 0;
       if (!q) score = 50;
       else if (key.startsWith(q)) score = 100;
+      else if (qRef && refKey.startsWith(qRef)) score = 95;
       else if (team.searchKey.includes(q) || wordStartsWithQuery(team, q)) score = 60;
       else if (team.title.toLowerCase().includes(q)) score = 40;
       else return null;
@@ -60,6 +63,7 @@ export function getMentionState(
     const partial = between.toLowerCase();
     const matching = teams.some(
       (t) =>
+        t.ref.toLowerCase().startsWith(partial) ||
         t.title.toLowerCase().startsWith(partial) ||
         t.title.toLowerCase().includes(partial)
     );

@@ -15,8 +15,9 @@ export function ChatEmptyState({ onSuggestion, disabled }: ChatEmptyStateProps) 
         </h2>
         <p className="mb-6 text-sm text-[#8e8e8e]">
           Type{" "}
-          <span className="font-medium text-[var(--groq-orange)]">@</span> in the
-          message box to mention a team by name.
+          <span className="font-medium text-[var(--groq-orange)]">@</span> to mention
+          a team by name or ref (e.g. @H-56). Live re-rank additions appear here
+          automatically.
         </p>
         <div className="flex max-w-2xl flex-wrap items-center justify-center gap-2">
           {CHAT_SUGGESTIONS.map((s) => (

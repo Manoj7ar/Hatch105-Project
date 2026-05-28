@@ -9,13 +9,16 @@ import {
   type ProgressItem,
 } from "../rerank/GroqScoringProgress";
 import { previewThesesInput } from "@/lib/thesis-input-client";
+import type { RankingState } from "@/lib/types";
 
 export function ScoreHandoffModal({
   initialText = "",
   onClose,
+  onScored,
 }: {
   initialText?: string;
   onClose: () => void;
+  onScored?: (state: RankingState) => void;
 }) {
   const [text, setText] = useState(initialText);
   const [scoring, setScoring] = useState(false);
@@ -34,10 +37,11 @@ export function ScoreHandoffModal({
     if (data.job?.done) {
       setScoring(false);
       setPlacements(data.placements ?? []);
+      if (data.state) onScored?.(data.state as RankingState);
       return true;
     }
     return false;
-  }, []);
+  }, [onScored]);
 
   useEffect(() => {
     if (!jobId || !scoring) return;

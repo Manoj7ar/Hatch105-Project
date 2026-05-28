@@ -1,8 +1,14 @@
 import type { Thesis } from "./types";
-import { scoreThesis, type ScoreContext } from "./scorer";
-import { saveScore, loadCandidateTheses, loadScore } from "./data";
-import { rankScores, placementSummary } from "./rank";
-import { buildRankingState, generateRankingMarkdown } from "./markdown";
+import { scoreThesisForRanking } from "./score-pipeline";
+import type { ScoreContext } from "./scorer";
+import {
+  saveScore,
+  loadCandidateTheses,
+  getRankingState,
+  mergeExtraTheses,
+} from "./data";
+import { placementSummary } from "./rank";
+import { generateRankingMarkdown } from "./markdown";
 import { writeFileSync } from "fs";
 import { join } from "path";
 import { createJob, getJob, updateJob, type BatchJob } from "./job-store";
@@ -33,10 +39,7 @@ export async function runBatchScore(
     updateJob(job);
 
     try {
-      const score = await scoreThesis(thesis, {
-        ...ctx,
-        forceGroq: ctx?.forceGroq ?? true,
-      });
+      const score = await scoreThesisForRanking(thesis, ctx);
       saveScore(score);
       item.status = "done";
     } catch (e) {
@@ -79,18 +82,11 @@ export async function startBatchJob(
 
 export function finalizeRanking(newRefs: string[], extraTheses: Thesis[] = []) {
   const base = loadCandidateTheses();
-  const allTheses = [
-    ...base,
-    ...extraTheses.filter((n) => !base.some((b) => b.ref === n.ref)),
-  ];
+  const added = extraTheses.filter((n) => !base.some((b) => b.ref === n.ref));
+  mergeExtraTheses(added);
 
-  const scores = allTheses
-    .map((t) => loadScore(t.ref))
-    .filter((s): s is import("./types").ThesisScore => s !== null);
-
-  const ranked = rankScores(scores, allTheses);
-  const placements = placementSummary(ranked, newRefs);
-  const state = buildRankingState(ranked);
+  const state = getRankingState();
+  const placements = placementSummary(state.ranked, newRefs);
   const markdown = generateRankingMarkdown(state);
   try {
     writeFileSync(join(process.cwd(), "RANKING.md"), markdown);

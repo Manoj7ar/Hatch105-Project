@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { RankedThesis, ResearchCitation } from "@/lib/types";
 import { Search, Scale, Loader2 } from "lucide-react";
@@ -9,13 +9,21 @@ import { GroqIcon } from "@/components/ui/GroqIcon";
 import { useCompare } from "@/lib/compare-store";
 import Link from "next/link";
 import { chatMentionPath, ideaPath } from "@/lib/idea-path";
+import {
+  notifyRankingUpdated,
+  rankedRefsFromState,
+} from "@/lib/ranking-sync";
+import type { RankingState } from "@/lib/types";
+import type { ResearchResult } from "@/lib/research";
 
 export function ThesisDetailActions({
   thesis,
   topPickRef,
+  research = null,
 }: {
   thesis: RankedThesis;
   topPickRef: string;
+  research?: ResearchResult | null;
 }) {
   const router = useRouter();
   const { add, has, remove } = useCompare();
@@ -25,8 +33,27 @@ export function ThesisDetailActions({
   const [researching, setResearching] = useState(false);
   const [rescoring, setRescoring] = useState(false);
   const [citations, setCitations] = useState<ResearchCitation[]>(
-    thesis.researchCitations ?? []
+    thesis.researchCitations ?? research?.citations ?? []
   );
+
+  useEffect(() => {
+    if (thesis.researchCitations?.length) {
+      setCitations(thesis.researchCitations);
+      return;
+    }
+    if (research?.citations?.length) {
+      setCitations(research.citations);
+      return;
+    }
+    void fetch(`/api/research/${encodeURIComponent(thesis.ref)}`)
+      .then((r) => r.json())
+      .then((data: { research?: { citations?: ResearchCitation[] } }) => {
+        if (data.research?.citations?.length) {
+          setCitations(data.research.citations);
+        }
+      })
+      .catch(() => {});
+  }, [thesis.ref, thesis.researchCitations, research?.citations]);
   const [overrideOpen, setOverrideOpen] = useState(false);
   const [overrideNote, setOverrideNote] = useState(thesis.overrideNote ?? "");
   const [savingOverride, setSavingOverride] = useState(false);
@@ -46,7 +73,13 @@ export function ThesisDetailActions({
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Research failed");
       setCitations(data.research?.citations ?? []);
-      if (rescore) refresh();
+      if (rescore) {
+        const nextState = data.state as RankingState | undefined;
+        if (nextState?.ranked) {
+          notifyRankingUpdated(rankedRefsFromState(nextState.ranked));
+        }
+        refresh();
+      }
     } catch (e) {
       alert(e instanceof Error ? e.message : "Research failed");
     } finally {
@@ -184,6 +217,11 @@ export function ThesisDetailActions({
             {rescoring ? "Scoring with Groq…" : "Re-score with Groq"}
           </Button>
         </div>
+        {research?.queries && research.queries.length > 0 && (
+          <p className="mt-3 text-xs text-slate-500">
+            Queries: {research.queries.join(" · ")}
+          </p>
+        )}
         {citations.length > 0 && (
           <ol className="mt-4 list-decimal space-y-2 pl-4 text-sm text-slate-600">
             {citations.map((c) => (

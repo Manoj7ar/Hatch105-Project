@@ -5,6 +5,7 @@ import { getChatModel } from "@/lib/models";
 import { expandTeamMentions } from "@/lib/teams";
 
 export const maxDuration = 60;
+export const dynamic = "force-dynamic";
 
 type ChatMessage = {
   role: "user" | "assistant";

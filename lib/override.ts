@@ -3,6 +3,7 @@ import {
   writeFileSync,
   existsSync,
   mkdirSync,
+  unlinkSync,
 } from "fs";
 import { join } from "path";
 import { z } from "zod";
@@ -63,6 +64,16 @@ export function loadOverride(ref: string): OverrideRecord | null {
 export function saveOverride(record: OverrideRecord) {
   if (!existsSync(OVERRIDES_DIR)) mkdirSync(OVERRIDES_DIR, { recursive: true });
   writeFileSync(overridePath(record.ref), JSON.stringify(record, null, 2));
+}
+
+export function deleteOverride(ref: string): void {
+  const p = overridePath(ref);
+  if (!existsSync(p)) return;
+  try {
+    unlinkSync(p);
+  } catch {
+    /* skip */
+  }
 }
 
 export function applyOverrideToScore(

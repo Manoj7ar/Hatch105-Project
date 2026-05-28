@@ -8,6 +8,10 @@ import {
   useMemo,
   useState,
 } from "react";
+import {
+  RANKING_UPDATED_EVENT,
+  type RankingUpdatedDetail,
+} from "@/lib/ranking-sync";
 
 const STORAGE_KEY = "hatch105-compare";
 const MAX_COMPARE = 4;
@@ -35,10 +39,22 @@ function loadRefs(): string[] {
 }
 
 export function CompareProvider({ children }: { children: React.ReactNode }) {
-  const [refs, setRefs] = useState<string[]>([]);
+  const [refs, setRefs] = useState<string[]>(() => loadRefs());
 
   useEffect(() => {
-    setRefs(loadRefs());
+    const onRankingUpdated = (event: Event) => {
+      const detail = (event as CustomEvent<RankingUpdatedDetail>).detail;
+      const valid = detail?.rankedRefs;
+      if (!valid?.length) return;
+      const allowed = new Set(valid);
+      setRefs((prev) => {
+        const next = prev.filter((r) => allowed.has(r));
+        return next.length === prev.length ? prev : next;
+      });
+    };
+    window.addEventListener(RANKING_UPDATED_EVENT, onRankingUpdated);
+    return () =>
+      window.removeEventListener(RANKING_UPDATED_EVENT, onRankingUpdated);
   }, []);
 
   useEffect(() => {

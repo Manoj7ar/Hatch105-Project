@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 import { ideaPath } from "@/lib/idea-path";
 import { resolveTeamTitleToRef } from "@/lib/teams-mention";
 
-const REF_PATTERN = /(\*\*)?(H-\d{2})(\*\*)?/g;
+const REF_PATTERN = /(\*\*)?(H-\d{1,3})(\*\*)?/gi;
 
 export function formatTeamText(
   text: string,

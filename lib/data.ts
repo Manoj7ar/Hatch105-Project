@@ -5,11 +5,13 @@ import {
   mkdirSync,
   readdirSync,
   copyFileSync,
+  unlinkSync,
 } from "fs";
 import { join } from "path";
 import {
   ThesisSchema,
   normalizeThesisScore,
+  type ResearchCitation,
   type Thesis,
   type ThesisScore,
 } from "./types";
@@ -17,8 +19,20 @@ import { rankScores } from "./rank";
 import { buildRankingState } from "./markdown";
 import type { RankingState } from "./types";
 import { CRITERIA_VERSION } from "./criteria-version";
-import { applyOverrideToScore, loadOverride } from "./override";
+import {
+  applyOverrideToScore,
+  deleteOverride,
+  loadOverride,
+} from "./override";
+import {
+  clearExtraThesesStore,
+  loadExtraTheses,
+  mergeExtraTheses,
+  thesisStubFromScore,
+} from "./extra-theses";
 import { getWritableRoot, isEphemeralWritableRoot } from "./writable-root";
+
+export { loadExtraTheses, mergeExtraTheses };
 
 const REPO_SCORES_DIR = join(process.cwd(), "scores");
 export const INITIAL_DATASET_DIR = join(process.cwd(), "Initial-dataset");
@@ -45,6 +59,27 @@ export function loadCandidateTheses(): Thesis[] {
   const raw = readFileSync(path, "utf-8");
   const data = JSON.parse(raw);
   return data.map((t: unknown) => ThesisSchema.parse(t));
+}
+
+/** Base 50 + persisted extras + optional in-memory batch rows + score stubs. */
+export function loadAllTheses(extraTheses?: Thesis[]): Thesis[] {
+  const thesisByRef = new Map<string, Thesis>();
+
+  for (const t of loadCandidateTheses()) thesisByRef.set(t.ref, t);
+  for (const t of loadExtraTheses()) thesisByRef.set(t.ref, t);
+  for (const t of extraTheses ?? []) thesisByRef.set(t.ref, t);
+  for (const score of loadAllScores()) {
+    if (!thesisByRef.has(score.ref)) {
+      thesisByRef.set(score.ref, thesisStubFromScore(score));
+    }
+  }
+
+  return [...thesisByRef.values()].sort((a, b) => a.ref.localeCompare(b.ref));
+}
+
+export function findThesisByRef(ref: string): Thesis | null {
+  const norm = ref.trim().toUpperCase();
+  return loadAllTheses().find((t) => t.ref.toUpperCase() === norm) ?? null;
 }
 
 export function ensureScoresDir() {
@@ -82,6 +117,21 @@ function archiveScoreIfChanged(ref: string, incoming: ThesisScore) {
   }
 }
 
+function citationsFromStoredResearch(ref: string): ResearchCitation[] | undefined {
+  const stored = loadResearch(ref);
+  if (!stored || typeof stored !== "object") return undefined;
+  const citations = (stored as { citations?: ResearchCitation[] }).citations;
+  return citations?.length ? citations : undefined;
+}
+
+/** Attach saved research/*.json citations when the score file omits them. */
+export function enrichScoreWithStoredResearch(score: ThesisScore): ThesisScore {
+  if (score.researchCitations?.length) return score;
+  const citations = citationsFromStoredResearch(score.ref);
+  if (!citations) return score;
+  return { ...score, researchCitations: citations };
+}
+
 export function saveScore(score: ThesisScore) {
   ensureScoresDir();
   const stamped: ThesisScore = {
@@ -97,7 +147,10 @@ export function loadScore(ref: string): ThesisScore | null {
     const p = join(dir, `${ref}.json`);
     if (!existsSync(p)) continue;
     const base = normalizeThesisScore(JSON.parse(readFileSync(p, "utf-8")));
-    return applyOverrideToScore(base, loadOverride(ref));
+    const withOverride = applyOverrideToScore(base, loadOverride(ref));
+    return withOverride
+      ? enrichScoreWithStoredResearch(withOverride)
+      : null;
   }
   return null;
 }
@@ -121,23 +174,15 @@ export function loadAllScores(): ThesisScore[] {
       if (!existsSync(p)) continue;
       const base = normalizeThesisScore(JSON.parse(readFileSync(p, "utf-8")));
       const s = applyOverrideToScore(base, loadOverride(ref));
-      if (s) byRef.set(ref, s);
+      if (s) byRef.set(ref, enrichScoreWithStoredResearch(s));
     }
   }
   return [...byRef.values()].sort((a, b) => a.ref.localeCompare(b.ref));
 }
 
 export function getRankingState(extraTheses?: Thesis[]): RankingState {
-  const base = loadCandidateTheses();
-  const allTheses = extraTheses
-    ? [...base, ...extraTheses.filter((t) => !base.some((b) => b.ref === t.ref))]
-    : base;
-
-  const scores: ThesisScore[] = [];
-  for (const t of allTheses) {
-    const s = loadScore(t.ref);
-    if (s) scores.push(s);
-  }
+  const allTheses = loadAllTheses(extraTheses);
+  const scores = loadAllScores();
 
   if (scores.length === 0) {
     throw new Error(
@@ -175,4 +220,64 @@ export function loadResearch(ref: string): unknown | null {
   const p = researchPath(ref);
   if (!existsSync(p)) return null;
   return JSON.parse(readFileSync(p, "utf-8"));
+}
+
+export function baseThesisRefs(): Set<string> {
+  return new Set(loadCandidateTheses().map((t) => t.ref));
+}
+
+/** Refs from live re-rank (extras file and/or scores outside the base 50). */
+export function getAddedThesisRefs(): string[] {
+  const base = baseThesisRefs();
+  const refs = new Set<string>();
+
+  for (const t of loadExtraTheses()) {
+    if (!base.has(t.ref)) refs.add(t.ref);
+  }
+  for (const score of loadAllScores()) {
+    if (!base.has(score.ref)) refs.add(score.ref);
+  }
+
+  return [...refs].sort((a, b) => a.localeCompare(b));
+}
+
+function deleteScoreForRef(ref: string): void {
+  for (const dir of scoresReadDirs()) {
+    const p = join(dir, `${ref}.json`);
+    if (!existsSync(p)) continue;
+    try {
+      unlinkSync(p);
+    } catch {
+      /* skip read-only */
+    }
+  }
+}
+
+function deleteResearchForRef(ref: string): void {
+  const paths = [
+    join(researchDir(), `${ref}.json`),
+    join(process.cwd(), "research", `${ref}.json`),
+  ];
+  for (const p of paths) {
+    if (!existsSync(p)) continue;
+    try {
+      unlinkSync(p);
+    } catch {
+      /* skip */
+    }
+  }
+}
+
+/** Remove all live re-rank additions; returns to the base 50 ranking. */
+export function clearAddedTheses(): { removedRefs: string[] } {
+  const removedRefs = getAddedThesisRefs();
+  clearExtraThesesStore();
+
+  for (const ref of removedRefs) {
+    deleteScoreForRef(ref);
+    deleteResearchForRef(ref);
+    deleteOverride(ref);
+  }
+
+  return { removedRefs };
 }

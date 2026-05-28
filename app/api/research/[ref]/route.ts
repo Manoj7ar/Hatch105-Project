@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { loadCandidateTheses, loadResearch, saveScore, loadAllScores } from "@/lib/data";
+import {
+  findThesisByRef,
+  getRankingState,
+  loadResearch,
+  saveScore,
+} from "@/lib/data";
 import { runResearch, getDefaultResearchMode, type ResearchMode } from "@/lib/research";
-import { scoreThesisWithContext } from "@/lib/scorer";
-import { buildRankingState, generateRankingMarkdown } from "@/lib/markdown";
-import { rankScores } from "@/lib/rank";
+import { scoreThesisForRanking } from "@/lib/score-pipeline";
+import { generateRankingMarkdown } from "@/lib/markdown";
 
 type Params = { params: Promise<{ ref: string }> };
 
@@ -20,8 +24,7 @@ export async function POST(req: NextRequest, { params }: Params) {
     const mode = (body.mode as ResearchMode) ?? getDefaultResearchMode();
     const rescore = body.rescore === true;
 
-    const theses = loadCandidateTheses();
-    const thesis = theses.find((t) => t.ref === ref);
+    const thesis = findThesisByRef(ref);
     if (!thesis) {
       return NextResponse.json({ error: "Thesis not found" }, { status: 404 });
     }
@@ -30,16 +33,14 @@ export async function POST(req: NextRequest, { params }: Params) {
 
     let score = null;
     if (rescore) {
-      score = await scoreThesisWithContext(thesis, {
+      score = await scoreThesisForRanking(thesis, {
         forceGroq: true,
         researchCitations: research.citations,
       });
       saveScore(score);
     }
 
-    const base = loadCandidateTheses();
-    const ranked = rankScores(loadAllScores(), base);
-    const state = buildRankingState(ranked);
+    const state = getRankingState();
 
     return NextResponse.json({
       research,

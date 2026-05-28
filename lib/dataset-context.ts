@@ -1,5 +1,4 @@
-import { loadCandidateTheses, loadAllScores } from "./data";
-import { rankScores } from "./rank";
+import { getRankingState } from "./data";
 import { CRITERION_LABELS } from "./criteria";
 import type { CriterionKey, RankedThesis } from "./types";
 import { RUBRIC_SUMMARY } from "./prompts/rubric-summary";
@@ -68,15 +67,13 @@ function formatThesisSlim(row: RankedThesis): string {
 }
 
 export function buildDatasetContext(): string {
-  const theses = loadCandidateTheses();
-  const scores = loadAllScores();
-  const ranked = rankScores(scores, theses);
+  const { ranked } = getRankingState();
   const generatedAt = new Date().toISOString();
 
   const parts: string[] = [
     `generatedAt: ${generatedAt}`,
     `Snapshot: ${ranked.length} teams. Top ${TOP_DETAIL_COUNT} include full criterion notes; others are compact.`,
-    "Team name = title field. Users refer to teams by name, not H-XX alone.",
+    "Team name = title field; ref = H-XX. Users may @-mention by name or ref.",
     "",
     "## Ranking table (best first)",
     "| rank | Team | ref | fit | verdict | gates |",
