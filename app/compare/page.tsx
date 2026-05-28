@@ -70,10 +70,10 @@ export default function ComparePage() {
             {rows.map((row) => (
               <article
                 key={row.ref}
-                className="min-w-0 flex-1 rounded-xl border border-t-2 border-t-[var(--groq-orange)] border-slate-200 bg-white p-4 shadow-sm lg:min-w-[240px]"
+                className="min-w-0 flex-1 rounded-xl border border-t-2 border-t-[var(--gemini-accent)] border-slate-200 bg-white p-4 shadow-sm lg:min-w-[240px]"
               >
                 <h2 className="text-lg font-semibold text-slate-900">
-                  <Link href={ideaPath(row.ref)} className="hover:text-[var(--groq-orange)]">
+                  <Link href={ideaPath(row.ref)} className="hover:text-[var(--gemini-accent)]">
                     {row.title}
                   </Link>
                 </h2>

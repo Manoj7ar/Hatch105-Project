@@ -64,7 +64,7 @@ export function ThesisDetailBuilding({
       : phase === "research"
         ? "Running grounded research…"
         : phase === "scoring"
-          ? "Scoring with Groq (deep dive, v1 plan, citations)…"
+          ? "Computing score, v1 plan, and citations…"
           : phase === "done"
             ? "Profile ready — refreshing…"
             : "Build failed";
@@ -114,7 +114,7 @@ export function ThesisDetailBuilding({
               This idea was added via Live re-rank. We are generating the same
               sections as the base dataset — research citations, technical
               snapshot, v1 plan, and deep dive — so the page matches the rest of
-              the library. This usually takes under a minute.
+              the library. This is instant for new ideas.
             </p>
             {error && (
               <p className="text-sm font-medium text-red-700">{error}</p>

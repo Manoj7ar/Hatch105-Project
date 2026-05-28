@@ -141,6 +141,12 @@ export function ChatInterface() {
             )
           );
         }
+
+        if (!accumulated.trim()) {
+          throw new Error(
+            "Gemini returned an empty response. Check API key, billing, and quota in Google AI Studio."
+          );
+        }
       } catch (e) {
         setError(e instanceof Error ? e.message : "Something went wrong");
         setMessages((m) => m.filter((msg) => msg.id !== assistantId));

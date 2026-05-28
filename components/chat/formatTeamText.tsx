@@ -29,7 +29,7 @@ export function formatTeamText(
         <Link
           key={`ref-${m.index}`}
           href={ideaPath(ref)}
-          className="rounded bg-[#fff0eb] px-1.5 py-0.5 font-mono text-xs font-medium text-[var(--groq-orange)] hover:underline"
+          className="rounded bg-[#eef4ff] px-1.5 py-0.5 font-mono text-xs font-medium text-[var(--gemini-accent)] hover:underline"
         >
           {ref}
         </Link>
@@ -44,7 +44,7 @@ export function formatTeamText(
     const atRe = new RegExp(`@${escaped}`, "g");
     while ((m = atRe.exec(text)) !== null) {
       const inner = (
-        <span className="rounded-full bg-[var(--groq-orange)] px-2 py-0.5 text-xs font-medium text-white">
+        <span className="rounded-full bg-[var(--gemini-accent)] px-2 py-0.5 text-xs font-medium text-white">
           @{title}
         </span>
       );

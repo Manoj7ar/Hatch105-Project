@@ -14,7 +14,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@ai-sdk/groq": "^3.0.39",
+    "@ai-sdk/google": "^3.0.80",
     "@vercel/analytics": "^2.0.1",
     "@vercel/blob": "^2.4.0",
     "ai": "^6.0.191",

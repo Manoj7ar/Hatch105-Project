@@ -4,6 +4,7 @@ import { applyHardGates, applyCapsToCriteria, applyGateFitCeiling } from "./gate
 import { computeFit, verdictFromFit } from "./criteria";
 import { CRITERIA_VERSION } from "./criteria-version";
 import { checkShopifySurfaces } from "./shopify-surfaces";
+import { generateExpansion } from "./expansion";
 
 type CriterionResult = { score: number; reason: string; evidence: EvidenceTag };
 
@@ -155,6 +156,13 @@ export function scoreThesisHeuristic(thesis: Thesis) {
   const fit = applyGateFitCeiling(computeFit(criteria), gatesTriggered);
   const verdict = verdictFromFit(fit);
 
+  const partial = {
+    criteria,
+    gatesTriggered,
+    surfaceFlags: surfaceFlags.length ? surfaceFlags : undefined,
+  };
+  const expansion = generateExpansion(thesis, partial);
+
   return {
     ref: thesis.ref,
     title: thesis.title,
@@ -166,5 +174,8 @@ export function scoreThesisHeuristic(thesis: Thesis) {
     scoredAt: new Date().toISOString(),
     criteriaVersion: CRITERIA_VERSION,
     surfaceFlags: surfaceFlags.length ? surfaceFlags : undefined,
+    technicalSnapshot: expansion.technicalSnapshot,
+    v1Plan: expansion.v1Plan,
+    trapNote: expansion.trapNote,
   };
 }

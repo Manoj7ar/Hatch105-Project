@@ -12,7 +12,6 @@ import { RankingTable } from "./RankingTable";
 import { RerankPanel } from "./RerankPanel";
 import { Button } from "./ui/Button";
 import { FocusInput } from "./ui/FocusInput";
-import { GroqIcon } from "./ui/GroqIcon";
 import { CompareTray } from "./CompareTray";
 import { PortfolioBoard } from "./PortfolioBoard";
 import { TrapStories } from "./traps/TrapStories";
@@ -44,7 +43,6 @@ export function RankingDashboard() {
   const searchRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(true);
   const [rerankInput, setRerankInput] = useState("");
-  const [briefLoading, setBriefLoading] = useState(false);
   const [placements, setPlacements] = useState<
     { ref: string; rank: number; summary: string }[]
   >([]);
@@ -183,26 +181,6 @@ export function RankingDashboard() {
     URL.revokeObjectURL(url);
   };
 
-  const downloadBrief = async () => {
-    setBriefLoading(true);
-    try {
-      const res = await fetch("/api/brief", { method: "POST" });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Brief failed");
-      const blob = new Blob([data.markdown], { type: "text/markdown" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = data.filename ?? "Hatch105-Executive-Brief.md";
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Brief failed");
-    } finally {
-      setBriefLoading(false);
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex min-h-[320px] flex-col items-center justify-center gap-3 text-slate-500">
@@ -264,15 +242,6 @@ export function RankingDashboard() {
             placeholder="Search teams… (/)"
             className="min-w-0 flex-1 sm:max-w-xs"
           />
-          <Button
-            variant="groq"
-            onClick={downloadBrief}
-            disabled={briefLoading}
-            className="shrink-0"
-          >
-            <GroqIcon size={16} inverted />
-            {briefLoading ? "Memo…" : "Executive brief"}
-          </Button>
         </div>
       </div>
 

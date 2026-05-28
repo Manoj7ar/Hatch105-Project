@@ -3,7 +3,7 @@ import { CRITERION_LABELS } from "./criteria";
 import type { CriterionKey, RankedThesis } from "./types";
 import { RUBRIC_SUMMARY } from "./prompts/rubric-summary";
 
-/** Groq on-demand TPM per request ≈ 8k tokens — keep dataset block ~5.5k tokens */
+/** Keep dataset block ~5.5k tokens for Gemini context / rate limits */
 const MAX_CONTEXT_CHARS = 16_000;
 const TOP_DETAIL_COUNT = 8;
 const MAX_WEDGE_CHARS = 180;

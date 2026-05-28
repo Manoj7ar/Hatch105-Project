@@ -97,7 +97,7 @@ export function BuildSprintLens({
             </dl>
           ) : (
             <p className="mt-3 text-sm text-slate-500">
-              No v1 timeline in score file — re-score with Groq two-pass for day-3 /
+              No v1 timeline in score file — re-score with Gemini for day-3 /
               week-3 / week-10 plan.
             </p>
           )}

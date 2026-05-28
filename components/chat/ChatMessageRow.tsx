@@ -1,6 +1,6 @@
 import { ThinkingShimmer } from "./ThinkingShimmer";
 import { AssistantMarkdown } from "./AssistantMarkdown";
-import { GroqAvatar } from "./GroqAvatar";
+import { GeminiAvatar } from "./GeminiAvatar";
 import { formatTeamText } from "./formatTeamText";
 import type { TeamOption } from "@/lib/teams";
 
@@ -35,7 +35,7 @@ export function ChatMessageRow({
 
   return (
     <div className="flex gap-3 py-3">
-      <GroqAvatar />
+      <GeminiAvatar />
       {isThinking ? (
         <ThinkingShimmer />
       ) : (

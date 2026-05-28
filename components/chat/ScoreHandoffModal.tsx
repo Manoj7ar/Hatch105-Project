@@ -3,11 +3,10 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "../ui/Button";
-import { GroqIcon } from "../ui/GroqIcon";
 import {
-  GroqScoringProgress,
+  RerankProgress,
   type ProgressItem,
-} from "../rerank/GroqScoringProgress";
+} from "../rerank/RerankProgress";
 import { previewThesesInput } from "@/lib/thesis-input-client";
 import type { RankingState } from "@/lib/types";
 
@@ -103,7 +102,7 @@ export function ScoreHandoffModal({
         aria-label="Close"
       />
       <div className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl bg-white p-6 shadow-xl">
-        <p className="hatch-label">Score with Groq</p>
+        <p className="hatch-label">Score idea</p>
         <h2 className="mt-1 text-lg font-semibold text-slate-900">Score this idea</h2>
         <p className="mt-1 text-sm text-slate-500">
           Paste a thesis JSON object or array (same format as Live re-rank).
@@ -124,14 +123,14 @@ export function ScoreHandoffModal({
         {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
         {(scoring || items.length > 0) && (
           <div className="mt-4">
-            <GroqScoringProgress items={items} active={scoring} />
+            <RerankProgress items={items} active={scoring} />
           </div>
         )}
         {placements.length > 0 && (
           <ul className="mt-3 space-y-2 text-sm text-slate-600">
             {placements.map((p) => (
               <li key={p.ref} className="hatch-accent-border rounded-lg pl-3">
-                <span className="font-mono font-medium text-[var(--groq-orange)]">
+                <span className="font-mono font-medium text-[var(--gemini-accent)]">
                   {p.ref}
                 </span>{" "}
                 — rank {p.rank}: {p.summary}
@@ -141,12 +140,11 @@ export function ScoreHandoffModal({
         )}
         <div className="mt-4 flex flex-wrap gap-2">
           <Button
-            variant="groq"
+            variant="primary"
             onClick={submit}
             disabled={scoring || !text.trim()}
           >
-            <GroqIcon size={16} inverted />
-            {scoring ? "Scoring with Groq…" : "Score & re-rank with Groq"}
+            {scoring ? "Scoring…" : "Score & re-rank"}
           </Button>
           <Button variant="secondary" onClick={onClose}>
             Close

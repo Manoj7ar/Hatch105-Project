@@ -5,6 +5,7 @@ import type { RankedThesis } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { ideaPath } from "@/lib/idea-path";
 import { Badge } from "./ui/Badge";
+import { GeminiScoreMark } from "./ui/GeminiScoreMark";
 import { ChevronRight, Plus } from "lucide-react";
 import { useCompare } from "@/lib/compare-store";
 
@@ -63,11 +64,7 @@ export function RankingTable({
                 <span className="mt-0.5 flex flex-wrap items-center gap-2">
                   <span className="font-mono text-xs text-slate-400">{row.ref}</span>
                   {newRefs.has(row.ref) && <Badge variant="new">New</Badge>}
-                  {row.scoredWith === "human+groq" && (
-                    <Badge variant="groq" className="text-[10px]">
-                      Human+Groq
-                    </Badge>
-                  )}
+                  <GeminiScoreMark scoredWith={row.scoredWith} size={14} />
                   {row.overrideNote && (
                     <Badge variant="warning" className="text-[10px]">
                       Override
@@ -103,7 +100,7 @@ export function RankingTable({
                 >
                   <Plus className="h-4 w-4" />
                 </button>
-                <ChevronRight className="ml-1 inline h-4 w-4 text-slate-300 group-hover:text-[var(--groq-orange)]" />
+                <ChevronRight className="ml-1 inline h-4 w-4 text-slate-300 group-hover:text-[var(--gemini-accent)]" />
               </td>
             </tr>
           ))}

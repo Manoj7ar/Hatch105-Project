@@ -2,11 +2,12 @@
 
 :root {
   color-scheme: light;
-  /* Groq brand — Neon Zest / Deep Ember */
-  --groq-orange: #f43e01;
-  --groq-orange-hover: #c23101;
-  --groq-orange-muted: rgba(244, 62, 1, 0.14);
-  --groq-orange-ring: rgba(244, 62, 1, 0.28);
+  /* Gemini / Google AI accent */
+  --gemini-accent: #4285f4;
+  --gemini-accent-hover: #3367d6;
+  --gemini-teal: #34a4eb;
+  --gemini-accent-muted: rgba(66, 133, 244, 0.14);
+  --gemini-accent-ring: rgba(66, 133, 244, 0.28);
   --background: #ffffff;
   --surface: #ffffff;
   --surface-muted: #f1f5f9;
@@ -29,8 +30,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-groq-orange: var(--groq-orange);
-  --color-groq-orange-hover: var(--groq-orange-hover);
+  --color-gemini-accent: var(--gemini-accent);
+  --color-gemini-accent-hover: var(--gemini-accent-hover);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -44,7 +45,7 @@ body {
 }
 
 ::selection {
-  background: var(--groq-orange-muted);
+  background: var(--gemini-accent-muted);
   color: var(--foreground);
 }
 
@@ -62,10 +63,10 @@ body {
 .hatch-focus-ring:focus-within,
 .hatch-focus-ring:focus-visible {
   outline: none;
-  border-color: var(--groq-orange);
+  border-color: var(--gemini-accent);
   box-shadow:
-    0 0 0 1px var(--groq-orange),
-    0 0 0 4px var(--groq-orange-ring);
+    0 0 0 1px var(--gemini-accent),
+    0 0 0 4px var(--gemini-accent-ring);
 }
 
 .hatch-tablist {
@@ -122,15 +123,15 @@ body {
 
 .hatch-tab--active {
   background: #ffffff;
-  color: var(--groq-orange);
+  color: var(--gemini-accent);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 
 .hatch-tab--ai.hatch-tab--active {
-  color: var(--groq-orange);
+  color: var(--gemini-accent);
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.06),
-    inset 0 -2px 0 var(--groq-orange);
+    inset 0 -2px 0 var(--gemini-accent);
 }
 
 .hatch-nav-link {
@@ -149,7 +150,7 @@ body {
 
 .hatch-nav-link--active {
   background: #fff0eb;
-  color: var(--groq-orange);
+  color: var(--gemini-accent);
 }
 
 .hatch-label {
@@ -157,7 +158,7 @@ body {
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--groq-orange);
+  color: var(--gemini-accent);
 }
 
 .hatch-chip {
@@ -169,7 +170,7 @@ body {
   padding: 0.25rem 0.625rem;
   font-size: 0.75rem;
   font-weight: 500;
-  color: var(--groq-orange);
+  color: var(--gemini-accent);
   box-shadow: inset 0 0 0 1px #f9c4b0;
 }
 
@@ -179,21 +180,21 @@ body {
 
 .hatch-row-focus {
   background: #fffaf8;
-  box-shadow: inset 0 0 0 1px var(--groq-orange-ring);
+  box-shadow: inset 0 0 0 1px var(--gemini-accent-ring);
 }
 
 .hatch-spinner {
-  color: var(--groq-orange);
+  color: var(--gemini-accent);
 }
 
 .hatch-link {
   font-weight: 600;
-  color: var(--groq-orange);
+  color: var(--gemini-accent);
   text-underline-offset: 2px;
 }
 
 .hatch-link:hover {
-  color: var(--groq-orange-hover);
+  color: var(--gemini-accent-hover);
   text-decoration: underline;
 }
 
@@ -212,7 +213,7 @@ body {
 }
 
 .hatch-accent-border {
-  border-left: 4px solid var(--groq-orange);
+  border-left: 4px solid var(--gemini-accent);
 }
 
 .hatch-drop-target {
@@ -222,8 +223,8 @@ body {
 }
 
 .hatch-drop-target--over {
-  border-color: var(--groq-orange);
-  box-shadow: 0 0 0 3px var(--groq-orange-ring);
+  border-color: var(--gemini-accent);
+  box-shadow: 0 0 0 3px var(--gemini-accent-ring);
 }
 
 .hatch-drag-chip {
@@ -232,7 +233,7 @@ body {
 }
 
 .hatch-drag-chip:active {
-  box-shadow: 0 0 0 2px var(--groq-orange);
+  box-shadow: 0 0 0 2px var(--gemini-accent);
 }
 
 .hatch-suggestion-pill {
@@ -246,14 +247,14 @@ body {
 
 .hatch-suggestion-pill:hover:not(:disabled),
 .hatch-suggestion-pill:focus-visible:not(:disabled) {
-  border-color: var(--groq-orange);
-  box-shadow: 0 0 0 2px var(--groq-orange-ring);
+  border-color: var(--gemini-accent);
+  box-shadow: 0 0 0 2px var(--gemini-accent-ring);
   outline: none;
 }
 
 .hatch-mention-active {
   background: #fff0eb;
-  color: var(--groq-orange);
+  color: var(--gemini-accent);
 }
 
 .hatch-textarea-shell {
@@ -267,11 +268,11 @@ body {
 }
 
 .hatch-textarea-shell:focus-within {
-  border-color: var(--groq-orange);
+  border-color: var(--gemini-accent);
   background: #ffffff;
   box-shadow:
-    0 0 0 1px var(--groq-orange),
-    0 0 0 4px var(--groq-orange-ring);
+    0 0 0 1px var(--gemini-accent),
+    0 0 0 4px var(--gemini-accent-ring);
 }
 
 .hatch-tray {
@@ -312,7 +313,7 @@ body {
   width: 5px;
   height: 5px;
   border-radius: 9999px;
-  background: var(--groq-orange);
+  background: var(--gemini-accent);
   opacity: 0.55;
   animation: thinking-dot 1.2s ease-in-out infinite;
 }
@@ -338,9 +339,9 @@ body {
 .thinking-skeleton {
   background: linear-gradient(
     90deg,
-    var(--groq-orange-muted) 0%,
+    var(--gemini-accent-muted) 0%,
     rgba(255, 240, 235, 0.9) 50%,
-    var(--groq-orange-muted) 100%
+    var(--gemini-accent-muted) 100%
   );
   background-size: 200% 100%;
   animation: shimmer 1.8s ease-in-out infinite, thinking-skeleton 1.8s ease-in-out infinite;
@@ -428,11 +429,11 @@ body {
 }
 
 .chat-composer-shell:focus-within {
-  border-color: var(--groq-orange);
+  border-color: var(--gemini-accent);
   box-shadow:
-    0 0 0 1px var(--groq-orange),
-    0 0 0 4px var(--groq-orange-ring),
-    0 2px 12px var(--groq-orange-muted);
+    0 0 0 1px var(--gemini-accent),
+    0 0 0 4px var(--gemini-accent-ring),
+    0 2px 12px var(--gemini-accent-muted);
 }
 
 .chat-composer-send {
@@ -453,13 +454,13 @@ body {
 }
 
 .chat-composer-send--ready {
-  background-color: var(--groq-orange);
+  background-color: var(--gemini-accent);
   color: #ffffff;
-  box-shadow: 0 1px 4px var(--groq-orange-muted);
+  box-shadow: 0 1px 4px var(--gemini-accent-muted);
 }
 
 .chat-composer-send--ready:hover {
-  background-color: var(--groq-orange-hover);
+  background-color: var(--gemini-accent-hover);
 }
 
 .chat-composer-send--ready:active {
@@ -496,15 +497,15 @@ body {
 }
 
 .rerank-input-shell:focus-within {
-  border-color: var(--groq-orange);
+  border-color: var(--gemini-accent);
   background: #ffffff;
   box-shadow:
-    0 0 0 1px var(--groq-orange),
-    0 0 0 4px var(--groq-orange-ring);
+    0 0 0 1px var(--gemini-accent),
+    0 0 0 4px var(--gemini-accent-ring);
 }
 
 .rerank-input-shell--valid:focus-within {
-  border-color: var(--groq-orange);
+  border-color: var(--gemini-accent);
 }
 
 .rerank-input-shell--error {
@@ -523,7 +524,7 @@ body {
 
 .rerank-format-toggle button[data-active="true"] {
   background: #fff0eb;
-  color: var(--groq-orange);
+  color: var(--gemini-accent);
 }
 
 .rerank-preview-chip,
@@ -536,7 +537,7 @@ body {
   padding: 0.25rem 0.625rem;
   font-size: 0.75rem;
   font-weight: 500;
-  color: var(--groq-orange);
+  color: var(--gemini-accent);
   box-shadow: inset 0 0 0 1px #f9c4b0;
 }
 
@@ -546,7 +547,7 @@ body {
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--groq-orange);
+  color: var(--gemini-accent);
 }
 
 .rerank-format-guide {
@@ -574,7 +575,7 @@ body {
     box-shadow: 0 0 0 0 transparent;
   }
   50% {
-    box-shadow: 0 0 0 3px var(--groq-orange-muted);
+    box-shadow: 0 0 0 3px var(--gemini-accent-muted);
   }
 }
 
@@ -588,7 +589,7 @@ body {
 .rerank-progress-fill {
   height: 100%;
   border-radius: 9999px;
-  background: linear-gradient(90deg, var(--groq-orange-hover), var(--groq-orange));
+  background: linear-gradient(90deg, var(--gemini-accent-hover), var(--gemini-accent));
   transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -624,11 +625,11 @@ body {
 }
 
 .rerank-progress-row--running .rerank-status-pill {
-  color: var(--groq-orange);
+  color: var(--gemini-accent);
 }
 
 .rerank-placement-card {
-  border-left: 3px solid var(--groq-orange);
+  border-left: 3px solid var(--gemini-accent);
   background: #ffffff;
 }
 

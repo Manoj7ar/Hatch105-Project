@@ -14,9 +14,9 @@ export function ThesisFormatGuide({
     <div className="rerank-format-guide">
       <div className="flex items-center gap-2">
         {format === "json" ? (
-          <FileJson className="h-4 w-4 text-[var(--groq-orange)]" />
+          <FileJson className="h-4 w-4 text-[var(--gemini-accent)]" />
         ) : (
-          <Sheet className="h-4 w-4 text-[var(--groq-orange)]" />
+          <Sheet className="h-4 w-4 text-[var(--gemini-accent)]" />
         )}
         <h4 className="text-sm font-semibold text-slate-900">
           {format === "json" ? "JSON array" : "CSV with header row"}
@@ -53,7 +53,7 @@ export function ThesisFormatGuide({
         <button
           type="button"
           onClick={onInsertExample}
-          className="mt-2 text-xs font-medium text-[var(--groq-orange)] hover:underline"
+          className="mt-2 text-xs font-medium text-[var(--gemini-accent)] hover:underline"
         >
           Insert example JSON
         </button>

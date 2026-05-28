@@ -1,10 +1,11 @@
 import { cn } from "@/lib/utils";
 
-/** groq / accent = AI-powered actions; primary = neutral confirm; secondary/ghost = non-AI */
+/** gemini / accent = AI-powered actions; primary = neutral confirm; secondary/ghost = non-AI */
 type Variant =
   | "primary"
   | "secondary"
   | "ghost"
+  | "gemini"
   | "groq"
   | "accent"
   | "outline-accent";
@@ -15,11 +16,14 @@ const variants: Record<Variant, string> = {
   secondary:
     "bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-slate-50 disabled:opacity-50",
   ghost: "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
-  groq: "bg-[var(--groq-orange)] text-white shadow-sm hover:bg-[var(--groq-orange-hover)] disabled:opacity-50",
+  gemini:
+    "bg-[var(--gemini-accent)] text-white shadow-sm hover:bg-[var(--gemini-accent-hover)] disabled:opacity-50",
+  groq:
+    "bg-[var(--gemini-accent)] text-white shadow-sm hover:bg-[var(--gemini-accent-hover)] disabled:opacity-50",
   accent:
-    "bg-[var(--groq-orange)] text-white shadow-sm hover:bg-[var(--groq-orange-hover)] disabled:opacity-50",
+    "bg-[var(--gemini-accent)] text-white shadow-sm hover:bg-[var(--gemini-accent-hover)] disabled:opacity-50",
   "outline-accent":
-    "bg-white text-[var(--groq-orange)] ring-1 ring-[#f9c4b0] hover:bg-[#fff0eb] disabled:opacity-50",
+    "bg-white text-[var(--gemini-accent)] ring-1 ring-[#c5d9fc] hover:bg-[#eef4ff] disabled:opacity-50",
 };
 
 export function Button({
@@ -29,7 +33,7 @@ export function Button({
   ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant }) {
   const resolved: Variant =
-    variant === "accent" ? "groq" : variant;
+    variant === "accent" || variant === "groq" ? "gemini" : variant;
   return (
     <button
       type="button"

@@ -25,8 +25,8 @@ export function isThesisProfileComplete(row: RankedThesis): boolean {
 }
 
 /**
- * Backfill live re-rank ideas that were scored before the full profile pipeline.
- * Runs grounded research + full Groq score once when a detail page is opened.
+ * Backfill live re-rank ideas missing research or full profile fields.
+ * Uses deterministic scoring only (no LLM).
  */
 export async function ensureThesisProfile(
   ref: string,
@@ -50,10 +50,6 @@ export async function ensureThesisProfile(
 
   if (enriched && isThesisProfileComplete({ ...ranked, ...enriched, thesis })) {
     return { ...ranked, ...enriched, thesis };
-  }
-
-  if (!process.env.GROQ_API_KEY) {
-    return enriched ? { ...ranked, ...enriched, thesis } : ranked;
   }
 
   const score = await scoreThesisForRanking(thesis);

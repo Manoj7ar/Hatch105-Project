@@ -1,4 +1,4 @@
-/** Condensed rubric for Groq prompts. Full detail: CRITERIA.md */
+/** Condensed rubric for Gemini prompts. Full detail: CRITERIA.md */
 export const RUBRIC_SUMMARY = `
 Hatch Fit Score — 3-person team, 10 weeks to revenue, Shopify/DTC. No invented € forecasts.
 

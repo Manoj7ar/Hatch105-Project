@@ -101,9 +101,13 @@ export function applyOverrideToScore(
   const verdict = verdictFromFit(fit);
 
   const scoredWith =
-    base.scoredWith === "heuristic" || base.scoredWith === "groq"
-      ? ("human+groq" as const)
-      : base.scoredWith;
+    base.scoredWith === "heuristic"
+      ? ("human+heuristic" as const)
+      : base.scoredWith === "gemini"
+        ? ("human+gemini" as const)
+        : base.scoredWith === "groq"
+          ? ("human+groq" as const)
+          : base.scoredWith;
 
   return {
     ...base,

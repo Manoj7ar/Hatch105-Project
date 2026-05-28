@@ -1,6 +1,5 @@
 import type { Thesis } from "./types";
 import { scoreThesisForRanking } from "./score-pipeline";
-import type { ScoreContext } from "./scorer";
 import {
   saveScoreAsync,
   loadCandidateTheses,
@@ -16,7 +15,6 @@ import { createJob, getJob, updateJob, type BatchJob } from "./job-store";
 export async function runBatchScore(
   jobId: string,
   theses: Thesis[],
-  ctx?: ScoreContext,
   onlyFailed = false
 ) {
   const job = getJob(jobId);
@@ -39,7 +37,7 @@ export async function runBatchScore(
     updateJob(job);
 
     try {
-      const score = await scoreThesisForRanking(thesis, ctx);
+      const score = await scoreThesisForRanking(thesis);
       await saveScoreAsync(score);
       item.status = "done";
     } catch (e) {
@@ -73,7 +71,7 @@ export async function startBatchJob(
     job = createJob(theses);
   }
 
-  await runBatchScore(job.id, theses, undefined, opts?.resumeFailed ?? false);
+  await runBatchScore(job.id, theses, opts?.resumeFailed ?? false);
 
   const finished = getJob(job.id);
   if (!finished) throw new Error("Batch job lost after scoring");

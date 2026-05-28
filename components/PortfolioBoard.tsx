@@ -81,7 +81,7 @@ export function PortfolioBoard({ ranked }: { ranked: RankedThesis[] }) {
                     key={ref}
                     draggable
                     onDragStart={(e) => onDragStart(e, ref)}
-                    className="hatch-drag-chip cursor-grab rounded-lg border border-slate-200 bg-white shadow-sm hover:ring-2 hover:ring-[var(--groq-orange-ring)] active:cursor-grabbing"
+                    className="hatch-drag-chip cursor-grab rounded-lg border border-slate-200 bg-white shadow-sm hover:ring-2 hover:ring-[var(--gemini-accent-ring)] active:cursor-grabbing"
                   >
                     <Link
                       href={ideaPath(ref)}

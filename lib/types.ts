@@ -56,7 +56,10 @@ export type ResearchCitation = z.infer<typeof ResearchCitationSchema>;
 export const ScoredWithSchema = z.enum([
   "heuristic",
   "groq",
+  "gemini",
+  "human+heuristic",
   "human+groq",
+  "human+gemini",
 ]);
 
 export const ThesisScoreSchema = z.object({
@@ -164,12 +167,18 @@ export function normalizeThesisScore(raw: unknown): ThesisScore {
   const scoredWithRaw = (base.scoredWith as string) ?? "heuristic";
   const scoredWith =
     scoredWithRaw === "llm"
-      ? "groq"
-      : scoredWithRaw === "human+groq"
-        ? "human+groq"
-        : scoredWithRaw === "groq"
-          ? "groq"
-          : "heuristic";
+      ? "gemini"
+      : scoredWithRaw === "human+heuristic"
+        ? "human+heuristic"
+        : scoredWithRaw === "human+groq"
+          ? "human+groq"
+          : scoredWithRaw === "human+gemini"
+            ? "human+gemini"
+            : scoredWithRaw === "groq"
+              ? "groq"
+              : scoredWithRaw === "gemini"
+                ? "gemini"
+                : "heuristic";
 
   if (typeof base.criteria === "object" && base.criteria !== null) {
     base.criteria = withDefaultEvidence(

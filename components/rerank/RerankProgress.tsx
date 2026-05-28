@@ -10,7 +10,7 @@ export type ProgressItem = {
   error?: string;
 };
 
-export function GroqScoringProgress({
+export function RerankProgress({
   items,
   active,
 }: {
@@ -30,17 +30,17 @@ export function GroqScoringProgress({
         active && "rerank-progress-panel--active"
       )}
       role="region"
-      aria-label="Groq scoring progress"
+      aria-label="Scoring progress"
       aria-live="polite"
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="hatch-label">Groq is scoring your ideas</p>
+          <p className="hatch-label">Scoring your ideas</p>
           <p className="mt-0.5 text-sm text-slate-600">
             {active && running ? (
               <>
                 Working on{" "}
-                <span className="font-medium text-[var(--groq-orange)]">
+                <span className="font-medium text-slate-900">
                   {running.title ?? running.ref}
                 </span>
                 …
@@ -53,7 +53,7 @@ export function GroqScoringProgress({
           </p>
         </div>
         <div className="text-right">
-          <p className="font-mono text-2xl font-semibold tabular-nums text-[var(--groq-orange)]">
+          <p className="font-mono text-2xl font-semibold tabular-nums text-slate-900">
             {pct}%
           </p>
           <p className="text-xs text-slate-500">
@@ -102,7 +102,7 @@ export function GroqScoringProgress({
 function StatusIcon({ status }: { status: ProgressItem["status"] }) {
   if (status === "running") {
     return (
-      <Loader2 className="h-4 w-4 shrink-0 animate-spin text-[var(--groq-orange)]" />
+      <Loader2 className="h-4 w-4 shrink-0 animate-spin text-slate-700" />
     );
   }
   if (status === "done") {

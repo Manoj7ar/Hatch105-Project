@@ -5,15 +5,9 @@ import { useRouter } from "next/navigation";
 import type { RankedThesis, ResearchCitation } from "@/lib/types";
 import { Search, Scale, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { GroqIcon } from "@/components/ui/GroqIcon";
 import { useCompare } from "@/lib/compare-store";
 import Link from "next/link";
 import { chatMentionPath, ideaPath } from "@/lib/idea-path";
-import {
-  notifyRankingUpdated,
-  rankedRefsFromState,
-} from "@/lib/ranking-sync";
-import type { RankingState } from "@/lib/types";
 import type { ResearchResult } from "@/lib/research";
 
 export function ThesisDetailActions({
@@ -31,7 +25,6 @@ export function ThesisDetailActions({
     "grounded"
   );
   const [researching, setResearching] = useState(false);
-  const [rescoring, setRescoring] = useState(false);
   const [citations, setCitations] = useState<ResearchCitation[]>(
     thesis.researchCitations ?? research?.citations ?? []
   );
@@ -62,29 +55,22 @@ export function ThesisDetailActions({
 
   const refresh = () => router.refresh();
 
-  const handleResearch = async (rescore: boolean) => {
+  const handleResearch = async () => {
     setResearching(true);
     try {
       const res = await fetch(`/api/research/${thesis.ref}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mode: researchMode, rescore }),
+        body: JSON.stringify({ mode: researchMode }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Research failed");
       setCitations(data.research?.citations ?? []);
-      if (rescore) {
-        const nextState = data.state as RankingState | undefined;
-        if (nextState?.ranked) {
-          notifyRankingUpdated(rankedRefsFromState(nextState.ranked));
-        }
-        refresh();
-      }
+      refresh();
     } catch (e) {
       alert(e instanceof Error ? e.message : "Research failed");
     } finally {
       setResearching(false);
-      setRescoring(false);
     }
   };
 
@@ -169,7 +155,10 @@ export function ThesisDetailActions({
       )}
 
       <section className="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
-        <h2 className="hatch-label">Research & Groq</h2>
+        <h2 className="hatch-label">Grounded research</h2>
+        <p className="mt-1 text-xs text-slate-500">
+          Competitor cache and Shopify surface checks — no LLM required.
+        </p>
         <div className="mt-3 inline-flex rounded-lg bg-slate-100/90 p-0.5">
           {(["grounded", "external"] as const).map((m) => (
             <button
@@ -191,30 +180,14 @@ export function ThesisDetailActions({
             variant="secondary"
             className="text-xs"
             disabled={researching}
-            onClick={() => handleResearch(false)}
+            onClick={() => void handleResearch()}
           >
-            {researching && !rescoring ? (
+            {researching ? (
               <Loader2 className="hatch-spinner h-3.5 w-3.5 animate-spin" />
             ) : (
               <Search className="h-3.5 w-3.5" />
             )}
-            {researching && !rescoring ? "Researching…" : "Fetch snippets"}
-          </Button>
-          <Button
-            variant="groq"
-            className="text-xs"
-            disabled={researching || rescoring}
-            onClick={() => {
-              setRescoring(true);
-              void handleResearch(true);
-            }}
-          >
-            {rescoring ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            ) : (
-              <GroqIcon size={14} inverted />
-            )}
-            {rescoring ? "Scoring with Groq…" : "Re-score with Groq"}
+            {researching ? "Refreshing…" : "Refresh snippets"}
           </Button>
         </div>
         {research?.queries && research.queries.length > 0 && (

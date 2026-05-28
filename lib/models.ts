@@ -1,57 +1,50 @@
-import { createGroq } from "@ai-sdk/groq";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 
 /**
- * Default Groq model for all app tasks (chat, executive brief, thesis scoring).
- * `llama-3.3-70b-versatile` — strong general chat/reasoning; json_object / generateObject
- * with JSON fallback in lib/scorer.ts.
+ * Default Gemini model for Ask dataset chat (`/api/chat` only).
+ * Override via GEMINI_MODEL in .env.local.
  *
- * Override via GROQ_MODEL in .env.local. For stricter schema-only scoring you can set
- * GROQ_SCORING_MODEL=openai/gpt-oss-20b (or openai/gpt-oss-120b) without changing chat.
- *
- * @see https://console.groq.com/docs/models
+ * @see https://ai.google.dev/gemini-api/docs/models
  */
-export const DEFAULT_GROQ_MODEL = "llama-3.3-70b-versatile";
+export const DEFAULT_GEMINI_MODEL = "gemini-2.0-flash";
 
-export const GROQ_MODEL_ALIASES: Record<string, string> = {
-  "llama-3.3-70b": "llama-3.3-70b-versatile",
-  "gpt-oss-20b": "openai/gpt-oss-20b",
-  "gpt-oss-120b": "openai/gpt-oss-120b",
+export const GEMINI_MODEL_ALIASES: Record<string, string> = {
+  flash: "gemini-2.0-flash",
+  "gemini-flash": "gemini-2.0-flash",
+  "2.0-flash": "gemini-2.0-flash",
 };
 
 function resolveModelId(raw: string | undefined, fallback: string): string {
   const id = (raw ?? fallback).trim();
-  return GROQ_MODEL_ALIASES[id] ?? id;
+  return GEMINI_MODEL_ALIASES[id] ?? id;
 }
 
-export function getGroqModelId(
-  purpose: "chat" | "scoring" | "brief" = "chat"
-): string {
-  if (purpose === "scoring" && process.env.GROQ_SCORING_MODEL?.trim()) {
-    return resolveModelId(
-      process.env.GROQ_SCORING_MODEL,
-      DEFAULT_GROQ_MODEL
+/** API key for Google Generative AI (Gemini). */
+export function getGeminiApiKey(): string | undefined {
+  const key = process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim();
+  if (key) return key;
+  return undefined;
+}
+
+export function hasLlmApiKey(): boolean {
+  return Boolean(getGeminiApiKey());
+}
+
+export function getGeminiModelId(): string {
+  return resolveModelId(process.env.GEMINI_MODEL, DEFAULT_GEMINI_MODEL);
+}
+
+export function getGeminiModel() {
+  const apiKey = getGeminiApiKey();
+  if (!apiKey) {
+    throw new Error(
+      "GOOGLE_GENERATIVE_AI_API_KEY is not configured. Add it to .env.local."
     );
   }
-  return resolveModelId(process.env.GROQ_MODEL, DEFAULT_GROQ_MODEL);
-}
-
-function createModel(modelId: string) {
-  const groq = createGroq({
-    apiKey: process.env.GROQ_API_KEY,
-  });
-  return groq(modelId);
-}
-
-/** Shared Groq model — used for chat, brief, and scoring unless GROQ_SCORING_MODEL is set. */
-export function getGroqModel(purpose: "chat" | "scoring" | "brief" = "chat") {
-  return createModel(getGroqModelId(purpose));
-}
-
-/** @deprecated Use getGroqModel — kept for existing imports */
-export function getScoringModel() {
-  return getGroqModel("scoring");
+  const google = createGoogleGenerativeAI({ apiKey });
+  return google(getGeminiModelId());
 }
 
 export function getChatModel() {
-  return getGroqModel("chat");
+  return getGeminiModel();
 }

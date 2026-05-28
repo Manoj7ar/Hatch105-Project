@@ -3,10 +3,8 @@ import {
   findThesisByRefAsync,
   getRankingStateAsync,
   loadResearchAsync,
-  saveScoreAsync,
 } from "@/lib/data";
 import { runResearch, getDefaultResearchMode, type ResearchMode } from "@/lib/research";
-import { scoreThesisForRanking } from "@/lib/score-pipeline";
 import { generateRankingMarkdown } from "@/lib/markdown";
 
 type Params = { params: Promise<{ ref: string }> };
@@ -22,7 +20,6 @@ export async function POST(req: NextRequest, { params }: Params) {
     const { ref } = await params;
     const body = await req.json().catch(() => ({}));
     const mode = (body.mode as ResearchMode) ?? getDefaultResearchMode();
-    const rescore = body.rescore === true;
 
     const thesis = await findThesisByRefAsync(ref);
     if (!thesis) {
@@ -30,21 +27,10 @@ export async function POST(req: NextRequest, { params }: Params) {
     }
 
     const research = await runResearch(thesis, mode);
-
-    let score = null;
-    if (rescore) {
-      score = await scoreThesisForRanking(thesis, {
-        forceGroq: true,
-        researchCitations: research.citations,
-      });
-      await saveScoreAsync(score);
-    }
-
     const state = await getRankingStateAsync();
 
     return NextResponse.json({
       research,
-      score,
       state,
       markdown: generateRankingMarkdown(state),
     });

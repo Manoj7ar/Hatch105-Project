@@ -9,7 +9,7 @@ export function ThinkingShimmer() {
       aria-label="Thinking"
     >
       <div className="flex items-center gap-1.5">
-        <span className="text-[15px] font-medium tracking-tight text-[var(--groq-orange)]">
+        <span className="text-[15px] font-medium tracking-tight text-[var(--gemini-accent)]">
           Thinking
         </span>
         <span className="thinking-dots inline-flex items-center gap-0.5 pt-0.5" aria-hidden>

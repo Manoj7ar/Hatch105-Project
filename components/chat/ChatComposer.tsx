@@ -211,7 +211,7 @@ export function ChatComposer({
             <button
               type="button"
               onClick={onScoreIdea}
-              className="text-xs font-medium text-[var(--groq-orange)] hover:text-[var(--groq-orange-hover)]"
+              className="text-xs font-medium text-[var(--gemini-accent)] hover:text-[var(--gemini-accent-hover)]"
             >
               Score this idea
             </button>

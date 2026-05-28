@@ -3,8 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Upload } from "lucide-react";
 import { Button } from "./ui/Button";
-import { GroqIcon } from "./ui/GroqIcon";
-import { GroqScoringProgress, type ProgressItem } from "./rerank/GroqScoringProgress";
+import { RerankProgress, type ProgressItem } from "./rerank/RerankProgress";
 import { ThesisFormatGuide } from "./rerank/ThesisFormatGuide";
 import {
   previewThesesInput,
@@ -223,11 +222,11 @@ export function RerankPanel({
             <div>
               <p className="hatch-label">Live re-rank</p>
               <h3 className="mt-1 text-lg font-semibold text-slate-900">
-                Add theses · score with Groq · update rankings
+                Add theses · score · update rankings
               </h3>
               <p className="mt-1 max-w-xl text-sm text-slate-600">
-                Paste JSON or CSV, upload a file, or insert the example. Groq scores each
-                idea against the Hatch rubric while you watch progress in real time.
+                Paste JSON or CSV, upload a file, or insert the example. The deterministic
+                Hatch rubric scores each idea instantly — no API calls.
               </p>
             </div>
             <div className="rerank-format-toggle flex gap-1 rounded-lg bg-slate-100 p-1">
@@ -317,13 +316,12 @@ export function RerankPanel({
                 />
               </label>
               <Button
-                variant="groq"
+                variant="primary"
                 disabled={!canSubmit}
                 onClick={() => startScoring(false)}
                 className="min-w-[200px]"
               >
-                <GroqIcon size={16} inverted />
-                {scoring ? "Scoring with Groq…" : "Score & re-rank with Groq"}
+                {scoring ? "Scoring…" : "Score & re-rank"}
               </Button>
               {items.some((i) => i.status === "failed") && !scoring && (
                 <Button variant="secondary" onClick={() => startScoring(true)}>
@@ -333,7 +331,7 @@ export function RerankPanel({
             </div>
 
             {(scoring || items.length > 0) && (
-              <GroqScoringProgress items={items} active={scoring} />
+              <RerankProgress items={items} active={scoring} />
             )}
           </div>
 
@@ -356,7 +354,7 @@ export function RerankPanel({
                 key={p.ref}
                 className="rerank-placement-card rounded-lg px-4 py-3 text-sm leading-relaxed text-slate-600"
               >
-                <span className="font-mono font-semibold text-[var(--groq-orange)]">
+                <span className="font-mono font-semibold text-[var(--gemini-accent)]">
                   {p.ref}
                 </span>
                 <span className="text-slate-400"> · rank {p.rank}</span>

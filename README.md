@@ -6,14 +6,15 @@ Inspectable ranking system for the [Hatch105 Build Challenge](Initial-dataset/Ha
 |-------|------|
 | **Next.js 16** (App Router, Turbopack) | UI, SSR idea pages, Route Handlers |
 | **TypeScript + Zod** | Schemas for theses, scores, LLM output |
-| **Vercel AI SDK** + **`@ai-sdk/groq`** | Structured scoring, streaming chat, executive brief |
-| **Groq** (`llama-3.3-70b-versatile` default) | Primary LLM for score / chat / brief |
+| **Vercel AI SDK** + **`@ai-sdk/google`** | Streaming Ask dataset chat only |
+| **Google Gemini** (`gemini-2.0-flash` default) | `/api/chat` — grounded Q&A over ranking snapshot |
+| **Deterministic rubric** (`lib/heuristic.ts`, `lib/expansion.ts`) | Scoring, re-rank, detail pages — zero LLM calls |
 | **Vercel Blob** (production) | Durable live re-rank extras, scores, research |
 | **Filesystem** (local + `/tmp` overlay) | Committed `scores/`, writable jobs, research cache |
 
 <p align="center">
-  <img src="public/groq-logo.ico" alt="Groq" width="32" height="32" />
-  <strong>Powered by Groq</strong> — scoring, chat, and brief generation
+  <img src="public/gemini-logo.svg" alt="Gemini" width="32" height="32" />
+  <strong>Ask dataset chat</strong> uses Google Gemini; ranking and re-rank are fully deterministic
 </p>
 
 ---
@@ -21,7 +22,7 @@ Inspectable ranking system for the [Hatch105 Build Challenge](Initial-dataset/Ha
 ## Table of contents
 
 1. [Product surface](#product-surface)
-2. [Groq in Hatch105](#groq-in-hatch105)
+2. [Gemini in Hatch105](#gemini-in-hatch105)
 3. [System context (C4)](#system-context-c4)
 4. [Deployment architecture](#deployment-architecture)
 5. [Repository layout](#repository-layout)
@@ -52,11 +53,10 @@ Inspectable ranking system for the [Hatch105 Build Challenge](Initial-dataset/Ha
 | Ranked list (base 50 + extras) | `/` → **All ideas** | `RankingDashboard`, `GET /api/ranking` |
 | Written rubric + gates | [CRITERIA.md](CRITERIA.md) | `lib/gates.ts`, `lib/criteria.ts` |
 | Company profile + cohort charts | `/ideas/H-XX` | `ThesisDetailPage`, `lib/thesis-detail.ts` |
-| Live re-rank (batch + Groq UI) | **Live re-rank** tab | `RerankPanel`, `lib/rerank-batch.ts` |
+| Live re-rank (instant deterministic scoring) | **Live re-rank** tab | `RerankPanel`, `lib/rerank-batch.ts` |
 | Grounded dataset chat (`@` mentions) | `/chat` | `lib/dataset-context.ts`, `POST /api/chat` |
 | Compare (up to 4) | `/compare` | `lib/compare-store.tsx` |
 | Portfolio board (localStorage) | **Portfolio** tab | `PortfolioBoard` |
-| Executive brief export | Dashboard button | `POST /api/brief` |
 | Human overrides | Company page | `overrides/H-XX.json`, `POST /api/overrides/[ref]` |
 
 ```mermaid
@@ -66,7 +66,6 @@ mindmap
       All ideas table
       Traps tab
       Live re-rank
-      Executive brief
     Ideas
       Cohort charts
       Why this rank
@@ -80,31 +79,27 @@ mindmap
 
 ---
 
-## Groq in Hatch105
+## Intelligence split
 
-Groq is the default intelligence layer for anything that needs language reasoning over the ranking snapshot. The UI uses the Groq brand mark from [`public/groq-logo.ico`](public/groq-logo.ico) (`GroqIcon`, `GroqAvatar`, orange `--groq-orange` tokens in `globals.css`).
+| Layer | Entry point | How it works |
+|-------|-------------|--------------|
+| **Ranking / re-rank** | `RerankPanel`, `scripts/rank.ts`, `scoreThesisForRanking` | `lib/heuristic.ts` + `lib/expansion.ts` — regex rubric, gates, templated snapshot/v1 plan |
+| **Ask dataset chat** | `POST /api/chat` | Gemini `streamText` over pre-built `RANKING.md` snapshot |
+| **Legacy base-50 scores** | Committed `scores/H-XX.json` | Historical Groq/Gemini narratives kept as-is (no runtime API) |
 
-| Feature | Entry point | Groq usage |
-|---------|-------------|------------|
-| Seed / CLI rank | `npm run seed`, `scripts/rank.ts` | `generateObject` via `@ai-sdk/groq` |
-| Live re-rank | `RerankPanel` → `POST /api/rerank/batch` | `scoreThesisForRanking` → full-detail Groq |
-| Company re-score | `ThesisDetailActions` | `POST /api/research/[ref]` with `rescore: true` |
-| Chat | `POST /api/chat` | `streamText` + grounded system prompt |
-| Executive brief | `POST /api/brief` | `generateText` over `RANKING.md` snapshot |
-| Profile backfill | `POST /api/ideas/[ref]/build` | `ensureThesisProfile` → research + Groq |
+Chat UI uses the official 2025 Gemini spark in [`public/gemini-logo.svg`](public/gemini-logo.svg) (`GeminiIcon`, `GeminiAvatar` on `/chat` only).
 
-### Groq scoring pipeline (screenshot)
+### Scoring pipeline (example screenshot)
 
-Terminal output from seeding the base cohort with Groq — each thesis becomes an auditable `scores/H-XX.json`:
+Terminal output from seeding the base cohort with an LLM — each thesis becomes an auditable `scores/H-XX.json` (screenshot from an earlier Groq seed run):
 
-![Groq scoring pipeline](docs/images/groq-seed-scoring.png)
+![Gemini scoring pipeline example](docs/images/groq-seed-scoring.png)
 
 ```mermaid
 flowchart LR
   subgraph UI["Browser UI"]
     RP[RerankPanel]
-    GSP[GroqScoringProgress]
-    TDA[ThesisDetailActions]
+    RProg[RerankProgress]
     Chat[ChatComposer]
   end
 
@@ -112,27 +107,23 @@ flowchart LR
     Batch["/api/rerank/batch"]
     Research["/api/research/ref"]
     ChatAPI["/api/chat"]
-    Brief["/api/brief"]
     Build["/api/ideas/ref/build"]
   end
 
   subgraph Lib["lib/"]
     SP[score-pipeline.ts]
-    Scorer[scorer.ts]
+    HEU[heuristic + expansion]
     Models[models.ts]
   end
 
-  Groq[(Groq API)]
+  GeminiAPI[(Gemini API)]
 
   RP --> Batch
-  GSP --> Batch
-  TDA --> Research
+  RProg --> Batch
   Chat --> ChatAPI
-  Batch --> SP --> Scorer --> Models --> Groq
-  Research --> SP
+  Batch --> SP --> HEU
   Build --> SP
-  ChatAPI --> Models --> Groq
-  Brief --> Models --> Groq
+  ChatAPI --> Models --> GeminiAPI
 ```
 
 ---
@@ -144,18 +135,18 @@ C4Context
   title System Context — Hatch105 Thesis Ranker
 
   Person(reviewer, "Reviewer / Hatch team", "Reads rankings, overrides, chat")
-  Person(operator, "Operator", "Live re-rank, export brief")
+  Person(operator, "Operator", "Live re-rank, chat")
 
   System(hatch105, "Hatch105 Web App", "Next.js 16 — rank, explain, re-rank, chat")
 
-  System_Ext(groq, "Groq API", "LLM inference")
+  System_Ext(groq, "Gemini API", "LLM inference")
   System_Ext(firecrawl, "Firecrawl API", "Optional external research")
   System_Ext(vercel, "Vercel Platform", "Hosting, Blob, Analytics")
   System_Ext(blob, "Vercel Blob", "Durable JSON for extras/scores/research")
 
   Rel(reviewer, hatch105, "Uses")
   Rel(operator, hatch105, "Adds theses, scores")
-  Rel(hatch105, groq, "Score, chat, brief", "HTTPS")
+  Rel(hatch105, groq, "Chat only", "HTTPS")
   Rel(hatch105, firecrawl, "Search citations", "HTTPS")
   Rel(hatch105, vercel, "Deployed on")
   Rel(hatch105, blob, "Read/write live data", "HTTPS")
@@ -202,7 +193,7 @@ flowchart TB
   end
 
   subgraph External["External APIs"]
-    GroqAPI[Groq API]
+    GroqAPI[Gemini API]
     FC[Firecrawl — optional]
   end
 
@@ -242,12 +233,12 @@ overrides/                    Human override records per ref
 docs/images/
   groq-seed-scoring.png       README / docs screenshot
 public/
-  groq-logo.ico               Groq mark for UI
+  gemini-logo.svg               Groq mark for UI
 lib/
   data.ts                     loadAllTheses*, getRankingState*, scores/research I/O
   persist.ts                  Vercel Blob + FS dual-write
   writable-root.ts            cwd vs /tmp vs HATCH105_WRITABLE_DIR
-  scorer.ts                   Groq structured output + heuristic routing
+  scorer.ts                   Gemini structured output + heuristic routing
   heuristic.ts                Deterministic fallback scorer
   gates.ts                    Post-LLM hard gates + criterion caps
   score-pipeline.ts           research → full Groq score (live re-rank)
@@ -492,40 +483,22 @@ flowchart LR
 
 ## Scoring pipeline
 
-[`lib/scorer.ts`](lib/scorer.ts) is the core decision engine. [`lib/score-pipeline.ts`](lib/score-pipeline.ts) wraps **research + forced full Groq** for live re-rank.
+All ranking work is **deterministic** — no Gemini calls.
 
-### Mode routing
-
-| `SCORING_MODE` | Behavior |
-|----------------|----------|
-| `heuristic` | Always `lib/heuristic.ts` |
-| `groq` | Groq if `GROQ_API_KEY` set |
-| `auto` | Groq when key present, else heuristic |
-
-| `SCORING_ROUTING` | Behavior |
-|-------------------|----------|
-| `smart` | Heuristic first; Groq only if fit ∈ [3.2, 3.8] or forced |
-| `always_groq` | Groq for every thesis when key present |
-
-### End-to-end scoring flow
+| Module | Role |
+|--------|------|
+| [`lib/heuristic.ts`](lib/heuristic.ts) | Six criterion scores from regex + ref calibration |
+| [`lib/expansion.ts`](lib/expansion.ts) | `technicalSnapshot`, `v1Plan`, `trapNote` templates |
+| [`lib/gates.ts`](lib/gates.ts) | Hard gates + fit ceiling |
+| [`lib/score-pipeline.ts`](lib/score-pipeline.ts) | `runResearch` + `scoreThesisHeuristic` + citations |
 
 ```mermaid
 flowchart TD
-  START([scoreThesis / scoreThesisForRanking]) --> RES{Live re-rank?}
-  RES -->|yes| RR[runResearch — lib/research.ts]
-  RR --> FG[scoreThesis forceGroq + fullDetail + citations]
-  RES -->|no| MODE{SCORING_MODE / ROUTING}
-  MODE -->|heuristic only| HEU[scoreThesisHeuristic]
-  MODE -->|groq path| GROQ[generateObject — LlmScoreOutputSchema]
-  MODE -->|smart| HEU2[heuristic fit probe]
-  HEU2 --> BAND{fit in 3.2-3.8?}
-  BAND -->|no| HEU
-  BAND -->|yes| GROQ
-  GROQ --> GATE[applyHardGates + caps + ceiling]
-  HEU --> GATE
-  GATE --> FIT[computeFit + verdictFromFit]
-  FIT --> ZOD[ThesisScoreSchema.parse]
-  ZOD --> SAVE[saveScore / saveScoreAsync]
+  START([scoreThesisForRanking]) --> RES[runResearch — grounded citations]
+  RES --> HEU[scoreThesisHeuristic]
+  HEU --> EXP[generateExpansion]
+  EXP --> GATE[applyHardGates + computeFit]
+  GATE --> SAVE[saveScoreAsync]
 ```
 
 ```mermaid
@@ -534,39 +507,17 @@ sequenceDiagram
   participant Batch as /api/rerank/batch
   participant RB as rerank-batch.ts
   participant SP as score-pipeline.ts
-  participant Res as research.ts
-  participant Sc as scorer.ts
-  participant Groq as Groq API
   participant Data as data.ts
 
   Client->>Batch: POST { text | refs | theses }
   Batch->>RB: startBatchJob()
   loop each thesis
     RB->>SP: scoreThesisForRanking(thesis)
-    SP->>Res: runResearch()
-    Res->>Data: saveResearchAsync()
-    SP->>Sc: scoreThesis(forceGroq, fullDetail)
-    Sc->>Groq: generateObject (Zod schema)
-    Groq-->>Sc: structured criteria + snapshot + v1Plan
-    Sc->>Sc: applyHardGates
-    Sc-->>RB: ThesisScore
+    SP-->>RB: ThesisScore + citations
     RB->>Data: saveScoreAsync()
   end
-  RB->>RB: finalizeRanking → mergeExtraThesesAsync
+  RB->>RB: finalizeRanking
   RB-->>Client: { state, placements, markdown }
-```
-
-### Two-pass Groq (optional)
-
-When `SCORING_TWO_PASS=true`, pass 1 scores criteria only; pass 2 adds `technicalSnapshot` + `v1Plan` for top fits (`SCORING_TOP_DETAIL`).
-
-```mermaid
-stateDiagram-v2
-  [*] --> Pass1: SCORING_TWO_PASS=true
-  Pass1 --> Pass2: fit >= threshold OR SCORING_PASS2_ALL
-  Pass1 --> Done: low fit, skip pass 2
-  Pass2 --> Done: merge pass2 fields
-  Done --> [*]
 ```
 
 ---
@@ -787,7 +738,6 @@ flowchart TB
     CHAT[POST /api/chat]
     RES[GET POST /api/research/ref]
     OVR[POST /api/overrides/ref]
-    BRIEF[POST /api/brief]
     BUILD[POST /api/ideas/ref/build]
   end
 
@@ -804,20 +754,18 @@ flowchart TB
   CHAT --> DS --> DATA
   RES --> DATA
   BUILD --> DATA
-  BRIEF --> DATA
 ```
 
 | Route | Method | `maxDuration` | Purpose |
 |-------|--------|---------------|---------|
 | `/api/ranking` | GET | default | Full `RankingState` + markdown |
-| `/api/rerank/batch` | POST, GET | **300s** | Start/poll Groq batch job |
+| `/api/rerank/batch` | POST, GET | **300s** | Start/poll deterministic batch job |
 | `/api/rerank/extras` | GET, DELETE | default | List/clear live additions |
 | `/api/teams` | GET | default | `@` autocomplete from ranked list |
 | `/api/chat` | POST | **60s** | Streaming grounded chat |
-| `/api/research/[ref]` | GET, POST | default | Load/run research; optional rescore |
+| `/api/research/[ref]` | GET, POST | default | Load/run grounded research (no rescore) |
 | `/api/overrides/[ref]` | POST | default | Human criterion overrides |
-| `/api/brief` | POST | default | Executive memo (Groq) |
-| `/api/ideas/[ref]/build` | POST | **300s** | Backfill extra profile |
+| `/api/ideas/[ref]/build` | POST | **300s** | Backfill extra profile (deterministic) |
 
 ---
 
@@ -840,7 +788,7 @@ flowchart TB
   subgraph Components["components/"]
     RD[RankingDashboard]
     RT[RankingTable / TopThreeCards]
-    RP[RerankPanel + GroqScoringProgress]
+    RP[RerankPanel + RerankProgress]
     TDP[thesis/* charts + actions]
     CHC[chat/* composer + messages]
     CT[CompareTray]
@@ -883,15 +831,8 @@ Copy [`.env.example`](.env.example) to `.env.local` (`.env*` is gitignored).
 
 | Variable | Purpose |
 |----------|---------|
-| `GROQ_API_KEY` | Groq API — scoring, chat, brief, profile build |
-| `GROQ_MODEL` | Default `llama-3.3-70b-versatile` |
-| `GROQ_SCORING_MODEL` | Optional separate model for structured scoring |
-| `SCORING_MODE` | `auto` \| `groq` \| `heuristic` |
-| `SCORING_ROUTING` | `smart` \| `always_groq` |
-| `SCORING_TWO_PASS` | Pass 1 scores; pass 2 snapshot/plan for top fits |
-| `SCORING_PASS2_ALL` | Run pass 2 on every thesis |
-| `SCORING_TOP_DETAIL` | How many top fits get pass 2 detail |
-| `GROQ_SEED_DELAY_MS` | Throttle between seed requests |
+| `GOOGLE_GENERATIVE_AI_API_KEY` | Gemini API — **Ask dataset chat only** (`/api/chat`) |
+| `GEMINI_MODEL` | Default `gemini-2.0-flash` |
 | `FIRECRAWL_API_KEY` | External research mode |
 | `RESEARCH_DEFAULT_MODE` | `grounded` \| `external` |
 | `CRITERIA_VERSION` | Rubric version stamped on each score |
@@ -900,10 +841,9 @@ Copy [`.env.example`](.env.example) to `.env.local` (`.env*` is gitignored).
 
 ```mermaid
 flowchart TD
-  ENV[.env.local] --> GROQ[GROQ_API_KEY]
+  ENV[.env.local] --> GEMINI[GOOGLE_GENERATIVE_AI_API_KEY]
   ENV --> BLOB[BLOB_READ_WRITE_TOKEN]
-  GROQ --> SCORER[lib/scorer.ts]
-  GROQ --> CHAT[lib/models.ts → chat/brief]
+  GEMINI --> CHAT[lib/models.ts → /api/chat]
   BLOB --> PERSIST[lib/persist.ts]
 ```
 
@@ -913,18 +853,12 @@ flowchart TD
 
 ```bash
 npm install
-cp .env.example .env.local   # GROQ_API_KEY from https://console.groq.com
-npm run seed                 # score base 50 → scores/*.json + RANKING.md
+cp .env.example .env.local   # optional: GOOGLE_GENERATIVE_AI_API_KEY for /chat only
+npm run seed                 # deterministic score base 50 → scores/*.json + RANKING.md
 npm run dev                  # http://localhost:3000
 ```
 
 The UI loads committed `scores/*.json` on first paint. Re-run `npm run seed` after rubric or model changes.
-
-**Without Groq:**
-
-```bash
-SCORING_MODE=heuristic npm run seed
-```
 
 ```mermaid
 flowchart LR
@@ -966,7 +900,7 @@ flowchart TD
 ```mermaid
 flowchart TD
   A[Import GitHub repo] --> B[Add Blob store — Storage]
-  B --> C[Set GROQ_API_KEY in project env]
+  B --> C[Set GOOGLE_GENERATIVE_AI_API_KEY in project env]
   C --> D[Deploy]
   D --> E{Live re-rank?}
   E -->|yes| F[BLOB_READ_WRITE_TOKEN auto-injected]
@@ -976,8 +910,8 @@ flowchart TD
 
 1. Import the repo on [Vercel](https://vercel.com).
 2. **Storage → Blob** — create and link a store (required for live re-rank persistence).
-3. Set `GROQ_API_KEY` (and optional vars above).
-4. Committed `scores/*.json` lets the rankings UI work on cold start without Groq.
+3. Set `GOOGLE_GENERATIVE_AI_API_KEY` (and optional vars above).
+4. Committed `scores/*.json` lets the rankings UI work on cold start without Gemini.
 
 ```bash
 npx vercel --prod

@@ -4,6 +4,10 @@ import type { RankedThesis } from "@/lib/types";
 import { CRITERION_LABELS } from "@/lib/criteria";
 import { CRITERION_KEYS } from "@/lib/types";
 import { Badge } from "@/components/ui/Badge";
+import {
+  GeminiScoreMark,
+  isLlmScoredWith,
+} from "@/components/ui/GeminiScoreMark";
 import { EvidenceChip } from "@/components/EvidenceChip";
 import { CriterionRadarChart } from "./CriterionRadarChart";
 import { CriterionCompareBars } from "./CriterionCompareBars";
@@ -44,13 +48,6 @@ export function ThesisDetailPage({
   const why = getWhyThisRank(thesis, benchmarks, ranked);
   const similar = getSimilarTheses(thesis, ranked);
   const tension = getRankGateTension(thesis);
-  const scoredLabel =
-    thesis.scoredWith === "human+groq"
-      ? "Human + Groq"
-      : thesis.scoredWith === "groq"
-        ? "Groq"
-        : "Heuristic";
-
   const percentile = getFitPercentile(thesis.rank, benchmarks.count);
   const vsMedian =
     Math.round((thesis.fit - benchmarks.medianFit) * 100) / 100;
@@ -75,7 +72,11 @@ export function ThesisDetailPage({
             <div className="mt-2 flex flex-wrap items-center gap-2">
               <span className="font-mono text-sm text-slate-400">{thesis.ref}</span>
               <span className="hatch-chip">Rank #{thesis.rank}</span>
-              <Badge variant="muted">{scoredLabel}</Badge>
+              {isLlmScoredWith(thesis.scoredWith) ? (
+                <GeminiScoreMark scoredWith={thesis.scoredWith} size={18} />
+              ) : (
+                <Badge variant="muted">Heuristic</Badge>
+              )}
               <Badge variant={verdictVariant(thesis.verdict)}>{thesis.verdict}</Badge>
               {thesis.overrideNote && (
                 <Badge variant="warning" className="text-[10px]">

@@ -18,7 +18,7 @@ export function TopThreeCards({ items }: { items: RankedThesis[] }) {
           <span
             className={
               i === 0
-                ? "text-xs font-medium text-[var(--groq-orange)]"
+                ? "text-xs font-medium text-[var(--gemini-accent)]"
                 : "text-xs font-medium text-slate-400"
             }
           >
