@@ -5,6 +5,8 @@ import { startBatchJob, finalizeRanking } from "@/lib/rerank-batch";
 import { getJob } from "@/lib/job-store";
 import type { Thesis } from "@/lib/types";
 
+export const maxDuration = 300;
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -25,10 +27,28 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No theses to score" }, { status: 400 });
     }
 
-    const job = startBatchJob(theses, {
+    const job = await startBatchJob(theses, {
       resumeFailed: body.resumeFailed,
       existingJobId: body.jobId,
     });
+
+    if (job.done) {
+      const newRefs = job.items
+        .filter((i) => i.status === "done")
+        .map((i) => i.ref);
+      const { state, placements, markdown } = finalizeRanking(
+        newRefs,
+        job.theses ?? []
+      );
+      return NextResponse.json({
+        jobId: job.id,
+        job,
+        state,
+        placements,
+        markdown,
+        newRefs,
+      });
+    }
 
     return NextResponse.json({ jobId: job.id, job });
   } catch (e) {

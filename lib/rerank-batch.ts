@@ -52,21 +52,29 @@ export async function runBatchScore(
   updateJob(job);
 }
 
-export function startBatchJob(
+export async function startBatchJob(
   theses: Thesis[],
   opts?: { resumeFailed?: boolean; existingJobId?: string }
-): BatchJob {
+): Promise<BatchJob> {
+  let job: BatchJob;
+
   if (opts?.existingJobId) {
     const existing = getJob(opts.existingJobId);
-    if (existing) {
-      const list = existing.theses.length ? existing.theses : theses;
-      void runBatchScore(existing.id, list, undefined, opts.resumeFailed);
-      return existing;
+    if (!existing) {
+      job = createJob(theses);
+    } else {
+      job = existing;
+      theses = existing.theses.length ? existing.theses : theses;
     }
+  } else {
+    job = createJob(theses);
   }
-  const job = createJob(theses);
-  void runBatchScore(job.id, theses, undefined, false);
-  return job;
+
+  await runBatchScore(job.id, theses, undefined, opts?.resumeFailed ?? false);
+
+  const finished = getJob(job.id);
+  if (!finished) throw new Error("Batch job lost after scoring");
+  return finished;
 }
 
 export function finalizeRanking(newRefs: string[], extraTheses: Thesis[] = []) {

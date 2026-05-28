@@ -18,11 +18,27 @@ import { buildRankingState } from "./markdown";
 import type { RankingState } from "./types";
 import { CRITERIA_VERSION } from "./criteria-version";
 import { applyOverrideToScore, loadOverride } from "./override";
+import { getWritableRoot, isEphemeralWritableRoot } from "./writable-root";
 
-const SCORES_DIR = join(process.cwd(), "scores");
-const ARCHIVE_DIR = join(SCORES_DIR, "archive");
+const REPO_SCORES_DIR = join(process.cwd(), "scores");
 export const INITIAL_DATASET_DIR = join(process.cwd(), "Initial-dataset");
-const RESEARCH_DIR = join(process.cwd(), "research");
+
+function scoresWriteDir(): string {
+  return join(getWritableRoot(), "scores");
+}
+
+/** Overlay (tmp) first, then committed repo scores on serverless. */
+function scoresReadDirs(): string[] {
+  const writeDir = scoresWriteDir();
+  if (!isEphemeralWritableRoot() || writeDir === REPO_SCORES_DIR) {
+    return [REPO_SCORES_DIR];
+  }
+  return [writeDir, REPO_SCORES_DIR];
+}
+
+function researchDir(): string {
+  return join(getWritableRoot(), "research");
+}
 
 export function loadCandidateTheses(): Thesis[] {
   const path = join(INITIAL_DATASET_DIR, "candidate_theses.json");
@@ -32,17 +48,23 @@ export function loadCandidateTheses(): Thesis[] {
 }
 
 export function ensureScoresDir() {
-  if (!existsSync(SCORES_DIR)) mkdirSync(SCORES_DIR, { recursive: true });
+  const dir = scoresWriteDir();
+  if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
 }
 
 export function scorePath(ref: string) {
-  return join(SCORES_DIR, `${ref}.json`);
+  return join(scoresWriteDir(), `${ref}.json`);
 }
 
 function archiveScoreIfChanged(ref: string, incoming: ThesisScore) {
   const p = scorePath(ref);
   if (!existsSync(p)) return;
-  const prev = normalizeThesisScore(JSON.parse(readFileSync(p, "utf-8")));
+  let prev: ThesisScore;
+  try {
+    prev = normalizeThesisScore(JSON.parse(readFileSync(p, "utf-8")));
+  } catch {
+    return;
+  }
   if (
     prev.criteriaVersion === incoming.criteriaVersion &&
     prev.fit === incoming.fit &&
@@ -50,11 +72,14 @@ function archiveScoreIfChanged(ref: string, incoming: ThesisScore) {
   ) {
     return;
   }
-  const versionDir = join(ARCHIVE_DIR, prev.criteriaVersion ?? "unknown");
-  if (!existsSync(versionDir)) mkdirSync(versionDir, { recursive: true });
-  const stamp = prev.scoredAt.replace(/[:.]/g, "-");
-  const dest = join(versionDir, `${ref}-${stamp}.json`);
-  copyFileSync(p, dest);
+  const archiveDir = join(scoresWriteDir(), "archive", prev.criteriaVersion ?? "unknown");
+  try {
+    if (!existsSync(archiveDir)) mkdirSync(archiveDir, { recursive: true });
+    const stamp = prev.scoredAt.replace(/[:.]/g, "-");
+    copyFileSync(p, join(archiveDir, `${ref}-${stamp}.json`));
+  } catch {
+    /* skip archive on read-only / ephemeral FS */
+  }
 }
 
 export function saveScore(score: ThesisScore) {
@@ -68,24 +93,38 @@ export function saveScore(score: ThesisScore) {
 }
 
 export function loadScore(ref: string): ThesisScore | null {
-  const p = scorePath(ref);
-  if (!existsSync(p)) return null;
-  const base = normalizeThesisScore(JSON.parse(readFileSync(p, "utf-8")));
-  return applyOverrideToScore(base, loadOverride(ref));
+  for (const dir of scoresReadDirs()) {
+    const p = join(dir, `${ref}.json`);
+    if (!existsSync(p)) continue;
+    const base = normalizeThesisScore(JSON.parse(readFileSync(p, "utf-8")));
+    return applyOverrideToScore(base, loadOverride(ref));
+  }
+  return null;
 }
 
 export function loadAllScores(): ThesisScore[] {
-  ensureScoresDir();
-  const files = readdirSync(SCORES_DIR).filter(
-    (f) => f.endsWith(".json") && !f.startsWith(".")
-  );
-  return files
-    .map((f) => {
+  const byRef = new Map<string, ThesisScore>();
+  for (const dir of scoresReadDirs()) {
+    if (!existsSync(dir)) continue;
+    let files: string[];
+    try {
+      files = readdirSync(dir).filter(
+        (f) => f.endsWith(".json") && !f.startsWith(".")
+      );
+    } catch {
+      continue;
+    }
+    for (const f of files) {
       const ref = f.replace(/\.json$/, "");
-      return loadScore(ref);
-    })
-    .filter((s): s is ThesisScore => s !== null)
-    .sort((a, b) => a.ref.localeCompare(b.ref));
+      if (byRef.has(ref)) continue;
+      const p = join(dir, `${ref}.json`);
+      if (!existsSync(p)) continue;
+      const base = normalizeThesisScore(JSON.parse(readFileSync(p, "utf-8")));
+      const s = applyOverrideToScore(base, loadOverride(ref));
+      if (s) byRef.set(ref, s);
+    }
+  }
+  return [...byRef.values()].sort((a, b) => a.ref.localeCompare(b.ref));
 }
 
 export function getRankingState(extraTheses?: Thesis[]): RankingState {
@@ -120,12 +159,16 @@ export function writeRankingMarkdown(state: RankingState) {
 }
 
 export function researchPath(ref: string) {
-  return join(RESEARCH_DIR, `${ref}.json`);
+  const ephemeral = join(researchDir(), `${ref}.json`);
+  const repo = join(process.cwd(), "research", `${ref}.json`);
+  if (existsSync(ephemeral)) return ephemeral;
+  return repo;
 }
 
 export function saveResearch(ref: string, data: unknown) {
-  if (!existsSync(RESEARCH_DIR)) mkdirSync(RESEARCH_DIR, { recursive: true });
-  writeFileSync(researchPath(ref), JSON.stringify(data, null, 2));
+  const dir = researchDir();
+  if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, `${ref}.json`), JSON.stringify(data, null, 2));
 }
 
 export function loadResearch(ref: string): unknown | null {

@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 import type { Thesis } from "./types";
+import { getWritableRoot } from "./writable-root";
 
 export type JobItemStatus = "pending" | "running" | "done" | "failed";
 
@@ -19,11 +20,24 @@ export type BatchJob = {
   createdAt: string;
 };
 
-const JOBS_DIR = join(process.cwd(), ".jobs");
 const memory = new Map<string, BatchJob>();
 
+function jobsDir(): string {
+  return join(getWritableRoot(), ".jobs");
+}
+
 function jobPath(id: string) {
-  return join(JOBS_DIR, `${id}.json`);
+  return join(jobsDir(), `${id}.json`);
+}
+
+function ensureJobsDir(): boolean {
+  try {
+    const dir = jobsDir();
+    if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export function createJob(theses: Thesis[]): BatchJob {
@@ -46,17 +60,23 @@ export function createJob(theses: Thesis[]): BatchJob {
 
 export function getJob(id: string): BatchJob | null {
   if (memory.has(id)) return memory.get(id)!;
+
   const p = jobPath(id);
   if (!existsSync(p)) return null;
-  const raw = JSON.parse(readFileSync(p, "utf-8")) as BatchJob & {
-    theses?: Thesis[];
-  };
-  const job: BatchJob = {
-    ...raw,
-    theses: raw.theses ?? [],
-  };
-  memory.set(id, job);
-  return job;
+
+  try {
+    const raw = JSON.parse(readFileSync(p, "utf-8")) as BatchJob & {
+      theses?: Thesis[];
+    };
+    const job: BatchJob = {
+      ...raw,
+      theses: raw.theses ?? [],
+    };
+    memory.set(id, job);
+    return job;
+  } catch {
+    return null;
+  }
 }
 
 export function updateJob(job: BatchJob) {
@@ -65,6 +85,10 @@ export function updateJob(job: BatchJob) {
 }
 
 function persistJob(job: BatchJob) {
-  if (!existsSync(JOBS_DIR)) mkdirSync(JOBS_DIR, { recursive: true });
-  writeFileSync(jobPath(job.id), JSON.stringify(job, null, 2));
+  if (!ensureJobsDir()) return;
+  try {
+    writeFileSync(jobPath(job.id), JSON.stringify(job, null, 2));
+  } catch {
+    /* memory-only fallback on read-only FS */
+  }
 }
