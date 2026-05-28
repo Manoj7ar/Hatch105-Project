@@ -367,7 +367,7 @@ flowchart TD
   D[loadAllScoresAsync] --> S[scoreByRef Map]
   S -->|stub if missing thesis| M
 
-  M --> T[All Thesis[]]
+  M --> T["All Thesis array"]
   S --> R[rankScores scores + theses]
   R --> BS[buildRankingState]
   BS --> RS[RankingState — ranked + metadata]
@@ -465,16 +465,16 @@ flowchart TD
 ```mermaid
 flowchart LR
   subgraph Inputs
-    TS[ThesisScore[]]
-    TH[Thesis[]]
+    TS["ThesisScore array"]
+    TH["Thesis array"]
   end
   subgraph lib_rank["lib/rank.ts"]
     SORT[sort by fit desc, ref tie-break]
     MAP[attach thesis + rank index]
   end
   subgraph Output
-    RT[RankedThesis[]]
-    MD[RANKING.md via lib/markdown.ts]
+    RT["RankedThesis array"]
+    MD["RANKING.md via lib/markdown.ts"]
   end
   TS --> SORT
   TH --> MAP
