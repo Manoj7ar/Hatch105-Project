@@ -7,7 +7,7 @@ Inspectable ranking system for the [Hatch105 Build Challenge](Initial-dataset/Ha
 | **Next.js 16** (App Router, Turbopack) | UI, SSR idea pages, Route Handlers |
 | **TypeScript + Zod** | Schemas for theses, scores, LLM output |
 | **Vercel AI SDK** + **`@ai-sdk/google`** | Streaming Ask dataset chat only |
-| **Google Gemini** (`gemini-2.0-flash` default) | `/api/chat` — grounded Q&A over ranking snapshot |
+| **Google Gemini** (`gemini-2.5-flash` default) | `/api/chat` — grounded Q&A over ranking snapshot |
 | **Deterministic rubric** (`lib/heuristic.ts`, `lib/expansion.ts`) | Scoring, re-rank, detail pages — zero LLM calls |
 | **Vercel Blob** (production) | Durable live re-rank extras, scores, research |
 | **Filesystem** (local + `/tmp` overlay) | Committed `scores/`, writable jobs, research cache |
@@ -832,7 +832,7 @@ Copy [`.env.example`](.env.example) to `.env.local` (`.env*` is gitignored).
 | Variable | Purpose |
 |----------|---------|
 | `GOOGLE_GENERATIVE_AI_API_KEY` | Gemini API — **Ask dataset chat only** (`/api/chat`) |
-| `GEMINI_MODEL` | Default `gemini-2.0-flash` |
+| `GEMINI_MODEL` | Default `gemini-2.5-flash` (legacy `gemini-2.0-flash` env values are remapped) |
 | `FIRECRAWL_API_KEY` | External research mode |
 | `RESEARCH_DEFAULT_MODE` | `grounded` \| `external` |
 | `CRITERIA_VERSION` | Rubric version stamped on each score |

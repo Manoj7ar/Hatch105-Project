@@ -4,14 +4,22 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
  * Default Gemini model for Ask dataset chat (`/api/chat` only).
  * Override via GEMINI_MODEL in .env.local.
  *
+ * gemini-2.0-flash is deprecated / unavailable for new users — use 2.5+.
+ * @see https://ai.google.dev/gemini-api/docs/deprecations
  * @see https://ai.google.dev/gemini-api/docs/models
  */
-export const DEFAULT_GEMINI_MODEL = "gemini-2.0-flash";
+export const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash";
 
+/** Map friendly env values and retired model IDs to a supported model. */
 export const GEMINI_MODEL_ALIASES: Record<string, string> = {
-  flash: "gemini-2.0-flash",
-  "gemini-flash": "gemini-2.0-flash",
-  "2.0-flash": "gemini-2.0-flash",
+  flash: "gemini-2.5-flash",
+  "gemini-flash": "gemini-2.5-flash",
+  "2.5-flash": "gemini-2.5-flash",
+  "2.0-flash": "gemini-2.5-flash",
+  "gemini-2.0-flash": "gemini-2.5-flash",
+  "gemini-2.0-flash-001": "gemini-2.5-flash",
+  "gemini-2.0-flash-lite": "gemini-2.5-flash-lite",
+  "gemini-2.0-flash-lite-001": "gemini-2.5-flash-lite",
 };
 
 function resolveModelId(raw: string | undefined, fallback: string): string {
