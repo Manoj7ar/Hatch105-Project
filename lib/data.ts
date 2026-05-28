@@ -26,13 +26,29 @@ import {
 } from "./override";
 import {
   clearExtraThesesStore,
+  clearExtraThesesStoreAsync,
   loadExtraTheses,
+  loadExtraThesesAsync,
   mergeExtraTheses,
+  mergeExtraThesesAsync,
   thesisStubFromScore,
 } from "./extra-theses";
+import {
+  isBlobPersistenceEnabled,
+  persistDelete,
+  persistGet,
+  persistList,
+  persistPut,
+} from "./persist";
 import { getWritableRoot, isEphemeralWritableRoot } from "./writable-root";
 
-export { loadExtraTheses, mergeExtraTheses };
+export {
+  loadExtraTheses,
+  loadExtraThesesAsync,
+  mergeExtraTheses,
+  mergeExtraThesesAsync,
+  isBlobPersistenceEnabled,
+};
 
 const REPO_SCORES_DIR = join(process.cwd(), "scores");
 export const INITIAL_DATASET_DIR = join(process.cwd(), "Initial-dataset");
@@ -80,6 +96,12 @@ export function loadAllTheses(extraTheses?: Thesis[]): Thesis[] {
 export function findThesisByRef(ref: string): Thesis | null {
   const norm = ref.trim().toUpperCase();
   return loadAllTheses().find((t) => t.ref.toUpperCase() === norm) ?? null;
+}
+
+export async function findThesisByRefAsync(ref: string): Promise<Thesis | null> {
+  const norm = ref.trim().toUpperCase();
+  const all = await loadAllThesesAsync();
+  return all.find((t) => t.ref.toUpperCase() === norm) ?? null;
 }
 
 export function ensureScoresDir() {
@@ -142,47 +164,135 @@ export function saveScore(score: ThesisScore) {
   writeFileSync(scorePath(stamped.ref), JSON.stringify(stamped, null, 2));
 }
 
+export async function saveScoreAsync(score: ThesisScore): Promise<void> {
+  const stamped: ThesisScore = {
+    ...score,
+    criteriaVersion: score.criteriaVersion ?? CRITERIA_VERSION,
+  };
+  archiveScoreIfChanged(stamped.ref, stamped);
+  await persistPut(
+    `scores/${stamped.ref}.json`,
+    JSON.stringify(stamped, null, 2)
+  );
+}
+
+function scoreFromJsonText(ref: string, text: string): ThesisScore | null {
+  const base = normalizeThesisScore(JSON.parse(text));
+  const withOverride = applyOverrideToScore(base, loadOverride(ref));
+  return withOverride
+    ? enrichScoreWithStoredResearch(withOverride)
+    : null;
+}
+
 export function loadScore(ref: string): ThesisScore | null {
   for (const dir of scoresReadDirs()) {
     const p = join(dir, `${ref}.json`);
     if (!existsSync(p)) continue;
-    const base = normalizeThesisScore(JSON.parse(readFileSync(p, "utf-8")));
-    const withOverride = applyOverrideToScore(base, loadOverride(ref));
-    return withOverride
-      ? enrichScoreWithStoredResearch(withOverride)
-      : null;
+    return scoreFromJsonText(ref, readFileSync(p, "utf-8"));
   }
   return null;
+}
+
+export async function loadScoreAsync(ref: string): Promise<ThesisScore | null> {
+  const blobText = await persistGet(`scores/${ref}.json`);
+  if (blobText) {
+    const fromBlob = scoreFromJsonText(ref, blobText);
+    if (fromBlob) return fromBlob;
+  }
+  return loadScore(ref);
+}
+
+function loadScoresFromDir(
+  dir: string,
+  byRef: Map<string, ThesisScore>,
+  overwrite: boolean
+): void {
+  if (!existsSync(dir)) return;
+  let files: string[];
+  try {
+    files = readdirSync(dir).filter(
+      (f) => f.endsWith(".json") && !f.startsWith(".")
+    );
+  } catch {
+    return;
+  }
+  for (const f of files) {
+    const ref = f.replace(/\.json$/, "");
+    if (!overwrite && byRef.has(ref)) continue;
+    const p = join(dir, `${ref}.json`);
+    if (!existsSync(p)) continue;
+    const s = scoreFromJsonText(ref, readFileSync(p, "utf-8"));
+    if (s) byRef.set(ref, s);
+  }
 }
 
 export function loadAllScores(): ThesisScore[] {
   const byRef = new Map<string, ThesisScore>();
   for (const dir of scoresReadDirs()) {
-    if (!existsSync(dir)) continue;
-    let files: string[];
-    try {
-      files = readdirSync(dir).filter(
-        (f) => f.endsWith(".json") && !f.startsWith(".")
-      );
-    } catch {
-      continue;
-    }
-    for (const f of files) {
-      const ref = f.replace(/\.json$/, "");
-      if (byRef.has(ref)) continue;
-      const p = join(dir, `${ref}.json`);
-      if (!existsSync(p)) continue;
-      const base = normalizeThesisScore(JSON.parse(readFileSync(p, "utf-8")));
-      const s = applyOverrideToScore(base, loadOverride(ref));
-      if (s) byRef.set(ref, enrichScoreWithStoredResearch(s));
-    }
+    loadScoresFromDir(dir, byRef, dir !== REPO_SCORES_DIR);
   }
+  return [...byRef.values()].sort((a, b) => a.ref.localeCompare(b.ref));
+}
+
+export async function loadAllScoresAsync(): Promise<ThesisScore[]> {
+  const byRef = new Map<string, ThesisScore>();
+  loadScoresFromDir(REPO_SCORES_DIR, byRef, false);
+
+  const listed = await persistList("scores");
+  for (const rel of listed) {
+    const normalized = rel.replace(/^scores\//, "");
+    if (!normalized.endsWith(".json")) continue;
+    const ref = normalized.replace(/\.json$/, "");
+    const text = await persistGet(`scores/${ref}.json`);
+    if (!text) continue;
+    const s = scoreFromJsonText(ref, text);
+    if (s) byRef.set(ref, s);
+  }
+
+  const writeDir = scoresWriteDir();
+  if (writeDir !== REPO_SCORES_DIR) {
+    loadScoresFromDir(writeDir, byRef, true);
+  }
+
   return [...byRef.values()].sort((a, b) => a.ref.localeCompare(b.ref));
 }
 
 export function getRankingState(extraTheses?: Thesis[]): RankingState {
   const allTheses = loadAllTheses(extraTheses);
   const scores = loadAllScores();
+
+  if (scores.length === 0) {
+    throw new Error(
+      "No scores found. Run npm run seed to generate scores/*.json"
+    );
+  }
+
+  const ranked = rankScores(scores, allTheses);
+  return buildRankingState(ranked);
+}
+
+export async function loadAllThesesAsync(
+  extraTheses?: Thesis[]
+): Promise<Thesis[]> {
+  const thesisByRef = new Map<string, Thesis>();
+
+  for (const t of loadCandidateTheses()) thesisByRef.set(t.ref, t);
+  for (const t of await loadExtraThesesAsync()) thesisByRef.set(t.ref, t);
+  for (const t of extraTheses ?? []) thesisByRef.set(t.ref, t);
+  for (const score of await loadAllScoresAsync()) {
+    if (!thesisByRef.has(score.ref)) {
+      thesisByRef.set(score.ref, thesisStubFromScore(score));
+    }
+  }
+
+  return [...thesisByRef.values()].sort((a, b) => a.ref.localeCompare(b.ref));
+}
+
+export async function getRankingStateAsync(
+  extraTheses?: Thesis[]
+): Promise<RankingState> {
+  const allTheses = await loadAllThesesAsync(extraTheses);
+  const scores = await loadAllScoresAsync();
 
   if (scores.length === 0) {
     throw new Error(
@@ -216,10 +326,31 @@ export function saveResearch(ref: string, data: unknown) {
   writeFileSync(join(dir, `${ref}.json`), JSON.stringify(data, null, 2));
 }
 
+export async function saveResearchAsync(
+  ref: string,
+  data: unknown
+): Promise<void> {
+  const payload = JSON.stringify(data, null, 2);
+  saveResearch(ref, data);
+  await persistPut(`research/${ref}.json`, payload);
+}
+
 export function loadResearch(ref: string): unknown | null {
   const p = researchPath(ref);
   if (!existsSync(p)) return null;
   return JSON.parse(readFileSync(p, "utf-8"));
+}
+
+export async function loadResearchAsync(ref: string): Promise<unknown | null> {
+  const blobText = await persistGet(`research/${ref}.json`);
+  if (blobText) {
+    try {
+      return JSON.parse(blobText);
+    } catch {
+      /* fall through */
+    }
+  }
+  return loadResearch(ref);
 }
 
 export function baseThesisRefs(): Set<string> {
@@ -268,12 +399,43 @@ function deleteResearchForRef(ref: string): void {
   }
 }
 
+export async function getAddedThesisRefsAsync(): Promise<string[]> {
+  const base = baseThesisRefs();
+  const refs = new Set<string>();
+
+  for (const t of await loadExtraThesesAsync()) {
+    if (!base.has(t.ref)) refs.add(t.ref);
+  }
+  for (const score of await loadAllScoresAsync()) {
+    if (!base.has(score.ref)) refs.add(score.ref);
+  }
+
+  return [...refs].sort((a, b) => a.localeCompare(b));
+}
+
 /** Remove all live re-rank additions; returns to the base 50 ranking. */
 export function clearAddedTheses(): { removedRefs: string[] } {
   const removedRefs = getAddedThesisRefs();
   clearExtraThesesStore();
 
   for (const ref of removedRefs) {
+    deleteScoreForRef(ref);
+    deleteResearchForRef(ref);
+    deleteOverride(ref);
+  }
+
+  return { removedRefs };
+}
+
+export async function clearAddedThesesAsync(): Promise<{
+  removedRefs: string[];
+}> {
+  const removedRefs = await getAddedThesisRefsAsync();
+  await clearExtraThesesStoreAsync();
+
+  for (const ref of removedRefs) {
+    await persistDelete(`scores/${ref}.json`);
+    await persistDelete(`research/${ref}.json`);
     deleteScoreForRef(ref);
     deleteResearchForRef(ref);
     deleteOverride(ref);

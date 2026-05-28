@@ -1,16 +1,16 @@
 import {
   baseThesisRefs,
   enrichScoreWithStoredResearch,
-  findThesisByRef,
-  loadResearch,
-  loadScore,
-  saveScore,
+  findThesisByRefAsync,
+  loadResearchAsync,
+  loadScoreAsync,
+  saveScoreAsync,
 } from "./data";
 import type { RankedThesis } from "./types";
 import { runResearch } from "./research";
 import { scoreThesisForRanking } from "./score-pipeline";
 
-function isProfileComplete(row: RankedThesis): boolean {
+export function isThesisProfileComplete(row: RankedThesis): boolean {
   const t = row.thesis;
   return !!(
     t?.one_liner?.trim() &&
@@ -32,23 +32,23 @@ export async function ensureThesisProfile(
   ref: string,
   ranked: RankedThesis
 ): Promise<RankedThesis> {
-  if (baseThesisRefs().has(ref) || isProfileComplete(ranked)) {
+  if (baseThesisRefs().has(ref) || isThesisProfileComplete(ranked)) {
     return ranked;
   }
 
-  const thesis = ranked.thesis ?? findThesisByRef(ref);
+  const thesis = ranked.thesis ?? (await findThesisByRefAsync(ref));
   if (!thesis) return ranked;
 
-  if (!loadResearch(ref)) {
+  if (!(await loadResearchAsync(ref))) {
     await runResearch(thesis);
   }
 
-  const existing = loadScore(ref);
+  const existing = await loadScoreAsync(ref);
   const enriched = existing
     ? enrichScoreWithStoredResearch(existing)
     : null;
 
-  if (enriched && isProfileComplete({ ...ranked, ...enriched, thesis })) {
+  if (enriched && isThesisProfileComplete({ ...ranked, ...enriched, thesis })) {
     return { ...ranked, ...enriched, thesis };
   }
 
@@ -57,6 +57,6 @@ export async function ensureThesisProfile(
   }
 
   const score = await scoreThesisForRanking(thesis);
-  saveScore(score);
+  await saveScoreAsync(score);
   return { ...ranked, ...score, thesis };
 }

@@ -2,10 +2,10 @@ import type { Thesis } from "./types";
 import { scoreThesisForRanking } from "./score-pipeline";
 import type { ScoreContext } from "./scorer";
 import {
-  saveScore,
+  saveScoreAsync,
   loadCandidateTheses,
-  getRankingState,
-  mergeExtraTheses,
+  getRankingStateAsync,
+  mergeExtraThesesAsync,
 } from "./data";
 import { placementSummary } from "./rank";
 import { generateRankingMarkdown } from "./markdown";
@@ -40,7 +40,7 @@ export async function runBatchScore(
 
     try {
       const score = await scoreThesisForRanking(thesis, ctx);
-      saveScore(score);
+      await saveScoreAsync(score);
       item.status = "done";
     } catch (e) {
       item.status = "failed";
@@ -80,12 +80,15 @@ export async function startBatchJob(
   return finished;
 }
 
-export function finalizeRanking(newRefs: string[], extraTheses: Thesis[] = []) {
+export async function finalizeRanking(
+  newRefs: string[],
+  extraTheses: Thesis[] = []
+) {
   const base = loadCandidateTheses();
   const added = extraTheses.filter((n) => !base.some((b) => b.ref === n.ref));
-  mergeExtraTheses(added);
+  await mergeExtraThesesAsync(added);
 
-  const state = getRankingState();
+  const state = await getRankingStateAsync();
   const placements = placementSummary(state.ranked, newRefs);
   const markdown = generateRankingMarkdown(state);
   try {

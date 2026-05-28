@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { getTeamsFromRanking } from "@/lib/teams";
-import { getRankingState } from "@/lib/data";
+import { getRankingStateAsync } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const { ranked } = getRankingState();
+    const { ranked } = await getRankingStateAsync();
     const teams = getTeamsFromRanking(ranked).map(
       ({ ref, title, searchKey, rank, fit, verdict }) => ({
         ref,

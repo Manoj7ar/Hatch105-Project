@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { getRankingState } from "@/lib/data";
+import { getRankingStateAsync } from "@/lib/data";
 import { generateRankingMarkdown } from "@/lib/markdown";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const state = getRankingState();
+    const state = await getRankingStateAsync();
     return NextResponse.json(
       {
         state,

@@ -1,4 +1,4 @@
-import { getRankingState } from "./data";
+import { getRankingStateAsync } from "./data";
 import { CRITERION_LABELS } from "./criteria";
 import type { CriterionKey, RankedThesis } from "./types";
 import { RUBRIC_SUMMARY } from "./prompts/rubric-summary";
@@ -66,8 +66,8 @@ function formatThesisSlim(row: RankedThesis): string {
     .join("\n");
 }
 
-export function buildDatasetContext(): string {
-  const { ranked } = getRankingState();
+export async function buildDatasetContext(): Promise<string> {
+  const { ranked } = await getRankingStateAsync();
   const generatedAt = new Date().toISOString();
 
   const parts: string[] = [

@@ -1,4 +1,4 @@
-import { getRankingState } from "./data";
+import { getRankingState, getRankingStateAsync } from "./data";
 import type { RankedThesis } from "./types";
 import { findTeamsByPrefixFrom } from "./teams-mention";
 
@@ -42,6 +42,11 @@ export function getAllTeams(): Team[] {
   return getTeamsFromRanking(getRankingState().ranked);
 }
 
+export async function getAllTeamsAsync(): Promise<Team[]> {
+  const { ranked } = await getRankingStateAsync();
+  return getTeamsFromRanking(ranked);
+}
+
 export function getTeamsFromRanking(ranked: RankedThesis[]): Team[] {
   return ranked
     .map((r) =>
@@ -61,6 +66,56 @@ export function findTeamsByPrefix(query: string, limit = 8): Team[] {
 }
 
 /** Expand @TeamName or @H-XX → @TeamName (ref H-XX) for model grounding */
+export async function expandTeamMentionsAsync(text: string): Promise<string> {
+  const teams = (await getAllTeamsAsync()).sort((a, b) => {
+    const lenA = Math.max(a.title.length, a.ref.length);
+    const lenB = Math.max(b.title.length, b.ref.length);
+    return lenB - lenA;
+  });
+  if (!teams.length || !text.includes("@")) return text;
+
+  type Span = { start: number; end: number; team: Team };
+  const spans: Span[] = [];
+
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] !== "@") continue;
+    const after = text.slice(i + 1);
+    for (const team of teams) {
+      const refHit = after.toLowerCase().startsWith(team.ref.toLowerCase());
+      const titleHit = after.startsWith(team.title);
+      if (!refHit && !titleHit) continue;
+
+      const end = refHit
+        ? i + 1 + team.ref.length
+        : i + 1 + team.title.length;
+      const tail = text.slice(end);
+      if (tail.startsWith(" (ref ")) break;
+      spans.push({ start: i, end, team });
+      break;
+    }
+  }
+
+  if (!spans.length) return text;
+
+  const merged: Span[] = [];
+  for (const s of spans.sort((a, b) => a.start - b.start)) {
+    const last = merged[merged.length - 1];
+    if (last && s.start < last.end) continue;
+    merged.push(s);
+  }
+
+  let out = "";
+  let cursor = 0;
+  for (const { start, end, team } of merged) {
+    out += text.slice(cursor, end);
+    out += ` (ref ${team.ref})`;
+    cursor = end;
+  }
+  out += text.slice(cursor);
+  return out;
+}
+
+/** Sync mention expansion (base 50 + local extras only — prefer async in API routes). */
 export function expandTeamMentions(text: string): string {
   const teams = getAllTeams().sort((a, b) => {
     const lenA = Math.max(a.title.length, a.ref.length);

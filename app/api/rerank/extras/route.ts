@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
 import {
-  clearAddedTheses,
-  getAddedThesisRefs,
-  getRankingState,
+  clearAddedThesesAsync,
+  getAddedThesisRefsAsync,
+  getRankingStateAsync,
   writeRankingMarkdown,
 } from "@/lib/data";
 import { generateRankingMarkdown } from "@/lib/markdown";
 
 export async function GET() {
   try {
-    const refs = getAddedThesisRefs();
+    const refs = await getAddedThesisRefsAsync();
     return NextResponse.json({ count: refs.length, refs });
   } catch (e) {
     const message = e instanceof Error ? e.message : "Could not list extras";
@@ -19,8 +19,8 @@ export async function GET() {
 
 export async function DELETE() {
   try {
-    const { removedRefs } = clearAddedTheses();
-    const state = getRankingState();
+    const { removedRefs } = await clearAddedThesesAsync();
+    const state = await getRankingStateAsync();
     const markdown = generateRankingMarkdown(state);
     try {
       writeRankingMarkdown(state);

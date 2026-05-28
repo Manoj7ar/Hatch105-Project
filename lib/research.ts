@@ -1,7 +1,7 @@
 import type { Thesis, ResearchCitation } from "./types";
 import { matchCompetitorsInText, formatCompetitorBlock } from "./competitors";
 import { checkShopifySurfaces, formatSurfaceFlagsBlock } from "./shopify-surfaces";
-import { saveResearch } from "./data";
+import { saveResearchAsync } from "./data";
 
 export type ResearchMode = "grounded" | "external";
 
@@ -150,6 +150,6 @@ export async function runResearch(
     at: new Date().toISOString(),
   };
 
-  saveResearch(thesis.ref, result);
+  await saveResearchAsync(thesis.ref, result);
   return result;
 }

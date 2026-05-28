@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { generateText } from "ai";
-import { getRankingState } from "@/lib/data";
+import { getRankingStateAsync } from "@/lib/data";
 import { generateRankingMarkdown } from "@/lib/markdown";
 import { getGroqModel } from "@/lib/models";
 import { CRITERIA_VERSION } from "@/lib/criteria-version";
@@ -14,7 +14,7 @@ export async function POST() {
   }
 
   try {
-    const state = getRankingState();
+    const state = await getRankingStateAsync();
     const datasetMd = generateRankingMarkdown(state);
 
     const { text } = await generateText({

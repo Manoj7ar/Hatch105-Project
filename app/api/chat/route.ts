@@ -2,7 +2,7 @@ import { streamText, type ModelMessage } from "ai";
 import { buildDatasetContext } from "@/lib/dataset-context";
 import { buildChatSystemPrompt } from "@/lib/prompts/chat-system";
 import { getChatModel } from "@/lib/models";
-import { expandTeamMentions } from "@/lib/teams";
+import { expandTeamMentionsAsync } from "@/lib/teams";
 
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
@@ -12,14 +12,20 @@ type ChatMessage = {
   content: string;
 };
 
-function toModelMessages(messages: ChatMessage[]): ModelMessage[] {
-  return messages
-    .filter((m) => m.content?.trim())
-    .map((m) => ({
+async function toModelMessages(
+  messages: ChatMessage[]
+): Promise<ModelMessage[]> {
+  const out: ModelMessage[] = [];
+  for (const m of messages.filter((msg) => msg.content?.trim())) {
+    out.push({
       role: m.role,
       content:
-        m.role === "user" ? expandTeamMentions(m.content) : m.content,
-    }));
+        m.role === "user"
+          ? await expandTeamMentionsAsync(m.content)
+          : m.content,
+    });
+  }
+  return out;
 }
 
 export async function POST(req: Request) {
@@ -38,13 +44,13 @@ export async function POST(req: Request) {
       return Response.json({ error: "messages array required" }, { status: 400 });
     }
 
-    const dataset = buildDatasetContext();
+    const dataset = await buildDatasetContext();
     const system = buildChatSystemPrompt(dataset);
 
     const result = streamText({
       model: getChatModel(),
       system,
-      messages: toModelMessages(messages),
+      messages: await toModelMessages(messages),
       temperature: 0.3,
       maxOutputTokens: 3072,
     });

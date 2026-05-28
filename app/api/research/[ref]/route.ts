@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
-  findThesisByRef,
-  getRankingState,
-  loadResearch,
-  saveScore,
+  findThesisByRefAsync,
+  getRankingStateAsync,
+  loadResearchAsync,
+  saveScoreAsync,
 } from "@/lib/data";
 import { runResearch, getDefaultResearchMode, type ResearchMode } from "@/lib/research";
 import { scoreThesisForRanking } from "@/lib/score-pipeline";
@@ -13,7 +13,7 @@ type Params = { params: Promise<{ ref: string }> };
 
 export async function GET(_req: NextRequest, { params }: Params) {
   const { ref } = await params;
-  const stored = loadResearch(ref);
+  const stored = await loadResearchAsync(ref);
   return NextResponse.json({ research: stored });
 }
 
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest, { params }: Params) {
     const mode = (body.mode as ResearchMode) ?? getDefaultResearchMode();
     const rescore = body.rescore === true;
 
-    const thesis = findThesisByRef(ref);
+    const thesis = await findThesisByRefAsync(ref);
     if (!thesis) {
       return NextResponse.json({ error: "Thesis not found" }, { status: 404 });
     }
@@ -37,10 +37,10 @@ export async function POST(req: NextRequest, { params }: Params) {
         forceGroq: true,
         researchCitations: research.citations,
       });
-      saveScore(score);
+      await saveScoreAsync(score);
     }
 
-    const state = getRankingState();
+    const state = await getRankingStateAsync();
 
     return NextResponse.json({
       research,

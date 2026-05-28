@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { parseThesesInput } from "@/lib/parse";
-import { loadAllTheses, loadCandidateTheses } from "@/lib/data";
+import { loadAllThesesAsync, loadCandidateTheses } from "@/lib/data";
 import { startBatchJob, finalizeRanking } from "@/lib/rerank-batch";
 import { getJob } from "@/lib/job-store";
 import type { Thesis } from "@/lib/types";
@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     if (body.text) {
       theses = parseThesesInput(body.text, body.format ?? "auto");
     } else if (body.refs?.length) {
-      const all = loadAllTheses();
+      const all = await loadAllThesesAsync();
       theses = all.filter((t) => body.refs.includes(t.ref));
     } else if (body.theses?.length) {
       theses = body.theses;
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
       const newRefs = job.items
         .filter((i) => i.status === "done")
         .map((i) => i.ref);
-      const { state, placements, markdown } = finalizeRanking(
+      const { state, placements, markdown } = await finalizeRanking(
         newRefs,
         job.theses ?? []
       );
@@ -69,7 +69,7 @@ export async function GET(req: NextRequest) {
 
   if (job.done) {
     const newRefs = job.items.filter((i) => i.status === "done").map((i) => i.ref);
-    const { state, placements, markdown } = finalizeRanking(
+    const { state, placements, markdown } = await finalizeRanking(
       newRefs,
       job.theses ?? []
     );

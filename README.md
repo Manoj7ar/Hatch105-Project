@@ -51,6 +51,7 @@ Copy [`.env.example`](.env.example). Common settings:
 | `FIRECRAWL_API_KEY` | External research mode (optional) |
 | `RESEARCH_DEFAULT_MODE` | `grounded` \| `external` |
 | `CRITERIA_VERSION` | Rubric version stamped on each score |
+| `BLOB_READ_WRITE_TOKEN` | **Vercel only** — persists live re-rank extras, scores, and research across deploys |
 
 ---
 
@@ -97,7 +98,9 @@ npm run rank -- --input fixtures/new_theses.json --merge
 
 [`fixtures/new_theses.json`](fixtures/new_theses.json) includes five sample ideas (H-51–H-55) for dry runs.
 
-**Persistence after refresh:** each live re-rank writes `scores/H-XX.json` and merges full thesis rows into **`data/extra_theses.json`** (and the writable root copy when different). Rankings, **Ask dataset** chat, **@mentions** (by team name or `H-XX`), company pages, compare, research, and portfolio all use the same merged list (base 50 + extras). On Vercel, commit new `scores/*.json` and `data/extra_theses.json` for production; `/tmp` alone is cleared on cold starts.
+**Persistence after refresh:** each live re-rank writes `scores/H-XX.json`, `research/H-XX.json`, and merges thesis rows into **`data/extra_theses.json`**. Rankings, **Ask dataset** chat, **@mentions**, company pages, compare, and portfolio all read the same merged list (base 50 + extras).
+
+**Vercel:** serverless `/tmp` is wiped on cold starts, so production **must** use [Vercel Blob](https://vercel.com/docs/storage/vercel-blob): add a Blob store to the project (Storage → Blob). `BLOB_READ_WRITE_TOKEN` is injected automatically. Without it, added companies disappear after refresh and `/ideas/H-XX` may 404. Locally, files are written under the repo / writable root as usual.
 
 **Full company profiles for new ideas:** live re-rank runs **grounded research** (saved under `research/H-XX.json`) then **full-detail Groq scoring** (criterion reasons, technical snapshot, 3-day / 3-week / 10-week plan, trap note, research citations in the score file). `/ideas/H-XX` shows the same expanded layout as the base cohort (charts, Why this rank, similar theses, Research & Groq). Opening a profile for an older extra that was scored before this pipeline will auto-backfill once (research + re-score if `GROQ_API_KEY` is set).
 
@@ -156,6 +159,8 @@ Each thesis has a dedicated route: **`/ideas/H-XX`**
 | `/api/research/[ref]` | GET, POST | Research + optional re-score |
 | `/api/overrides/[ref]` | POST | Human override note |
 | `/api/brief` | POST | Executive memo (Groq) |
+| `/api/rerank/extras` | GET, DELETE | List or clear live re-rank additions |
+| `/api/ideas/[ref]/build` | POST | Build full profile for a new idea (research + Groq) |
 
 ---
 
