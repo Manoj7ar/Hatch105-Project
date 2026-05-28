@@ -28,7 +28,7 @@ Inspectable ranking system for the [Hatch105 Build Challenge](Initial-dataset/Ha
 5. [Repository layout](#repository-layout)
 6. [Data model](#data-model)
 7. [Persistence layer](#persistence-layer)
-8. [Ranking & Hatch Fit](#ranking--hatch-fit)
+8. [Ranking & Hatch Fit](#ranking--hatch-fit) — see also [**docs/RANKING-SYSTEM.md**](docs/RANKING-SYSTEM.md) (full explainer + diagrams)
 9. [Scoring pipeline](#scoring-pipeline)
 10. [Hard gates (deterministic)](#hard-gates-deterministic)
 11. [Research subsystem](#research-subsystem)
@@ -433,6 +433,8 @@ flowchart LR
 ---
 
 ## Ranking & Hatch Fit
+
+For a standalone walkthrough (mermaid diagrams, research vs scoring, gates, persistence), read **[docs/RANKING-SYSTEM.md](docs/RANKING-SYSTEM.md)**.
 
 **North star:** Which thesis should a **3-person Hatch team** ship in **10 weeks** with revenue inside **10 weeks**, without trap pivots.
 
