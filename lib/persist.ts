@@ -1,4 +1,4 @@
-import { del, head, list, put } from "@vercel/blob";
+import { del, get, list, put } from "@vercel/blob";
 import {
   existsSync,
   mkdirSync,
@@ -11,6 +11,12 @@ import { dirname, join } from "path";
 import { getWritableRoot } from "./writable-root";
 
 const BLOB_PREFIX = "hatch105/";
+
+const BLOB_ACCESS = "private" as const;
+
+function blobToken(): string | undefined {
+  return process.env.BLOB_READ_WRITE_TOKEN;
+}
 
 export function isBlobPersistenceEnabled(): boolean {
   return Boolean(process.env.BLOB_READ_WRITE_TOKEN?.trim());
@@ -30,10 +36,10 @@ export async function persistPut(
 ): Promise<void> {
   if (isBlobPersistenceEnabled()) {
     await put(blobPath(relativePath), content, {
-      access: "public",
+      access: BLOB_ACCESS,
       allowOverwrite: true,
       addRandomSuffix: false,
-      token: process.env.BLOB_READ_WRITE_TOKEN,
+      token: blobToken(),
     });
   }
 
@@ -47,16 +53,20 @@ export async function persistPut(
   }
 }
 
+async function readBlobText(pathname: string): Promise<string | null> {
+  const result = await get(pathname, {
+    access: BLOB_ACCESS,
+    token: blobToken(),
+  });
+  if (!result || result.statusCode !== 200 || !result.stream) return null;
+  return new Response(result.stream).text();
+}
+
 export async function persistGet(relativePath: string): Promise<string | null> {
   if (isBlobPersistenceEnabled()) {
     try {
-      const meta = await head(blobPath(relativePath), {
-        token: process.env.BLOB_READ_WRITE_TOKEN,
-      });
-      if (!meta?.url) return null;
-      const res = await fetch(meta.url, { cache: "no-store" });
-      if (!res.ok) return null;
-      return await res.text();
+      const text = await readBlobText(blobPath(relativePath));
+      if (text !== null) return text;
     } catch {
       /* fall through to fs */
     }
@@ -70,12 +80,7 @@ export async function persistGet(relativePath: string): Promise<string | null> {
 export async function persistDelete(relativePath: string): Promise<void> {
   if (isBlobPersistenceEnabled()) {
     try {
-      const meta = await head(blobPath(relativePath), {
-        token: process.env.BLOB_READ_WRITE_TOKEN,
-      });
-      if (meta?.url) {
-        await del(meta.url, { token: process.env.BLOB_READ_WRITE_TOKEN });
-      }
+      await del(blobPath(relativePath), { token: blobToken() });
     } catch {
       /* ignore */
     }
@@ -102,7 +107,7 @@ export async function persistList(relativeDir: string): Promise<string[]> {
         prefix,
         cursor,
         limit: 1000,
-        token: process.env.BLOB_READ_WRITE_TOKEN,
+        token: blobToken(),
       });
       for (const blob of page.blobs) {
         const stripped = blob.pathname.replace(BLOB_PREFIX, "");
