@@ -782,7 +782,7 @@ flowchart TB
 
   subgraph Pages["Pages"]
     HOME[page.tsx — RankingDashboard]
-    IDEA[ideas/ref — ThesisDetailPage | Building]
+    IDEA["ideas/[ref] — ThesisDetailPage or Building"]
     CHAT[chat — ChatPage]
     CMP[compare — ComparePage]
   end
